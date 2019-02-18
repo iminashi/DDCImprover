@@ -1,0 +1,93 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>iminashi</Authors>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Version>2.2.0</Version>
+    <AssemblyVersion>2.2.6.49</AssemblyVersion>
+    <FileVersion>2.2.6.49</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ddc\ddc.exe" />
+    <None Remove="ddc\ddc_chords_protector.xml" />
+    <None Remove="ddc\ddc_chords_remover.xml" />
+    <None Remove="ddc\ddc_dd_remover.xml" />
+    <None Remove="ddc\ddc_default.cfg" />
+    <None Remove="ddc\ddc_default.xml" />
+    <None Remove="ddc\ddc_keep_all_levels.cfg" />
+    <None Remove="ddc\ddc_merge_all_levels.cfg" />
+    <None Remove="ddc\license.txt" />
+    <None Remove="ddc\readme.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ddc\ddc.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_chords_protector.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_chords_remover.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_dd_remover.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_default.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_default.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_keep_all_levels.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\ddc_merge_all_levels.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ddc\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ReactiveUI" Version="9.0.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rocksmith2014Xml\Rocksmith2014Xml.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="XmlUtils">
+      <HintPath>..\lib\XmlUtils.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

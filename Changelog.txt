@@ -1,0 +1,45 @@
+2.2
+-Added 'so' slideout custom event
+
+2.1
+-Added 'overwrite original file' option
+-Anchor position chord fingering uses handshapes and produces less false positives
+-Moved unnecessary NG phrase deletion before one level fix
+-Added crowd event correction (E0 -> e0 etc)
+-Added anchor placement checking
+-Updated to DDC 3.6
+-Removed first phrase/beat moving workarounds
+-Updated Avalonia to 0.7.0 and changed to dotnetcoreapp2.1
+-Reverted back to Avalonia 0.6.1
+-Changed config implementation
+-Added Ctrl+P and F5 shortcuts for 'Process'
+-Added shortcut keys to Avalonia version
+-Fixed a bug in FixEOFLinkNextChordTechNoteIssue function
+-Fixed a bug in intro applause event insertion
+
+2.0
+-Accept files with XML file extension in capitals
+-Fixed bug in DDC generated muted note detection
+-Fixed bug in RemoveUnnecessaryNGPhrase, adjust NLD phrase id numbers (Fixed bug that could cause wrong NLD phrase ids in certain circumstances if "Keep END phrase location" is enabled and DDC has moved the END phrase)
+-Can remove selected files with delete key
+-Clear log text when starting processing
+-Changed ShouldDisplayProcessingMessages into a Subject
+-Added chord slide detection to handshape adjustment
+-Improved handshape adjustment to account for notes <= 32nd note
+-Improved check for nested handshapes in handshape adjustment
+-Added new moveto pattern: minutes, seconds + milliseconds
+-Added relative phrase move pattern "moveR"
+-Move anchor with phrase
+-Added option to display times in minutes, seconds + milliseconds
+-Improved performance of XML checking
+-Enable righthand on tap notes
+-Automatic crowd events accounts for DD levels in manual DD files
+-Add comment with program version into the processed XML files
+-Improved crowd event validation
+-Removed DDC empty phrase removal
+
+1.1.17
+-Fixed bug in xml checking equalitycomparer
+-Fixed possible bug in restore NG anchors
+-Added check for notes with both harmonic and pinch harmonic
+-Added check for notes inside noguitar sections

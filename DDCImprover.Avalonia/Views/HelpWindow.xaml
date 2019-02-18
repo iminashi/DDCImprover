@@ -1,0 +1,87 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Help" Width="850" Height="600">
+  <ScrollViewer>
+    <StackPanel Width="850">
+      <StackPanel.Styles>
+        <Style Selector="TextBlock">
+          <Setter Property="Margin" Value="10,3"/>
+          <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style Selector="TextBlock.Title">
+          <Setter Property="FontWeight" Value="Bold"/>
+          <Setter Property="FontSize" Value="18"/>
+          <Setter Property="Margin" Value="10"/>
+        </Style>
+        <Style Selector="TextBlock.SubTitle">
+          <Setter Property="FontWeight" Value="Bold"/>
+          <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style Selector="TextBlock.List">
+          <Setter Property="Margin" Value="20,2"/>
+        </Style>
+      </StackPanel.Styles>
+      <TextBlock Classes="Title">1. Basic Usage</TextBlock>
+      <TextBlock>
+        Enable the settings you want in the configuration, load some XML files and click process.
+        The processed files are saved in the same directory as the original files, with a DDC_ prefix (or DD_ in case of files that already have DD).
+        Opened files will be automatically reloaded if you process them again.
+      </TextBlock>
+      <TextBlock Classes="Title">2. Off Beat Phrases/Sections</TextBlock>
+      <TextBlock TextWrapping="Wrap">
+        Phrases can be moved off beat by giving the phrase a special name. Available options:
+      </TextBlock>
+      <TextBlock TextWrapping="Wrap">
+        • "moveR#" will move the phrase right by # notes, where the number must be 1 or more. 1 will move the phrase to the next note/chord.
+        Chords and split chords count as one. If the phrase c a note/chord (sustain of a previous note does not count), it counts as one.
+        In the picture below "moveR3" would be the correct alternative. You should prefer this option since it is easier to use than the others.
+      </TextBlock>
+      <TextBlock TextWrapping="Wrap">
+        • "moveto---s---": Where "---s---" is the time in seconds and milliseconds, e.g. moveto10s250, moveto150s027
+      </TextBlock>
+      <TextBlock TextWrapping="Wrap">
+        • "moveto---m---s---": Where "---m---s---" is the time in minutes, seconds and milliseconds, e.g. moveto1m24s100
+      </TextBlock>
+      <Image Source="resm:DDCImprover.Avalonia.Assets.Help.moveto.png"/>
+      <TextBlock TextWrapping="Wrap">
+        In the above case, the phrase and section will be moved to start at 28.824 seconds (at the G power chord).
+        If an FHP is set at the start of the phrase, it will be moved to the new position. The FHP at the old position is deleted if no note is there.
+      </TextBlock>
+      <TextBlock Classes="Title">3. Special Chord Name Suffixes</TextBlock>
+      <TextBlock>In order to use these, the "Fix Chord Names" setting must be enabled.</TextBlock>
+      <TextBlock Classes="SubTitle">•	OF</TextBlock>
+      <TextBlock>
+        OF (One Finger / One Fret) moves the finger present in a handshape that has only one note to the specified fret number, e.g. OF5 moves it to the 5th fret. Possible use cases: tapped harmonics and artificial harmonics.
+      </TextBlock>
+      <Image Source="resm:DDCImprover.Avalonia.Assets.Help.OF.png"/>
+      <TextBlock Classes="SubTitle">•	FIXOPEN</TextBlock>
+      <TextBlock>
+        FIXOPEN automates a fix for a specific case in which an open string in a chord is sustained over FHP changes.
+      </TextBlock>
+      <Image Source="resm:DDCImprover.Avalonia.Assets.Help.fixopen.png"/>
+      <TextBlock Classes="SubTitle">•	-arp</TextBlock>
+      <TextBlock>
+        Changes the handshape into an arpeggio. Can be used to make arpeggios that have chords inside. Requires a relatively new version of the Toolkit to work.
+      </TextBlock>
+      <TextBlock Classes="SubTitle">•	-nop</TextBlock>
+      <TextBlock>
+        Changes the panel of a regular chord into the panel of a double stop. It is a really minor difference and mostly useless.
+      </TextBlock>
+      <TextBlock Classes="Title">4. XML Checking</TextBlock>
+      <TextBlock>The program will check the XML for the following:</TextBlock>
+
+      <TextBlock Classes="List">•	23rd and 24th fret notes without ignore status</TextBlock>
+      <TextBlock Classes="List">•	7th fret harmonic notes with a sustain</TextBlock>
+      <TextBlock Classes="List">•	Chords at the end of a handshape</TextBlock>
+      <TextBlock Classes="List">•	Crowd event placement</TextBlock>
+      <TextBlock Classes="List">•	Tone change placement</TextBlock>
+      <TextBlock Classes="List">•	Fret/bend mismatches in LinkNext</TextBlock>
+      <TextBlock Classes="List">•	Missing bend values</TextBlock>
+      <TextBlock Classes="List">•	Mismatches between anchor position and chord fingering</TextBlock>
+      <TextBlock Classes="List">•	Anchors (FHP) that should be on a note but are up to 5ms off</TextBlock>
+      <TextBlock Classes="List">•	Notes that are set as both harmonic and pinch harmonic</TextBlock>
+      <TextBlock Classes="List">•	Notes inside a noguitar phrase</TextBlock>
+
+    </StackPanel>
+  </ScrollViewer>
+</Window>

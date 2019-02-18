@@ -1,0 +1,145 @@
+﻿<Window x:Class="DDCImprover.WPF.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DDCImprover.WPF"
+        mc:Ignorable="d"
+        Title="Help" Height="650" Width="841.776" Icon="../Assets/information32.png">
+    <FlowDocumentScrollViewer Hyperlink.Click="FlowDocHyperlink_Click">
+        <FlowDocument>
+            <Paragraph FontSize="24">1. Basic Usage</Paragraph>
+            <Paragraph>Enable the settings you want in the configuration, load some XML files and click process. The processed files are saved in the same directory as the original files, with a DDC_ prefix (or DD_ in case of files that already have DD). Opened files will be automatically reloaded if you process them again.</Paragraph>
+            <Paragraph FontSize="24">2. Off Beat Phrases/Sections</Paragraph>
+            <Paragraph>
+                Phrases can be moved off beat by giving the phrase a special name. Available options:
+            </Paragraph>
+            <List>
+                <ListItem>
+                    <Paragraph>
+                        "moveR#" will move the phrase right by # notes, where the number must be 1 or more. 1 will move the phrase to the next note/chord.
+                        Chords and split chords count as one. If the phrase is located on the same timecode as a note/chord (sustain of a previous note does not count), it counts as one.
+                        In the picture below "moveR3" would be the correct alternative. You should prefer this option since it is easier to use than the others. 
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>"moveto---s---": Where "---s---" is the time in seconds and milliseconds, e.g. moveto10s250, moveto150s027</Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>"moveto---m---s---": Where "---m---s---" is the time in minutes, seconds and milliseconds, e.g. moveto1m24s100</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph TextAlignment="Center">
+                <Image Source="../Assets/help/moveto.png" MaxWidth="718" MaxHeight="314" />
+            </Paragraph>
+            <Paragraph>
+                In the above case, the phrase and section will be moved to start at 28.824 seconds (at the G power chord).
+                If an FHP is set at the start of the phrase, it will be moved to the new position. The FHP at the old position is deleted if no note is there.
+            </Paragraph>
+
+            <Paragraph FontSize="24">3. Special Chord Name Suffixes</Paragraph>
+            <Paragraph>
+                In order to use these, the "Fix Chord Names" setting must be enabled.
+            </Paragraph>
+            <List>
+                <ListItem>
+                    <Paragraph FontWeight="Bold">OF</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph Padding="20,0,0,0">OF (One Finger / One Fret) moves the finger present in a handshape that has only one note to the specified fret number, e.g. OF5 moves it to the 5th fret.
+                Possible use cases: tapped harmonics and artificial harmonics.
+            </Paragraph>
+            <Paragraph TextAlignment="Center">
+                <Image Source="../Assets/help/OF.png" MaxWidth="789" MaxHeight="305"/>
+            </Paragraph>
+            <List>
+                <ListItem>
+                    <Paragraph FontWeight="Bold">FIXOPEN</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph TextAlignment="Center" >
+                <Image Source="../Assets/help/fixopen.png" MaxWidth="632" MaxHeight="308"/>
+            </Paragraph>
+            <Paragraph Padding="20,0,0,0">FIXOPEN automates a fix for a specific case in which an open string in a chord is sustained over FHP changes. See
+                <Hyperlink NavigateUri="http://customsforge.com/index.php/topic/40001-chord-slide-with-open-note-error/">this thread</Hyperlink>.
+            </Paragraph>
+
+            <List>
+                <ListItem>
+                    <Paragraph FontWeight="Bold">-arp</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph Padding="20,0,0,0">Changes the handshape into an arpeggio. Can be used to make arpeggios that have chords inside. Requires a relatively new version of the Toolkit to work.
+            </Paragraph>
+
+            <List>
+                <ListItem>
+                    <Paragraph FontWeight="Bold">-nop</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph Padding="20,0,0,0">Changes the panel of a regular chord into the panel of a double stop. It is a really minor difference and mostly useless.
+            </Paragraph>
+            
+
+            <Paragraph FontSize="24">4. XML Checking</Paragraph>
+            <Paragraph>The program will check the XML for the following:</Paragraph>
+            <List>
+                <ListItem>
+                    <Paragraph>
+                        23rd and 24th fret notes without ignore status
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        7th fret harmonic notes with a sustain
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Chords at the end of a handshape
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Crowd event placement
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Tone change placement
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Fret/bend mismatches in LinkNext
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Missing bend values
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Mismatches between anchor position and chord fingering
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Anchors (FHP) that should be on a note but are up to 5ms off
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Notes that are set as both harmonic and pinch harmonic
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Notes inside a noguitar phrase
+                    </Paragraph>
+                </ListItem>
+            </List>
+        </FlowDocument>
+    </FlowDocumentScrollViewer>
+</Window>

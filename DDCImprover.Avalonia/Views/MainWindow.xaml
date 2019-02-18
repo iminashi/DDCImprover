@@ -1,0 +1,124 @@
+﻿<Window x:Class="DDCImprover.Avalonia.Views.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:DDCImprover.Core;assembly?DDCImprover.Core"
+        xmlns:local="clr-namespace:DDCImprover.Avalonia;assembly?DDCImprover"
+        Icon="resm:DDCImprover.Avalonia.Assets.icon.ico"
+        Title="{Binding ProgramTitle, Mode=OneTime}"
+        Height="450" Width="765" MinWidth="765" MinHeight="350">
+
+  <Window.DataTemplates>
+    <DataTemplate DataType="{x:Type core:XMLProcessor}">
+      <local:EventStackPanel Orientation="Horizontal" Margin="0,3">
+        <TextBlock Text="{Binding ArtistName}" Width="160" />
+        <TextBlock Text="{Binding SongTitle}" Width="163" />
+        <TextBlock Text="{Binding ArrangementType}" Width="100" />
+        <TextBlock Text="{Binding XMLFileName}" Width="153" />
+        <TextBlock Text="{Binding StatusHumanized}" Width="100" />
+        <TextBlock Text="{Binding LogViewText}"
+                   Tag="{Binding LogFileFullPath}"
+                   Foreground="Blue"
+                   Cursor="Hand"
+                   PointerReleased="LogLink_MouseButtonUp"/>
+      </local:EventStackPanel>
+    </DataTemplate>
+  </Window.DataTemplates>
+  <DockPanel>
+    <Menu DockPanel.Dock="Top" Background="#EEEEEE">
+      <MenuItem Header="_File">
+        <MenuItem Header="_Open Files..."
+                  Command="{Binding OpenFiles}"
+                  IsEnabled="{Binding !IsProcessingFiles}"
+                  Icon="{StaticResource openIcon}"/>
+        <MenuItem Header="_Add Files..." Command="{Binding AddFiles}"/>
+        <MenuItem Header="C_lose All"
+                  Command="{Binding CloseAll}"
+                  IsEnabled="{Binding !IsProcessingFiles}" />
+        <!-- Command binding enable/disable is not working on menus so binding to IsEnabled manually -->
+        <Separator />
+        <MenuItem Header="_Configuration"
+                  IsEnabled="{Binding !IsProcessingFiles}"
+                  Icon="{StaticResource configIcon}"
+                  Click="Configuration_Click"/>
+        <Separator />
+        <MenuItem Header="E_xit" Click="Exit_Click" />
+      </MenuItem>
+    </Menu>
+    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="#EEEEEE">
+      <StackPanel.Styles>
+        <Style Selector="Button">
+          <Setter Property="Background" Value="Transparent"/>
+          <Setter Property="BorderBrush" Value="Transparent"/>
+          <Setter Property="Margin" Value="5,3"/>
+        </Style>
+      </StackPanel.Styles>
+      <Button Command="{Binding Process}" ToolTip.Tip="Process files (F5 / Ctrl+P)">
+        <StackPanel Orientation="Horizontal">
+          <Image Source="resm:DDCImprover.Avalonia.Assets.arrow32.png" Height="32"/>
+          <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Process</TextBlock>
+        </StackPanel>
+      </Button>
+      <Button Command="{Binding OpenFiles}" ToolTip.Tip="Open files (Ctrl+O)">
+        <StackPanel Orientation="Horizontal">
+          <Image Source="resm:DDCImprover.Avalonia.Assets.folder32.png" Height="32"/>
+          <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Open Files</TextBlock>
+        </StackPanel>
+      </Button>
+      <Rectangle Width="2" Fill="#E0E0E0" Margin="0,2" />
+      <Button IsEnabled="{Binding !IsProcessingFiles}" Click="Configuration_Click">
+        <StackPanel Orientation="Horizontal">
+          <Image Source="resm:DDCImprover.Avalonia.Assets.cogwheel32.png" Height="32"/>
+          <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Configuration</TextBlock>
+        </StackPanel>
+      </Button>
+      <Rectangle Width="2" Fill="#E0E0E0" Margin="0,2" />
+      <Button Click="Help_Click">
+        <StackPanel Orientation="Horizontal">
+          <Image Source="resm:DDCImprover.Avalonia.Assets.information32.png" Height="32" />
+          <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Help</TextBlock>
+        </StackPanel>
+      </Button>
+    </StackPanel>
+
+    <Grid ColumnDefinitions="Auto, *, Auto" DockPanel.Dock="Bottom" Background="#EEEEEE">
+      <TextBlock Grid.Column="0"
+                 Text="{Binding StatusbarMessage, Mode=OneWay}"
+                 Margin="3"
+                 ToolTip.Tip="{Binding StatusbarMessageTooltip, Mode=OneWay}"/>
+
+      <ProgressBar Grid.Column="2"
+                   Width="90" Height="16"
+                   Margin="3"
+                   Value="{Binding ProcessingProgress, Mode=OneWay}"
+                   Maximum="{Binding ProgressMaximum, Mode=OneWay}"
+                   IsVisible="{Binding IsProcessingFiles}"
+                   HorizontalAlignment="Right"/>
+    </Grid>
+
+    <Grid Margin="10,5" Background="White" RowDefinitions="Auto,*">
+      <Grid.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Add Files..." Command="{Binding AddFiles}"/>
+          <Separator />
+          <!--<MenuItem Header="Close" Command="{Binding CloseFile}" />-->
+          <MenuItem Header="Close All" Command="{Binding CloseAll}" IsEnabled="{Binding !IsProcessingFiles}" />
+        </ContextMenu>
+      </Grid.ContextMenu>
+      <Border BorderThickness="1" BorderBrush="#DEDEDE" Background="#F0F0F0">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="Artist:" Width="160" />
+          <TextBlock Text="Title:" Width="163" />
+          <TextBlock Text="Arrangement:" Width="100" />
+          <TextBlock Text="XML File:" Width="153" />
+          <TextBlock Text="Status:" Width="100" />
+          <TextBlock Text="Log:"/>
+        </StackPanel>
+      </Border>
+
+      <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+        <ItemsControl Foreground="Black"
+                      Items="{Binding XMLProcessors, Mode=OneTime}"/>
+      </ScrollViewer>
+    </Grid>
+  </DockPanel>
+</Window>

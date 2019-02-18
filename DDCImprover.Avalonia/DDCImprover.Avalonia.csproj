@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <AssemblyName>DDCImprover</AssemblyName>
+    <Authors>iminashi</Authors>
+    <Version>2.2.0</Version>
+    <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyVersion>2.2.1.49</AssemblyVersion>
+    <FileVersion>2.2.1.49</FileVersion>
+    <Product>DDC Improver</Product>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <AllowedReferenceRelatedFileExtensions>
+      .none
+    </AllowedReferenceRelatedFileExtensions>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="MessageBox.xaml" />
+    <None Remove="Views\ConfigurationWindow.xaml" />
+    <None Remove="Views\HelpWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\icon.ico" Link="Assets\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\arrow32.png" Link="Assets\arrow32.png" />
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\cogwheel32.png" Link="Assets\cogwheel32.png" />
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\folder32.png" Link="Assets\folder32.png" />
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\information32.png" Link="Assets\information32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\fixopen.png" Link="Assets\Help\fixopen.png" />
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\moveto.png" Link="Assets\Help\moveto.png" />
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\OF.png" Link="Assets\Help\OF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.6.1" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.6.1" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.6.1" />
+    <PackageReference Include="System.Reactive.Core" Version="4.1.2" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="4.1.2" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="MessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ConfigurationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\HelpWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Help\" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,125 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:DDCImprover.Avalonia.Views;assembly=DDCImprover"
+        Title="Configuration" SizeToContent="WidthAndHeight">
+  <Window.Styles>
+    <Style Selector="HeaderedContentControl">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate>
+            <Border>
+              <StackPanel>
+                <ContentPresenter TextBlock.FontWeight="Bold" Content="{TemplateBinding Header}" />
+                <Border
+                    BorderBrush="{TemplateBinding Background}"
+                    BorderThickness="2"
+                    CornerRadius="5" Padding="5">
+                  <ContentPresenter Content="{TemplateBinding Content}" />
+                </Border>
+              </StackPanel>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style Selector="NumericUpDown.nup /template/ TextBox#PART_TextBox">
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+  </Window.Styles>
+  <Grid RowDefinitions="Auto,*,Auto">
+    <HeaderedContentControl Header="DDC Settings" Background="#EEEEEE" Grid.Row="0" Margin="10,5,10,0">
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*">
+        <TextBlock Grid.Row="0" Text="Phrase Length:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Text="Ramp-up:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Text="Config:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button Content="Select DDC Executable..."
+                Command="{Binding SelectDDCExecutable}"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Margin="15,0,15,0"
+                Padding="10,2"/>
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+        <Slider 
+                Classes="nup"
+                x:Name="phraseLengthSlider"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Margin="10,5,0,5"
+                Width="60"
+                Value="{Binding Config.DDCPhraseLength}"
+                Minimum="8" Maximum="256"
+                ToolTip.Tip="Recommended: 256"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Path=Value, ElementName=phraseLengthSlider}"/>
+        </StackPanel>
+        <DropDown Grid.Column="1" Grid.Row="1"
+                  VerticalAlignment="Center" HorizontalAlignment="Left"
+                  MinWidth="170" Margin="10,5,0,5"
+                  Height="30"
+                  Items="{Binding DDCRampupFiles}"
+                  SelectedItem="{Binding Config.DDCRampupFile}"/>
+        <DropDown Grid.Column="1" Grid.Row="2"
+                  VerticalAlignment="Center" HorizontalAlignment="Left"
+                  MinWidth="170" Margin="10,5,0,5"
+                  Height="30"
+                  Items="{Binding DDCConfigFiles}"
+                  SelectedItem="{Binding Config.DDCConfigFile}"/>
+      </Grid>
+    </HeaderedContentControl>
+
+    <HeaderedContentControl Header="Program Settings" Background="#EEEEEE" Grid.Row="1" Margin="10,10,10,5">
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*,*,*,*">
+        <Grid.Styles>
+          <Style Selector="CheckBox">
+            <Setter Property="Margin" Value="2,4,4,4"/>
+          </Style>
+        </Grid.Styles>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+          <TextBlock Text="Max. Threads:" VerticalAlignment="Center"/>
+          <Slider x:Name="maxThreadsSlider"
+                  VerticalAlignment="Center"
+                  Margin="5,0,0,3"
+                  Width="120"
+                  Value="{Binding Config.MaxThreads}"
+                  Minimum="1" Maximum="{x:Static local:ConfigurationWindow.ProcessorCount}"
+                  SmallChange="1"
+                  TickFrequency="1" IsSnapToTickEnabled="True"
+                  ToolTip.Tip="Sets the number files processed simultaneously."/>
+          <TextBlock Text="{Binding ElementName=maxThreadsSlider, Path=Value}" VerticalAlignment="Center"/>
+          <!--<NumericUpDown x:Name="maxThreadsUpDown" Value="{Binding Config.MaxThreads}" Width="50" Minimum="1" Maximum="{Binding Source={x:Static sys:Environment.ProcessorCount}, Mode=OneTime}" ToolTip="Sets the number files processed simultaneously."/>-->
+        </StackPanel>
+        <CheckBox Grid.Row="1" Grid.Column="0" x:Name="adjHSCheckBox" IsChecked="{Binding Config.AdjustHandshapes}" Content="Adjust Handshapes" VerticalAlignment="Center" ToolTip.Tip="Shortens the length of handshapes that are too close to the next one."/>
+        <CheckBox Grid.Row="1" Grid.Column="1" Content="Check XML" IsChecked="{Binding Config.CheckXML}" Margin="7,0,0,0" VerticalAlignment="Center" ToolTip.Tip="Looks for certain issues in the XML and displays a notification if found."/>
+        <CheckBox Grid.Row="2" Grid.Column="0" Content="Restore First Noguitar Section" IsChecked="{Binding Config.RestoreFirstNoguitarSection}" VerticalAlignment="Center" ToolTip.Tip="If the arrangement begins with a 'noguitar' section, restore it."/>
+        <CheckBox Grid.Row="2" Grid.Column="1" Content="Restore Noguitar Anchors" IsChecked="{Binding Config.RestoreNoguitarSectionAnchors}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Restores anchors (FHP) set at the beginning of noguitar sections and at the beginning of the beatmap."/>
+        <CheckBox Grid.Row="3" Grid.Column="1" Content="Keep END Phrase Location" IsChecked="{Binding Config.PreserveENDPhraseLocation}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Restores END phrase to the original position if DDC has moved it."/>
+        <CheckBox Grid.Row="3" Grid.Column="0" Content="Remove Beats Past Audio End" IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}" VerticalAlignment="Center" ToolTip.Tip="Removes beats that come after the audio has ended."/>
+        <CheckBox Grid.Row="4" Grid.Column="1" Content="Fix Chord Names" IsChecked="{Binding Config.FixChordNames}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Renames chords to match ODLC and processes commands in chord names."/>
+        <CheckBox Grid.Row="4" Grid.Column="0" Content="Fix One Level Phrases" IsChecked="{Binding Config.FixOneLevelPhrases}" VerticalAlignment="Center" ToolTip.Tip="Adds a second difficulty level for phrases that have only one."/>
+        <CheckBox Grid.Row="5" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="If unchecked, displays times in minutes, seconds and milliseconds."/>
+        <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Automatically adds crowd events if they are not already present."/>
+        <CheckBox Grid.Row="6" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="Saves logs to the 'logs' subfolder in the program folder."/>
+        <CheckBox Grid.Row="6" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Overwrites the original file with the processed file."/>
+      </Grid>
+    </HeaderedContentControl>
+    <Grid Grid.Row="2" Margin="0,5,0,10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <StackPanel Orientation="Horizontal" >
+        <Button Content="Delete All Logs" Command="{Binding DeleteLogs}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,7,0" MinWidth="100"/>
+        <TextBlock TextWrapping="Wrap" Text="{Binding LogsDeletedText}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+      </StackPanel>
+      <Button x:Name="closeButton"
+              Grid.Column="1"
+              Content="Close"
+              VerticalAlignment="Center" HorizontalAlignment="Right"
+              Margin="7,0,15,0"
+              IsDefault="True"
+              MinWidth="70"/>
+    </Grid>
+  </Grid>
+</Window>
