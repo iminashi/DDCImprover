@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Threading.Tasks;
 
 namespace DDCImprover.Core.ViewModels
@@ -32,8 +33,8 @@ namespace DDCImprover.Core.ViewModels
 
         #region Reactive Commands
 
-        public ReactiveCommand DeleteLogs { get; }
-        public ReactiveCommand SelectDDCExecutable { get; }
+        public ReactiveCommand<Unit, Unit> DeleteLogs { get; }
+        public ReactiveCommand<Unit, Unit> SelectDDCExecutable { get; }
 
         #endregion
 
