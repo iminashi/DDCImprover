@@ -153,9 +153,19 @@ namespace DDCImprover.Core
                         noteIndex++;
                     } while (noteIndex < level.Notes.Count && Utils.TimeEqualToMilliseconds(level.Notes[noteIndex].Time, slideTime));
 
-                    // Find the chord that is linked to the slide and its template
+                    // Find the chord that is linked to the slide, its template and handshape
                     var linkNextChord = level.Chords.Last(c => c.Time < slideTime);
                     var linkNextChordTemplate = DDCSong.ChordTemplates[linkNextChord.ChordId];
+                    var linkNextChordHs = level.HandShapes.FirstOrDefault(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, linkNextChord.Time));
+
+                    // Shorten handshapes that EOF has set to include the slide out
+                    if(linkNextChordHs != null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain)
+                    {
+                        linkNextChordHs.EndTime = (float)Math.Round(
+                            linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain,
+                            3,
+                            MidpointRounding.AwayFromZero);
+                    }
 
                     // Create a new handshape at the slide end
                     float endTime = notes[0].Time + notes[0].Sustain;
