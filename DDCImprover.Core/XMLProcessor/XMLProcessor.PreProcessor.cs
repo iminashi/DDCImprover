@@ -16,9 +16,6 @@ namespace DDCImprover.Core
             private const float OutroApplauseLength = 4.0f;
             private const float VenueFadeOutLength = 5.0f;
 
-            public const string RegPatternMinSecMs = @"(\d+)m(\d+s\d+)$";
-            public const string RegPatternSecMs = @"\d+s\d+$";
-
             private readonly XMLProcessor Parent;
             internal readonly RS2014Song Song;
 
@@ -408,49 +405,15 @@ namespace DDCImprover.Core
                         }
                         else // Parse the absolute time to move to from the phrase name
                         {
-                            Match match = Regex.Match(phraseToMoveName, RegPatternMinSecMs);
-                            if (match.Success)
+                            float? parsedTime = TimeParser.Parse(phraseToMoveName);
+                            if (parsedTime.HasValue)
                             {
-                                // Minutes
-                                if (int.TryParse(match.Groups[1].Value, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int minutes))
-                                {
-                                    movetoTime = 60 * minutes;
-                                }
-                                else
-                                {
-                                    MoveToParseFailure(phraseTime);
-                                    continue;
-                                }
-
-                                // Seconds and milliseconds
-                                if (float.TryParse(match.Groups[2].Value.Replace('s', '.'), NumberStyles.Float, NumberFormatInfo.InvariantInfo, out float seconds))
-                                {
-                                    movetoTime += seconds;
-                                }
-                                else
-                                {
-                                    MoveToParseFailure(phraseTime);
-                                    continue;
-                                }
+                                movetoTime = parsedTime.Value;
                             }
                             else
                             {
-                                match = Regex.Match(phraseToMoveName, RegPatternSecMs);
-                                if (match.Success)
-                                {
-                                    movetoTime = float.Parse(match.Value.Replace('s', '.'), NumberFormatInfo.InvariantInfo);
-                                }
-                                else
-                                {
-                                    match = Regex.Match(phraseToMoveName, @"\d+$");
-                                    if (!match.Success)
-                                    {
-                                        MoveToParseFailure(phraseTime);
-                                        continue;
-                                    }
-
-                                    movetoTime = float.Parse(match.Value, NumberFormatInfo.InvariantInfo);
-                                }
+                                MoveToParseFailure(phraseTime);
+                                continue;
                             }
                         }
 

@@ -119,16 +119,8 @@ namespace DDCImprover.Core
                 var slideoutEvents = events.Where(ev => ev.Code.StartsWith("so", StringComparison.OrdinalIgnoreCase)).ToList();
                 foreach (var slideEvent in slideoutEvents)
                 {
-                    Match match = Regex.Match(slideEvent.Code, XMLPreProcessor.RegPatternSecMs);
-                    float slideTime;
-                    if (match.Success)
-                    {
-                        slideTime = float.Parse(match.Value.Replace('s', '.'), NumberFormatInfo.InvariantInfo);
-                    }
-                    else
-                    {
-                        slideTime = slideEvent.Time;
-                    }
+                    float? parsedTime = TimeParser.Parse(slideEvent.Code);
+                    float slideTime = parsedTime ?? slideEvent.Time;
 
                     // Find the max level for the phrase the slide is in
                     var phraseIter = DDCSong.PhraseIterations.Last(pi => pi.Time < slideTime);
