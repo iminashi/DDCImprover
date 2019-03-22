@@ -37,14 +37,29 @@ namespace DDCImprover.Core
             songHasNoguitarSections = noguitarSections.Length != 0;
         }
 
+        public void RunAllChecks()
+        {
+            CheckCrowdEventPlacement();
+
+            foreach (var level in song.Levels)
+            {
+                CheckNotes(level.Notes);
+                CheckChords(level.Chords, level.Notes, level.HandShapes);
+                CheckHandshapes(level.HandShapes, song.ChordTemplates, level.Anchors);
+                CheckAnchors(level.Anchors, level.Notes, level.Chords);
+            }
+        }
+
         private void AddIssue(string message, float timeCode)
         {
             statusMessages.Add(new ImproverMessage(message, MessageType.Issue, timeCode));
             Log("Issue found: " + message);
         }
 
-        internal void CheckCrowdEventPlacement(EventCollection events)
+        internal void CheckCrowdEventPlacement()
         {
+            var events = song.Events;
+
             float? introApplauseStart = events.FirstOrDefault(e => e.Code == "E3")?.Time;
             float? applauseEnd = events.FirstOrDefault(e => e.Code == "E13")?.Time;
             Regex crowdSpeedRegex = new Regex("e[0-2]$");

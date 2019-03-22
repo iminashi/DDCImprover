@@ -790,17 +790,7 @@ namespace DDCImprover.Core
             private void Lint()
             {
                 var arrangementChecker = new ArrangementChecker(Song, Parent.StatusMessages, Log);
-
-                arrangementChecker.CheckCrowdEventPlacement(Song.Events);
-
-                foreach (var level in Song.Levels)
-                {
-                    arrangementChecker.CheckNotes(level.Notes);
-                    arrangementChecker.CheckChords(level.Chords, level.Notes, level.HandShapes);
-                    arrangementChecker.CheckHandshapes(level.HandShapes, Song.ChordTemplates, level.Anchors);
-
-                    arrangementChecker.CheckAnchors(level.Anchors, level.Notes, level.Chords);
-                }
+                arrangementChecker.RunAllChecks();
 
                 /*// Check for duplicate notes
                 var overlappingNotes =
