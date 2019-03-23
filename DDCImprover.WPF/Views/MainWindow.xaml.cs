@@ -89,7 +89,7 @@ namespace DDCImprover.WPF
             base.OnKeyDown(e);
         }
 
-        // Get any status messages and show them in a new windows
+        // Get any status messages and show them in a new window
         private void ShowProcessingMessages()
         {
             FlowDocument statusMessagesFlowDoc = GenerateStatusMessagesFlowDocument();

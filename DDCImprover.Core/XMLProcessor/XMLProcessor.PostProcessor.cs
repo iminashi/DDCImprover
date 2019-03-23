@@ -191,20 +191,16 @@ namespace DDCImprover.Core
                     float endTime = notes[0].Time + notes[0].Sustain;
                     float startTime = endTime - Math.Min(notes[0].Sustain / 3, 250f);
                     int chordId = DDCSong.ChordTemplates.Count;
-                    var handShape = new HandShape(chordId, startTime, endTime);
+                    level.HandShapes.InsertByTime(new HandShape(chordId, startTime, endTime));
 
+                    // Create a new chordtemplate for the handshape
                     var soChordTemplate = new ChordTemplate();
-                    sbyte minFret = notes.Min(n => n.Fret);
-                    sbyte slideTo = notes[0].SlideUnpitchTo;
-
                     foreach (var note in notes)
                     {
-                        soChordTemplate.Frets[note.String] = (sbyte)(note.Fret - minFret + slideTo);
+                        soChordTemplate.Frets[note.String] = note.SlideUnpitchTo;
                         soChordTemplate.Fingers[note.String] = originalChordTemplate.Fingers[note.String];
                     }
-
                     DDCSong.ChordTemplates.Add(soChordTemplate);
-                    level.HandShapes.InsertByTime(handShape);
 
                     Log($"Processed SlideOut event at {slideEvent.Time.TimeToString()}");
 
