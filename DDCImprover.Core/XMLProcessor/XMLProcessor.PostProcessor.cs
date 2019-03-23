@@ -127,55 +127,83 @@ namespace DDCImprover.Core
                     int diff = DDCSong.Phrases[phraseIter.PhraseId].MaxDifficulty;
                     var level = DDCSong.Levels[diff];
 
-                    int noteIndex = level.Notes.FindIndex(n => Utils.TimeEqualToMilliseconds(n.Time, slideTime));
-                    if (noteIndex == -1)
+                    int noteIndex = level.Notes.FindIndexByTime(slideTime);
+                    int chordIndex = level.Chords.FindIndexByTime(slideTime);
+                    if (noteIndex == -1 && chordIndex == -1)
                     {
-                        string error = $"Could not find the notes for SlideOut event at {slideEvent.Time.TimeToString()}";
+                        string error = $"Could not find the notes or chord for SlideOut event at {slideEvent.Time.TimeToString()}";
                         Parent.StatusMessages.Add(new ImproverMessage(error, MessageType.Error, slideEvent.Time));
                         Log(error);
                         continue;
                     }
 
-                    List<Note> notes = new List<Note>();
-                    do
-                    {
-                        var note = level.Notes[noteIndex];
-                        if (note.IsUnpitchedSlide)
-                            notes.Add(note);
-                        noteIndex++;
-                    } while (noteIndex < level.Notes.Count && Utils.TimeEqualToMilliseconds(level.Notes[noteIndex].Time, slideTime));
+                    var notes = new List<Note>();
+                    ChordTemplate originalChordTemplate;
 
-                    // Find the chord that is linked to the slide, its template and handshape
-                    var linkNextChord = level.Chords.Last(c => c.Time < slideTime);
-                    var linkNextChordTemplate = DDCSong.ChordTemplates[linkNextChord.ChordId];
-                    var linkNextChordHs = level.HandShapes.FirstOrDefault(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, linkNextChord.Time));
-
-                    // Shorten handshapes that EOF has set to include the slide out
-                    if(linkNextChordHs != null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain)
+                    if (noteIndex != -1) // These are notes that follow a linknext chord
                     {
-                        linkNextChordHs.EndTime = (float)Math.Round(
-                            linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain,
+                        do
+                        {
+                            var note = level.Notes[noteIndex];
+                            if (note.IsUnpitchedSlide)
+                                notes.Add(note);
+                            noteIndex++;
+                        } while (noteIndex < level.Notes.Count && Utils.TimeEqualToMilliseconds(level.Notes[noteIndex].Time, slideTime));
+
+                        // Find the chord that is linked to the slide, its template and handshape
+                        var linkNextChord = level.Chords.Last(c => c.Time < slideTime);
+                        var linkNextChordHs = level.HandShapes.FirstOrDefault(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, linkNextChord.Time));
+                        originalChordTemplate = DDCSong.ChordTemplates[linkNextChord.ChordId];
+
+                        // Shorten handshapes that EOF has set to include the slide out
+                        if (linkNextChordHs != null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain)
+                        {
+                            linkNextChordHs.EndTime = (float)Math.Round(
+                                linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain,
+                                3,
+                                MidpointRounding.AwayFromZero);
+                        }
+                    }
+                    else // It is a normal chord with unpitched slide out
+                    {
+                        var chord = level.Chords[chordIndex];
+                        notes.AddRange(chord.ChordNotes.Where(cn => cn.IsUnpitchedSlide));
+
+                        originalChordTemplate = DDCSong.ChordTemplates[chord.ChordId];
+
+                        // The length of the handshape likely needs to be shortened
+                        var chordHs = level.HandShapes.FirstOrDefault(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, chord.Time));
+                        chordHs.EndTime = (float)Math.Round(
+                            chordHs.StartTime + ((chordHs.EndTime - chordHs.StartTime) / 3),
                             3,
                             MidpointRounding.AwayFromZero);
                     }
 
+                    if (notes.Count == 0)
+                    {
+                        string error = $"Invalid SlideOut event at {slideEvent.Time.TimeToString()}";
+                        Parent.StatusMessages.Add(new ImproverMessage(error, MessageType.Error, slideEvent.Time));
+                        Log(error);
+                        continue;
+                    }
+
                     // Create a new handshape at the slide end
                     float endTime = notes[0].Time + notes[0].Sustain;
-                    float startTime = endTime - Math.Min(notes[0].Sustain / 2, 250f);
+                    float startTime = endTime - Math.Min(notes[0].Sustain / 3, 250f);
                     int chordId = DDCSong.ChordTemplates.Count;
                     var handShape = new HandShape(chordId, startTime, endTime);
 
-                    var ct = new ChordTemplate();
+                    var soChordTemplate = new ChordTemplate();
                     sbyte minFret = notes.Min(n => n.Fret);
                     sbyte slideTo = notes[0].SlideUnpitchTo;
 
                     foreach (var note in notes)
                     {
-                        ct.Frets[note.String] = (sbyte)(note.Fret - minFret + slideTo);
-                        ct.Fingers[note.String] = linkNextChordTemplate.Fingers[note.String];
+                        soChordTemplate.Frets[note.String] = (sbyte)(note.Fret - minFret + slideTo);
+                        soChordTemplate.Fingers[note.String] = originalChordTemplate.Fingers[note.String];
                     }
 
-                    DDCSong.ChordTemplates.Add(ct);
+                    DDCSong.ChordTemplates.Add(soChordTemplate);
                     level.HandShapes.InsertByTime(handShape);
 
                     Log($"Processed SlideOut event at {slideEvent.Time.TimeToString()}");
