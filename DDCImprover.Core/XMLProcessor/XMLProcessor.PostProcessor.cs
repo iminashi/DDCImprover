@@ -650,14 +650,8 @@ namespace DDCImprover.Core
 
                             Log($"Phrase has {notesInPhrase} note{(notesInPhrase == 1 ? "" : "s")}.");
 
-                            List<Note> harderLevelNotes = new List<Note>();
-
                             // Make copies of current notes that will be added to the harder difficulty level
-                            foreach (var note in firstLevelNotes)
-                            {
-                                harderLevelNotes.Add(new Note(note));
-                                //Log(note.ToString());
-                            }
+                            var harderLevelNotes = new List<Note>(from note in firstLevelNotes select new Note(note));
 
                             int notesRemoved = 0;
 

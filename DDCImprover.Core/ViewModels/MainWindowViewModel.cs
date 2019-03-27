@@ -305,15 +305,10 @@ namespace DDCImprover.Core.ViewModels
         /// <param name="skippedFiles"></param>
         private void UpdateStatusBarForSkippedFiles(ConcurrentBag<string> skippedFiles)
         {
-            string last = skippedFiles.Last();
-
             string tooltip = skippedFiles.Aggregate(
-                new StringBuilder("Skipped files:" + Environment.NewLine + Environment.NewLine),
-                (sb, fileName) =>
-                {
-                    // Add newline unless last filename
-                    return !ReferenceEquals(fileName, last) ? sb.AppendLine(fileName) : sb.Append(fileName);
-                }).ToString();
+                new StringBuilder("Skipped files:" + Environment.NewLine),
+                (sb, fileName) => sb.AppendLine().Append(fileName))
+                .ToString();
 
             ShowInStatusbar($"{skippedFiles.Count} file{(skippedFiles.Count == 1 ? "" : "s")} skipped", tooltip);
         }
