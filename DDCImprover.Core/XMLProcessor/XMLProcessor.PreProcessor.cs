@@ -46,7 +46,7 @@ namespace DDCImprover.Core
                 Log("-------------------- Preprocessing Started --------------------");
 
                 FixEOFLinkNextChordTechNoteIssue();
-
+                FixEOFChordSlideHandshapeLength();
                 FixCrowdEvents();
 
                 if (Preferences.AddCrowdEvents)
@@ -669,6 +669,25 @@ namespace DDCImprover.Core
                     {
                         chord.IsLinkNext = true;
                         Log($"Added LinkNext to chord at {chord.Time.TimeToString()}");
+                    }
+                }
+            }
+
+            private void FixEOFChordSlideHandshapeLength()
+            {
+                foreach (var level in Song.Levels)
+                {
+                    foreach (var chord in level.Chords.Where(c => c.IsLinkNext))
+                    {
+                        if (chord.ChordNotes.Any(cn => cn.IsSlide))
+                        {
+                            var handshape = level.HandShapes.FirstOrDefault(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, chord.Time));
+                            if (handshape?.EndTime > handshape.StartTime + chord.ChordNotes[0].Sustain)
+                            {
+                                handshape.EndTime = (float)Math.Round(handshape.StartTime + chord.ChordNotes[0].Sustain, 3, MidpointRounding.AwayFromZero);
+                                Log($"Adjusted handshape length for chord slide at {chord.Time.TimeToString()}");
+                            }
+                        }
                     }
                 }
             }
