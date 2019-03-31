@@ -1,4 +1,5 @@
-﻿using Rocksmith2014Xml;
+﻿using DynamicData;
+using Rocksmith2014Xml;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -203,9 +204,9 @@ namespace DDCImprover.Core
                     DDCSong.ChordTemplates.Add(soChordTemplate);
 
                     Log($"Processed SlideOut event at {slideEvent.Time.TimeToString()}");
-
-                    events.Remove(slideEvent);
                 }
+
+                events.Remove(slideoutEvents);
             }
 
             /// <summary>
@@ -530,6 +531,9 @@ namespace DDCImprover.Core
                 float lastBeatTime = lastBeat.Time;
                 int beatsRemoved = 0;
                 bool first = true;
+
+                if (lastBeatTime < audioEnd)
+                    return;
 
                 while (lastBeatTime > audioEnd)
                 {
