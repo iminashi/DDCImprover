@@ -14,13 +14,11 @@ namespace DDCImprover.Core
         {
             private readonly XMLProcessor Parent;
             private readonly RS2014Song DDCSong;
-            private readonly PhraseIterationCollection OriginalPhraseIterations;
 
             private float NewLastPhraseTime;
             private int NewPhraseIterationCount;
             private readonly float OldLastPhraseTime;
             private readonly int OldPhraseIterationCount;
-            //private readonly float FirstPhraseTime;
             private readonly float? FirstNGSectionTime;
 
             internal XMLPostProcessor(XMLProcessor parent)
@@ -29,10 +27,8 @@ namespace DDCImprover.Core
                 DDCSong = Parent.DDCSong;
 
                 OldLastPhraseTime = Parent.preProcessor.LastPhraseTime;
-                OldPhraseIterationCount = Parent.preProcessor.PhraseIterationCount;
-                OriginalPhraseIterations = Parent.preProcessor.PhraseIterations;
+                OldPhraseIterationCount = Parent.preProcessor.Song.PhraseIterations.Count;
 
-                //FirstPhraseTime = Parent.preProcessor.FirstPhraseTime;
                 FirstNGSectionTime = Parent.preProcessor.FirstNGSectionTime;
             }
 
@@ -52,8 +48,6 @@ namespace DDCImprover.Core
                     ProcessENDPhrase();
 
                     RemoveTemporaryMeasures();
-
-                    //RestoreFirstBeatTime();
                 }
 
                 if (Preferences.FixChordNames && DDCSong?.ChordTemplates.Any() == true)
@@ -76,9 +70,6 @@ namespace DDCImprover.Core
 
                     if (FirstNGSectionTime != null)
                         RestoreFirstNGSection();
-
-                    //if (Preferences.RemoveEmptyPhrasesAddedByDDC)
-                    //    RemoveEmptyPhrasesAddedByDDC();
                 }
 
                 PostProcessCustomEvents();
@@ -375,21 +366,6 @@ namespace DDCImprover.Core
             }
 
             /// <summary>
-            /// Restores correct time for the first phrase (COUNT).
-            /// </summary>
-            /*private void RestoreFirstBeatTime()
-            {
-                if (FirstPhraseTime > 0.0)
-                {
-                    Log("Restored first phrase time.");
-
-                    DDCSong.PhraseIterations[0].Time = FirstPhraseTime;
-
-                    DDCSong.Ebeats[0].Measure = 1;
-                }
-            }*/
-
-            /// <summary>
             /// Renames chord names to match ODLC and processes chord name commands.
             /// </summary>
             private void ProcessChordNames()
@@ -587,30 +563,6 @@ namespace DDCImprover.Core
                     Log($"PhraseIteration count does not match (Old: {OldPhraseIterationCount}, new: {NewPhraseIterationCount})");
                 }
             }
-
-            // Might remove phrases that DDC has moved.
-            /*private void RemoveEmptyPhrasesAddedByDDC()
-            {
-                var phraseIterationsToRemove =
-                    from ddcpi in DDCSong.PhraseIterations
-                    where ddcpi.PhraseId != 0 // Ignore COUNT phrase
-                        // Select phrases with no levels (DDC may create such phrases that have notes in them)
-                        && DDCSong.Phrases[ddcpi.PhraseId].MaxDifficulty == 0
-                        // Select phrase iterations not present in the original file
-                        && !OriginalPhraseIterations.Any(p => Utils.TimeEqualToMilliseconds(p.Time, ddcpi.Time))
-                    select ddcpi;
-
-                int nPhrasesIterationsRemoved = phraseIterationsToRemove.Count();
-
-                if (nPhrasesIterationsRemoved == 0)
-                    return;
-
-                foreach (var pIter in phraseIterationsToRemove)
-                {
-                    Log($"--Removed empty phrase added by DDC at {pIter.Time.TimeToString()}.");
-                    DDCSong.PhraseIterations.Remove(pIter);
-                }
-            }*/
 
             #region One level phrase fix
 

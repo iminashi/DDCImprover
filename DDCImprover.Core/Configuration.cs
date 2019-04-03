@@ -29,7 +29,6 @@ namespace DDCImprover.Core
         public bool RestoreNoguitarSectionAnchors { get; set; } = true;
         public bool RemoveBeatsPastAudioEnd { get; set; } = true;
         public bool RemoveTimeSignatureEvents { get; set; } = false;
-        //public bool RemoveEmptyPhrasesAddedByDDC { get; set; } = false;
         public bool DisplayTimesInSeconds { get; set; } = true;
         public bool WriteAbridgedXmlFiles { get; set; } = true;
         public bool OverwriteOriginalFile { get; set; } = false;

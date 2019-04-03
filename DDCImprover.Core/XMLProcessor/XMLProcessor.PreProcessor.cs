@@ -19,10 +19,6 @@ namespace DDCImprover.Core
             private readonly XMLProcessor Parent;
             internal readonly RS2014Song Song;
 
-            public PhraseIterationCollection PhraseIterations;
-
-            public readonly int PhraseIterationCount;
-            //public float FirstPhraseTime { get; private set; }
             public float LastPhraseTime;
             public float? FirstNGSectionTime { get; private set; }
 
@@ -31,11 +27,7 @@ namespace DDCImprover.Core
             internal XMLPreProcessor(XMLProcessor parent)
             {
                 Parent = parent;
-
                 Song = Parent.originalSong;
-                PhraseIterations = Song.PhraseIterations;
-
-                PhraseIterationCount = Song.PhraseIterations.Count;
                 LastPhraseTime = Song.PhraseIterations[Song.PhraseIterations.Count - 1].Time;
             }
 
@@ -51,9 +43,6 @@ namespace DDCImprover.Core
 
                 if (Preferences.AddCrowdEvents)
                     AddCrowdEvents();
-
-                //if (Parent.IsNonDDFile)
-                //    ApplyFixForFirstPhraseMoving();
 
                 ProcessMovetoPhrases();
 
@@ -290,26 +279,6 @@ namespace DDCImprover.Core
                     }
                 }
             }
-
-            /// <summary>
-            /// Changes first beat measure number to "0" if the first phrase does not start at 0.000.
-            /// </summary>
-            /*private void ApplyFixForFirstPhraseMoving()
-            {
-                float firstBeatTime = Song.Ebeats[0].Time;
-
-                if (firstBeatTime > 0.0)
-                {
-                    if (Song.Ebeats[0].Measure == 1)
-                    {
-                        Song.Ebeats[0].Measure = 0;
-                    }
-
-                    Log("Applied fix for DDC moving first beat.");
-                }
-
-                FirstPhraseTime = Song.PhraseIterations[0].Time;
-            }*/
 
             /// <summary>
             /// Changes weak beats that start a phrase into strong beats.
