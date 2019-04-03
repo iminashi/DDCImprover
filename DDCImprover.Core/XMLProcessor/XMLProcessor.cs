@@ -99,7 +99,7 @@ namespace DDCImprover.Core
         private string ManualDDXMLFileFullPath { get; set; }
 
         internal readonly List<Anchor> NGAnchors = new List<Anchor>();
-        private readonly List<Ebeat> addedBeats = new List<Ebeat>();
+        internal readonly List<Ebeat> addedBeats = new List<Ebeat>();
 
         private bool isNonDDFile = true;
 
