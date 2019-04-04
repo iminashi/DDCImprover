@@ -57,7 +57,7 @@ namespace DDCImprover.Core
                     .ApplyFixIf(Preferences.AddCrowdEvents, new CrowdEventAdder())
 
                     // Process 'move' phrases
-                    .ApplyFix(new PhraseMover(Parent))
+                    .ApplyFix(new PhraseMover(Parent.StatusMessages, Parent.addedBeats))
 
                     // Apply workaround for DDC moving phrases
                     .ApplyFixIf(Parent.isNonDDFile, new WeakBeatPhraseMovingFix())

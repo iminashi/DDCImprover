@@ -1,5 +1,4 @@
-﻿using DDCImprover.Core.PreBlocks;
-using Rocksmith2014Xml;
+﻿using Rocksmith2014Xml;
 using System;
 
 namespace DDCImprover.Core

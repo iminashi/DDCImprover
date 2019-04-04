@@ -1,5 +1,6 @@
 ﻿using Rocksmith2014Xml;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -10,17 +11,19 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class PhraseMover : IProcessorBlock
     {
-        private XMLProcessor Parent { get; }
+        private readonly IList<ImproverMessage> _statusMessages;
+        private readonly IList<Ebeat> _addedBeats;
 
-        public PhraseMover(XMLProcessor parent)
+        public PhraseMover(IList<ImproverMessage> statusMessages, IList<Ebeat> addedBeats)
         {
-            Parent = parent;
+            _statusMessages = statusMessages;
+            _addedBeats = addedBeats;
         }
 
         private void MoveToParseFailure(float phraseTime, Action<string> Log)
         {
             string errorMessage = $"Unable to read time for 'moveto' phrase at {phraseTime.TimeToString()}. (Usage examples: moveto5m10s200, moveto10s520)";
-            Parent.StatusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
+            _statusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
             Log(errorMessage);
         }
 
@@ -71,7 +74,7 @@ namespace DDCImprover.Core.PreBlocks
                         else
                         {
                             string errorMessage = $"Unable to read value for 'moveR' phrase at {phraseTime.TimeToString()}. (Usage example: moveR2)";
-                            Parent.StatusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
+                            _statusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
                             Log(errorMessage);
 
                             continue;
@@ -143,7 +146,7 @@ namespace DDCImprover.Core.PreBlocks
                     song.Ebeats.Insert(insertIndex, beatToAdd);
 
                     // Set the beat for later removal
-                    Parent.addedBeats.Add(beatToAdd);
+                    _addedBeats.Add(beatToAdd);
                 }
             }
 
