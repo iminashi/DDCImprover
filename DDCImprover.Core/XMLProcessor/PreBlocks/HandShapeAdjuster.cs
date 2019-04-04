@@ -72,7 +72,7 @@ namespace DDCImprover.Core.PreBlocks
 #endif
                         }
 
-                        handShapes[i - 1] = new HandShape(precedingHandshape.ChordId, precedingHandshape.StartTime, (float)newEndTime);
+                        handShapes[i - 1].EndTime = (float)newEndTime;
 
                         // Skip logging < 5ms adjustments
                         if (minDistance - currentDistance > 0.005)

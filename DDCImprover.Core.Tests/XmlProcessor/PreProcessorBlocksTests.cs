@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Rocksmith2014Xml;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace DDCImprover.Core.Tests.XmlProcessor
@@ -92,6 +93,99 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             var beat = testSong.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
             beat.Measure.Should().Be(XMLProcessor.TempMeasureNumber);
+        }
+
+        [Fact]
+        public void HandShapeAdjusterTest()
+        {
+            var testHandshape = new HandShape(0, 10f, 11.999f);
+            testSong.Levels[0].HandShapes.Add(testHandshape);
+            testSong.Levels[0].HandShapes.Add(new HandShape(0, 12f, 13f));
+
+            new HandShapeAdjuster().Apply(testSong, nullLog);
+
+            testHandshape.EndTime.Should().BeLessThan(11.999f);
+        }
+
+        [Fact]
+        public void PhraseMover_MoveTo_Test()
+        {
+            var testPhrase = new Phrase("moveto18s300", 0, PhraseMask.None);
+            testSong.Phrases.Add(testPhrase);
+            var testPhraseIter = new PhraseIteration
+            {
+                PhraseId = testSong.Phrases.Count - 1,
+                Time = 15f
+            };
+            testSong.PhraseIterations.Add(testPhraseIter);
+
+            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+
+            testPhraseIter.Time.Should().BeApproximately(18.3f, 0.001f);
+        }
+
+        [Fact]
+        public void PhraseMover_MoveRelative_Test()
+        {
+            float noteTime = 16.666f;
+            var testPhrase = new Phrase("moveR1", 0, PhraseMask.None);
+            testSong.Phrases.Add(testPhrase);
+            var testPhraseIter = new PhraseIteration
+            {
+                PhraseId = testSong.Phrases.Count - 1,
+                Time = 15f
+            };
+            testSong.PhraseIterations.Add(testPhraseIter);
+
+            testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
+
+            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+
+            testPhraseIter.Time.Should().BeApproximately(noteTime, 0.001f);
+        }
+
+        [Fact]
+        public void PhraseMoverMovesSectionAlso()
+        {
+            float noteTime = 16.666f;
+            float phraseTime = 15f;
+            var testPhrase = new Phrase("moveR1", 0, PhraseMask.None);
+            testSong.Phrases.Add(testPhrase);
+            var testPhraseIter = new PhraseIteration
+            {
+                PhraseId = testSong.Phrases.Count - 1,
+                Time = phraseTime
+            };
+            testSong.PhraseIterations.Add(testPhraseIter);
+            var testSection = new Section("riff", phraseTime, 1);
+            testSong.Sections.Add(testSection);
+
+            testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
+
+            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+
+            testSection.Time.Should().BeApproximately(noteTime, 0.001f);
+        }
+
+        [Fact]
+        public void PhraseMoverMovesAnchorAlso()
+        {
+            float noteTime = 16.666f;
+            float phraseTime = 15f;
+            var testPhrase = new Phrase("moveR1", 0, PhraseMask.None);
+            testSong.Phrases.Add(testPhrase);
+            var testPhraseIter = new PhraseIteration
+            {
+                PhraseId = testSong.Phrases.Count - 1,
+                Time = phraseTime
+            };
+            testSong.PhraseIterations.Add(testPhraseIter);
+            testSong.Levels[0].Anchors.Add(new Anchor(1, phraseTime, 4));
+            testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
+
+            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+
+            testSong.Levels[0].Anchors.Should().Contain(a => a.Time == noteTime);
         }
     }
 }
