@@ -20,7 +20,8 @@ namespace DDCImprover.Core
         public const int ProgressSteps = 3;
         internal const int TempMeasureNumber = 65535;
 
-        public static Configuration Preferences;
+        private static Configuration preferences;
+        public static Configuration Preferences { get => preferences ?? new Configuration(); set => preferences = value; }
         public static string Version;
 
         private static readonly bool UseWine = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
@@ -393,7 +394,7 @@ namespace DDCImprover.Core
             {
                 path = XMLFileFullPath;
             }
-            else if(isNonDDFile && File.Exists(DDCXMLFileFullPath))
+            else if (isNonDDFile && File.Exists(DDCXMLFileFullPath))
             {
                 File.Delete(DDCXMLFileFullPath);
             }
@@ -424,7 +425,7 @@ namespace DDCImprover.Core
                 arguments += $" -c \"{cfgPath}\"";
             }
 
-            if(Preferences.OverwriteOriginalFile)
+            if (Preferences.OverwriteOriginalFile)
             {
                 arguments += " -p Y";
             }

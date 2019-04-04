@@ -9,26 +9,20 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 {
     public class PreProcessorBlocksTests
     {
-        private readonly Configuration testConfig = new Configuration();
         private readonly RS2014Song testSong;
         private readonly Action<string> nullLog = s => { };
+        private readonly PhraseMover phraseMover = new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>());
 
         public PreProcessorBlocksTests()
         {
-            Configuration.LogDirectory = @".\logs";
-            testConfig.DDCExecutablePath = @".\ddc\ddc.exe";
-            testConfig.EnableLogging = false;
-            testConfig.RestoreNoguitarSectionAnchors = true;
-            testConfig.RestoreFirstNoguitarSection = true;
-
-            XMLProcessor.Preferences = testConfig;
-
             testSong = RS2014Song.Load(@".\TestFiles\preTest_RS2.xml");
         }
 
         [Fact]
         public void UnpitchedSlideCheckerTest()
         {
+            testSong.ArrangementProperties.UnpitchedSlides.Should().Be(0);
+
             new UnpitchedSlideChecker().Apply(testSong, nullLog);
 
             testSong.ArrangementProperties.UnpitchedSlides.Should().Be(1);
@@ -110,8 +104,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMover_MoveTo_Test()
         {
-            var testPhrase = new Phrase("moveto18s300", 0, PhraseMask.None);
-            testSong.Phrases.Add(testPhrase);
+            testSong.Phrases.Add(new Phrase("moveto18s300", 0, PhraseMask.None));
             var testPhraseIter = new PhraseIteration
             {
                 PhraseId = testSong.Phrases.Count - 1,
@@ -119,7 +112,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             };
             testSong.PhraseIterations.Add(testPhraseIter);
 
-            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+            phraseMover.Apply(testSong, nullLog);
 
             testPhraseIter.Time.Should().BeApproximately(18.3f, 0.001f);
         }
@@ -128,18 +121,16 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         public void PhraseMover_MoveRelative_Test()
         {
             float noteTime = 16.666f;
-            var testPhrase = new Phrase("moveR1", 0, PhraseMask.None);
-            testSong.Phrases.Add(testPhrase);
+            testSong.Phrases.Add(new Phrase("moveR1", 0, PhraseMask.None));
             var testPhraseIter = new PhraseIteration
             {
                 PhraseId = testSong.Phrases.Count - 1,
                 Time = 15f
             };
             testSong.PhraseIterations.Add(testPhraseIter);
-
             testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
-            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+            phraseMover.Apply(testSong, nullLog);
 
             testPhraseIter.Time.Should().BeApproximately(noteTime, 0.001f);
         }
@@ -149,8 +140,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             float noteTime = 16.666f;
             float phraseTime = 15f;
-            var testPhrase = new Phrase("moveR1", 0, PhraseMask.None);
-            testSong.Phrases.Add(testPhrase);
+            testSong.Phrases.Add(new Phrase("moveR1", 0, PhraseMask.None));
             var testPhraseIter = new PhraseIteration
             {
                 PhraseId = testSong.Phrases.Count - 1,
@@ -159,10 +149,9 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.PhraseIterations.Add(testPhraseIter);
             var testSection = new Section("riff", phraseTime, 1);
             testSong.Sections.Add(testSection);
-
             testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
-            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+            phraseMover.Apply(testSong, nullLog);
 
             testSection.Time.Should().BeApproximately(noteTime, 0.001f);
         }
@@ -172,8 +161,8 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             float noteTime = 16.666f;
             float phraseTime = 15f;
-            var testPhrase = new Phrase("moveR1", 0, PhraseMask.None);
-            testSong.Phrases.Add(testPhrase);
+
+            testSong.Phrases.Add(new Phrase("moveR1", 0, PhraseMask.None));
             var testPhraseIter = new PhraseIteration
             {
                 PhraseId = testSong.Phrases.Count - 1,
@@ -183,7 +172,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.Levels[0].Anchors.Add(new Anchor(1, phraseTime, 4));
             testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
-            new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>()).Apply(testSong, nullLog);
+            phraseMover.Apply(testSong, nullLog);
 
             testSong.Levels[0].Anchors.Should().Contain(a => a.Time == noteTime);
         }
