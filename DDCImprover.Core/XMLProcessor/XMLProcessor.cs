@@ -21,7 +21,12 @@ namespace DDCImprover.Core
         internal const int TempMeasureNumber = 65535;
 
         private static Configuration preferences;
-        public static Configuration Preferences { get => preferences ?? new Configuration(); set => preferences = value; }
+        public static Configuration Preferences
+        {
+            get => preferences ?? (preferences = new Configuration());
+            set => preferences = value;
+        }
+
         public static string Version;
 
         private static readonly bool UseWine = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);

@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlProcessor\PostProcessorBlocksTests.cs" />
     <Compile Include="XmlProcessor\PreProcessorBlocksTests.cs" />
     <Compile Include="XmlProcessor\PreProcessorContextTests.cs" />
     <Compile Include="XmlProcessor\PreProcessorTests.cs" />
@@ -101,6 +102,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestFiles\postTest_RS2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\preTest_RS2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

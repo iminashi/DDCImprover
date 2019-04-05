@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using DDCImprover.Core.PostBlocks;
+using DynamicData;
 using Rocksmith2014Xml;
 using System;
 using System.Collections.Generic;
@@ -12,19 +13,19 @@ namespace DDCImprover.Core
     {
         internal class XMLPostProcessor
         {
-            private readonly XMLProcessor Parent;
-            private readonly RS2014Song DDCSong;
-
-            private float NewLastPhraseTime;
-            private int NewPhraseIterationCount;
-            private readonly float OldLastPhraseTime;
-            private readonly int OldPhraseIterationCount;
-            private readonly float? FirstNGSectionTime;
+            private XMLProcessor Parent { get; }
+            private RS2014Song DDCSong { get; }
+            private float OldLastPhraseTime { get; }
+            private int OldPhraseIterationCount { get; }
+            private float? FirstNGSectionTime { get; }
+            private bool WasNonDDFile { get; }
 
             internal XMLPostProcessor(XMLProcessor parent)
             {
                 Parent = parent;
                 DDCSong = Parent.DDCSong;
+
+                WasNonDDFile = Parent.OriginalSong.Levels.Count == 1;
 
                 OldLastPhraseTime = Parent.preProcessor.LastPhraseTime;
                 OldPhraseIterationCount = Parent.preProcessor.Song.PhraseIterations.Count;
@@ -38,38 +39,66 @@ namespace DDCImprover.Core
             {
                 Log("-------------------- Postprocessing Started --------------------");
 
-                RemoveTemporaryBeats();
 
-                if (Preferences.RestoreNoguitarSectionAnchors && Parent.NGAnchors.Count > 0)
-                    RestoreNGSectionAnchors();
+                var context = new PreProcessorContext(DDCSong, Log);
 
-                if (Parent.isNonDDFile)
+                context
+                    // Remove temporary beats
+                    .ApplyFixIf(Parent.AddedBeats.Count > 0, new TemporaryBeatRemover(Parent.AddedBeats))
+
+                    // Restore anchors at the beginning of Noguitar sections
+                    .ApplyFixIf(Preferences.RestoreNoguitarSectionAnchors && Parent.NGAnchors.Count > 0, new NoguitarAnchorRestorer(Parent.NGAnchors))
+
+                    // Restore END phrase position if needed
+                    .ApplyFixIf(WasNonDDFile, new ENDPhraseProcessor(OldLastPhraseTime))
+
+                    // Process chord names
+                    .ApplyFixIf(Preferences.FixChordNames && DDCSong?.ChordTemplates.Any() == true, new ChordNameProcessor(Parent.StatusMessages))
+
+                    // Remove beats that come after the audio has ended
+                    .ApplyFixIf(Preferences.RemoveBeatsPastAudioEnd, new ExtraneousBeatsRemover())
+
+                    // Remove time signature events
+                    .ApplyFixIf(Preferences.RemoveTimeSignatureEvents, new TimeSignatureEventRemover())
+
+                    // Add second level to phrases with only one level
+                    .ApplyFixIf(Preferences.FixOneLevelPhrases, new OneLevelPhraseFixer())
+
+                    // Restore first noguitar section
+                    .ApplyFixIf(WasNonDDFile && FirstNGSectionTime.HasValue, new FirstNoguitarSectionRestorer(FirstNGSectionTime.Value));
+
+                //RemoveTemporaryBeats();
+
+                //if (Preferences.RestoreNoguitarSectionAnchors && Parent.NGAnchors.Count > 0)
+                //    RestoreNGSectionAnchors();
+
+                if (WasNonDDFile)
                 {
-                    ProcessENDPhrase();
+                    //ProcessENDPhrase();
 
                     RemoveTemporaryMeasures();
                 }
 
-                if (Preferences.FixChordNames && DDCSong?.ChordTemplates.Any() == true)
-                    ProcessChordNames();
+                //if (Preferences.FixChordNames && DDCSong?.ChordTemplates.Any() == true)
+                //    ProcessChordNames();
 
-                if (Preferences.RemoveBeatsPastAudioEnd)
-                    RemoveBeatsPastAudioEnd();
+                //if ()
+                //    RemoveBeatsPastAudioEnd();
 
-                if (Preferences.RemoveTimeSignatureEvents)
-                    RemoveTimeSignatureEvents();
+                //if (Preferences.RemoveTimeSignatureEvents)
+                //    RemoveTimeSignatureEvents();
 
                 CheckPhraseIterationCount();
 
-                if (Parent.isNonDDFile)
+                if (WasNonDDFile)
                 {
                     RemoveUnnecessaryNGPhrase();
 
-                    if (Preferences.FixOneLevelPhrases)
-                        ProcessOneLevelPhrases();
+                    //if (Preferences.FixOneLevelPhrases)
+                    //    ProcessOneLevelPhrases();
 
-                    if (FirstNGSectionTime != null)
-                        RestoreFirstNGSection();
+                    //if (FirstNGSectionTime != null)
+                    //    RestoreFirstNGSection();
                 }
 
                 PostProcessCustomEvents();
@@ -244,114 +273,6 @@ namespace DDCImprover.Core
             }
 
             /// <summary>
-            /// Removes temporary beats used for phrase moving.
-            /// </summary>
-            private void RemoveTemporaryBeats()
-            {
-                if (Parent.AddedBeats.Count > 0)
-                {
-                    foreach (var addedBeat in Parent.AddedBeats)
-                    {
-                        var beatToRemove = DDCSong.Ebeats.Find(beat => beat == addedBeat);
-                        DDCSong.Ebeats.Remove(beatToRemove);
-                    }
-                }
-            }
-
-            private void RestoreFirstNGSection()
-            {
-                // Increase the number attribute of any following noguitar sections
-                foreach (var section in DDCSong.Sections.Where(s => s.Name == "noguitar"))
-                {
-                    ++section.Number;
-                }
-
-                // Add removed noguitar section back
-                var newFirstSection = new Section("noguitar", FirstNGSectionTime.Value, 1);
-                DDCSong.Sections.Insert(0, newFirstSection);
-
-                // Add a new NG phrase as the last phrase
-                var newNGPhrase = new Phrase("NG", maxDifficulty: 0, PhraseMask.None);
-
-                DDCSong.Phrases.Add(newNGPhrase);
-
-                // Recreate removed phrase iteration (with phraseId of new NG phrase)
-                var newNGPhraseIteration = new PhraseIteration
-                {
-                    Time = FirstNGSectionTime.Value,
-                    PhraseId = DDCSong.Phrases.Count - 1,
-                    Variation = string.Empty
-                };
-
-                // Add after the first phraseIteration (COUNT)
-                DDCSong.PhraseIterations.Insert(1, newNGPhraseIteration);
-
-                Log("Restored first noguitar section.");
-            }
-
-            /// <summary>
-            /// Restores anchors at the beginning of noguitar sections.
-            /// </summary>
-            private void RestoreNGSectionAnchors()
-            {
-                Log("Restoring noguitar section anchors:");
-
-                var firstLevelAnchors = DDCSong.Levels[0].Anchors;
-
-                foreach (Anchor anchor in Parent.NGAnchors)
-                {
-                    // Add anchor to the first difficulty level
-                    int nextAnchorIndex = firstLevelAnchors.FindIndex(a => a.Time > anchor.Time);
-
-                    if (nextAnchorIndex != -1)
-                    {
-                        firstLevelAnchors.Insert(nextAnchorIndex, anchor);
-                    }
-                    else
-                    {
-                        // DDC may have moved the noguitar section
-                        if (firstLevelAnchors.Any(a => a.Time == anchor.Time))
-                            continue;
-                        else
-                            firstLevelAnchors.Add(anchor);
-                    }
-
-                    Log($"--Restored anchor at time {anchor.Time.TimeToString()}");
-                }
-            }
-
-            /// <summary>
-            /// Checks if DDC has moved the END phrase and restores its original position.
-            /// </summary>
-            private void ProcessENDPhrase()
-            {
-                NewLastPhraseTime = DDCSong.PhraseIterations.Last().Time;
-
-                if (!Utils.TimeEqualToMilliseconds(NewLastPhraseTime, OldLastPhraseTime))
-                {
-                    Log($"DDC has moved END phrase from {OldLastPhraseTime.TimeToString()} to {NewLastPhraseTime.TimeToString()}.");
-
-                    // Restore correct time to last section and phrase iteration
-                    if (Preferences.PreserveENDPhraseLocation)
-                    {
-                        // Check if DDC has added an empty phrase to where we want to move the END phrase
-                        var ddcAddedPhraseIteration = DDCSong.PhraseIterations.FirstOrDefault(pi => Utils.TimeEqualToMilliseconds(pi.Time, OldLastPhraseTime));
-                        if (ddcAddedPhraseIteration != null)
-                        {
-                            DDCSong.PhraseIterations.Remove(ddcAddedPhraseIteration);
-
-                            Log($"--Removed phrase added by DDC at {OldLastPhraseTime.TimeToString()}.");
-                        }
-
-                        DDCSong.PhraseIterations.Last().Time = OldLastPhraseTime;
-                        DDCSong.Sections.Last().Time = OldLastPhraseTime;
-
-                        Log("--Restored END phrase location.");
-                    }
-                }
-            }
-
-            /// <summary>
             /// Removes the temporary measures used to prevent DDC from moving phrase start positions.
             /// </summary>
             private void RemoveTemporaryMeasures()
@@ -365,355 +286,15 @@ namespace DDCImprover.Core
                 }
             }
 
-            /// <summary>
-            /// Renames chord names to match ODLC and processes chord name commands.
-            /// </summary>
-            private void ProcessChordNames()
-            {
-                var chordRenamed = new Dictionary<string, bool>();
-
-                Log("Processing chord names...");
-
-                for (int i = 0; i < DDCSong.ChordTemplates.Count; i++)
-                {
-                    var currentChordTemplate = DDCSong.ChordTemplates[i];
-                    string chordName = currentChordTemplate.ChordName;
-
-                    // One fret handshape fret moving
-                    if (chordName.StartsWith("OF"))
-                    {
-                        Match match = Regex.Match(chordName, @"\d+$");
-                        if (match.Success)
-                        {
-                            sbyte newFretNumber = sbyte.Parse(match.Value, NumberFormatInfo.InvariantInfo);
-
-                            for (int fretIndex = 0; fretIndex < 6; fretIndex++)
-                            {
-                                if (currentChordTemplate.Frets[fretIndex] == 0)
-                                {
-                                    // Remove unnecessary open string notes
-                                    currentChordTemplate.Frets[fretIndex] = -1;
-                                }
-                                else if (currentChordTemplate.Frets[fretIndex] != -1)
-                                {
-                                    currentChordTemplate.Frets[fretIndex] = newFretNumber;
-                                }
-                            }
-
-                            Log($"Adjusted fret number of one fret chord: {currentChordTemplate.ChordName}");
-
-                            // Remove chord name
-                            currentChordTemplate.ChordName = "";
-                            currentChordTemplate.DisplayName = "";
-                        }
-                        else
-                        {
-                            const string errorMessage = "Unable to read fret value from OF chord.";
-                            Parent.StatusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
-                            Log(errorMessage);
-                        }
-                    }
-
-                    // OBSOLETE Lengthen handshapes (arpeggios) 
-                    /*if (chordName.Contains("LEN"))
-                    {
-                        Match match = Regex.Match(chordName, @"\d+s\d+$");
-                        if (match.Success)
-                        {
-                            //float lenghtenAmount = match.Value.ToFloat();
-                            float newEndTime = float.Parse(match.Value.Replace('s', '.'), NumberFormatInfo.InvariantInfo);
-
-                            var handShapesToLenghten =
-                                from hshape in DDCSong.Levels.SelectMany(lv => lv.HandShapes)
-                                where hshape.ChordId == i
-                                select hshape;
-
-                            foreach (var handShape in handShapesToLenghten)
-                            {
-                                handShape.EndTime = newEndTime;
-                            }
-
-                            currentChordTemplate.ChordName = Regex.Replace(currentChordTemplate.ChordName, @"LEN\d+s\d+", string.Empty);
-                            currentChordTemplate.DisplayName = Regex.Replace(currentChordTemplate.DisplayName, @"LEN\d+s\d+", string.Empty);
-
-                            Log($"--Lengthened chord ID {i} handshape. New end time: {newEndTime}");
-                        }
-                        else
-                        {
-                            string errorMessage = $"Unable to read lengthen amount from chord {chordName}, Chord ID: {i}.";
-                            Parent.StatusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
-                            Log(errorMessage);
-                        }
-                    }*/
-
-                    string oldChordName = currentChordTemplate.ChordName;
-                    string oldDisplayName = currentChordTemplate.DisplayName;
-                    string newChordName = oldChordName;
-                    string newDisplayName = oldDisplayName;
-
-                    if (oldChordName == " ")
-                    {
-                        newChordName = "";
-                    }
-                    else
-                    {
-                        if (oldChordName.Contains("min"))
-                            newChordName = oldChordName.Replace("min", "m");
-                        if (oldChordName.Contains("CONV"))
-                            newChordName = oldChordName.Replace("CONV", "");
-                        if (oldChordName.Contains("-nop"))
-                            newChordName = oldChordName.Replace("-nop", "");
-                        if (oldChordName.Contains("-arp"))
-                            newChordName = oldChordName.Replace("-arp", "");
-                    }
-
-                    if (oldDisplayName == " ")
-                    {
-                        newDisplayName = "";
-                    }
-                    else
-                    {
-                        if (oldDisplayName.Contains("min"))
-                            newDisplayName = oldDisplayName.Replace("min", "m");
-                        if (oldDisplayName.Contains("CONV"))
-                            newDisplayName = oldDisplayName.Replace("CONV", "-arp");
-                    }
-
-                    // Log message for changed chord names that are not empty
-                    if (newChordName != oldChordName && newChordName.Length != 0 && !chordRenamed.ContainsKey(oldChordName))
-                    {
-                        if (oldChordName.Contains("CONV") || oldChordName.Contains("-arp"))
-                            Log($"--Converted {newChordName} handshape into an arpeggio.");
-                        else
-                            Log($"--Renamed \"{oldChordName}\" to \"{newChordName}\"");
-
-                        // Display renamed chords with the same name only once
-                        chordRenamed[oldChordName] = true;
-                    }
-
-                    currentChordTemplate.ChordName = newChordName;
-                    currentChordTemplate.DisplayName = newDisplayName;
-                }
-            }
-
-            /// <summary>
-            /// Removes beats that are past the end of the audio.
-            /// </summary>
-            private void RemoveBeatsPastAudioEnd()
-            {
-                var lastBeat = DDCSong.Ebeats[DDCSong.Ebeats.Count - 1];
-                var penultimateBeat = DDCSong.Ebeats[DDCSong.Ebeats.Count - 2];
-                float audioEnd = DDCSong.SongLength;
-                float lastBeatTime = lastBeat.Time;
-                int beatsRemoved = 0;
-                bool first = true;
-
-                if (lastBeatTime < audioEnd)
-                    return;
-
-                while (lastBeatTime > audioEnd)
-                {
-                    // If the second-to-last beat is not past audio end, check which beat is closer to the end
-                    if (penultimateBeat.Time < audioEnd)
-                    {
-                        // If the last beat is closer, keep it
-                        if (audioEnd - penultimateBeat.Time > lastBeatTime - audioEnd)
-                            break;
-                    }
-
-                    DDCSong.Ebeats.Remove(lastBeat);
-                    beatsRemoved++;
-
-                    if (first)
-                    {
-                        Log("Removing beats that are past audio end:");
-                        first = false;
-                    }
-
-                    Log($"--Removed beat at {lastBeatTime.TimeToString()}.");
-
-                    lastBeat = penultimateBeat;
-                    lastBeatTime = lastBeat.Time;
-                    penultimateBeat = DDCSong.Ebeats[DDCSong.Ebeats.Count - 2];
-                }
-
-                // Move the last beat to the time audio ends
-                lastBeat.Time = audioEnd;
-            }
-
-            /// <summary>
-            /// Removes TS events added by EOF.
-            /// </summary>
-            private void RemoveTimeSignatureEvents()
-            {
-                int eventsRemoved = DDCSong.Events.RemoveAll(ev => ev.Code.StartsWith("TS"));
-
-                if (eventsRemoved > 0)
-                {
-                    Log($"{eventsRemoved} time signature event{(eventsRemoved == 1 ? "" : "s")} removed.");
-                }
-            }
-
             private void CheckPhraseIterationCount()
             {
-                NewPhraseIterationCount = DDCSong.PhraseIterations.Count;
+                int newPhraseIterationCount = DDCSong.PhraseIterations.Count;
 
-                if (NewPhraseIterationCount != OldPhraseIterationCount)
+                if (newPhraseIterationCount != OldPhraseIterationCount)
                 {
-                    Log($"PhraseIteration count does not match (Old: {OldPhraseIterationCount}, new: {NewPhraseIterationCount})");
+                    Log($"PhraseIteration count does not match (Old: {OldPhraseIterationCount}, new: {newPhraseIterationCount})");
                 }
             }
-
-            #region One level phrase fix
-
-            /// <summary>
-            /// Adds a second difficulty level to phrases that have only one level.
-            /// </summary>
-            private void ProcessOneLevelPhrases()
-            {
-                Log("********** Begin one level phrase fix **********");
-
-                // Skip first phrase (COUNT) and last phrase (END)
-                for (int phraseID = 1; phraseID < DDCSong.Phrases.Count - 1; phraseID++)
-                {
-                    if (DDCSong.Phrases[phraseID].MaxDifficulty == 0)
-                    {
-                        Log($"--Phrase #{phraseID} ({DDCSong.Phrases[phraseID].Name}, {DDCSong.PhraseIterations.First(pi => pi.PhraseId == phraseID).Time.TimeToString()}) has only one level.");
-
-                        var phraseIterations = from pi in DDCSong.PhraseIterations
-                                               where pi.PhraseId == phraseID
-                                               select pi;
-
-                        foreach (var pi in phraseIterations)
-                        {
-                            float startTime = pi.Time;
-                            float endTime = DDCSong.PhraseIterations[DDCSong.PhraseIterations.IndexOf(pi) + 1].Time;
-
-                            var firstLevel = DDCSong.Levels[0];
-                            var secondLevel = DDCSong.Levels[1];
-
-                            var firstLevelNotes = (from note in firstLevel.Notes
-                                                   where note.Time >= startTime && note.Time < endTime
-                                                   select note).ToArray();
-
-                            int notesInPhrase = firstLevelNotes.Length;
-
-                            if (notesInPhrase == 0) // Phrase is a noguitar phrase
-                            {
-                                Log("Skipping empty phrase.");
-                                break;
-                            }
-
-                            Log($"Phrase has {notesInPhrase} note{(notesInPhrase == 1 ? "" : "s")}.");
-
-                            // Make copies of current notes that will be added to the harder difficulty level
-                            var harderLevelNotes = new List<Note>(from note in firstLevelNotes select new Note(note));
-
-                            int notesRemoved = 0;
-
-                            var removableSustainNotes =
-                                firstLevelNotes.Where(note => note.Sustain != 0.0f
-                                                              && !note.IsBend
-                                                              && !note.IsVibrato
-                                                              && !note.IsTremolo
-                                                              && !note.IsLinkNext
-                                                              && !note.IsSlide
-                                                              && !note.IsUnpitchedSlide);
-
-                            var firstLevelAnchors = firstLevel.Anchors;
-                            var secondLevelAnchors = secondLevel.Anchors;
-
-                            var anchorsToAddToSecondLevel =
-                                    from anchor in firstLevelAnchors
-                                    join note in firstLevelNotes on anchor.Time equals note.Time
-                                    select anchor;
-
-                            var newSecondLevelAnchors = new AnchorCollection();
-                            newSecondLevelAnchors.AddRange(secondLevelAnchors.Union(anchorsToAddToSecondLevel).OrderBy(a => a.Time));
-
-                            secondLevel.Anchors = newSecondLevelAnchors;
-
-                            if (notesInPhrase > 1)
-                            {
-                                foreach (var note in firstLevelNotes)
-                                {
-                                    // Remove sliding notes and vibratos
-                                    if (note.IsSlide || note.IsUnpitchedSlide || note.IsVibrato)
-                                    {
-                                        Log($"Removed note at time {note.Time.TimeToString()}");
-                                        firstLevel.Notes.Remove(note);
-                                        notesRemoved++;
-                                    }
-                                    else if (note.IsLinkNext) // Remove linkNext from the note
-                                    {
-                                        Log($"Removed linkNext from note at time {note.Time.TimeToString()}");
-                                        note.IsLinkNext = false;
-
-                                        if (note.Sustain < 0.5f && !note.IsBend) // Remove sustain if very short
-                                        {
-                                            note.Sustain = 0.0f;
-                                            Log($"Removed sustain from note at time {note.Time.TimeToString()}");
-                                        }
-                                    }
-
-                                    // If note has more than two bendValues, remove the rest
-                                    if (note.IsBend && note.BendValues.Count > 2)
-                                    {
-                                        // Remove bendValues
-                                        var secondBendValue = note.BendValues[1];
-                                        note.BendValues.RemoveRange(2, note.BendValues.Count - 2);
-
-                                        // Set sustain of the note to end at the second bendValue
-                                        float newSustain = secondBendValue.Time - note.Time;
-                                        note.Sustain = (float)Math.Round(newSustain, 3, MidpointRounding.AwayFromZero);
-
-                                        Log($"Removed bendvalues and adjusted the sustain of note at {note.Time.TimeToString()}");
-                                    }
-                                }
-                            }
-
-                            if (notesRemoved == 0 && removableSustainNotes.Any())
-                            {
-                                foreach (var note in removableSustainNotes)
-                                {
-                                    note.Sustain = 0.0f;
-                                }
-
-                                Log($"Solution: Removed sustain from note{(notesInPhrase == 1 ? "" : "s")}.");
-                            }
-                            else if (notesRemoved == 0)
-                            {
-                                // TODO: One note phrase -> remove all techniques?
-                                //if (Debugger.IsAttached)
-                                //    Debugger.Break();
-
-                                Log("Solution: Kept phrase as is.");
-                            }
-
-                            pi.HeroLevels = new HeroLevelCollection
-                            {
-                                new HeroLevel(hero: 1, difficulty: 0),
-                                new HeroLevel(hero: 2, difficulty: 1),
-                                new HeroLevel(hero: 3, difficulty: 1)
-                            };
-
-                            // Find correct place where to insert the notes in the second difficulty level
-                            float lastNoteTime = harderLevelNotes.Last().Time;
-                            int noteAfterIndex = secondLevel.Notes.FindIndex(n => n.Time > lastNoteTime);
-
-                            if (noteAfterIndex == -1) // Add to the end
-                                secondLevel.Notes.AddRange(harderLevelNotes);
-                            else
-                                secondLevel.Notes.InsertRange(noteAfterIndex, harderLevelNotes);
-
-                            DDCSong.Phrases[phraseID].MaxDifficulty = 1;
-                        }
-                    }
-                }
-                Log("**********  End one level phrase fix  **********");
-            }
-
-            #endregion
 
             private void ValidateDDCXML()
             {
@@ -721,7 +302,7 @@ namespace DDCImprover.Core
                     throw new DDCException("DDC has created a handshape with an invalid chordId (-1).");
 
                 // Check for DDC bug where muted notes with sustain are generated
-                if (Parent.isNonDDFile)
+                if (WasNonDDFile)
                 {
                     var notes = DDCSong.Levels.SelectMany(lev => lev.Notes);
                     var mutedNotesWithSustain =

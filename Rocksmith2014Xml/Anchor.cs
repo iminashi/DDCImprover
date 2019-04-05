@@ -14,7 +14,7 @@ namespace Rocksmith2014Xml
 
         public Anchor() { }
 
-        public Anchor(byte fret, float time, float width)
+        public Anchor(byte fret, float time, float width = 4f)
         {
             Fret = fret;
             Time = time;
