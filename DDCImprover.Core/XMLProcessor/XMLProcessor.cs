@@ -55,16 +55,16 @@ namespace DDCImprover.Core
 
         public string StatusHumanized => humanizedStatusStrings[_status];
 
-        private string _logText = "";
+        private string _logViewText = "";
 
         public string LogViewText
         {
-            get => _logText;
+            get => _logViewText;
             set
             {
-                if (_logText != value)
+                if (_logViewText != value)
                 {
-                    _logText = value;
+                    _logViewText = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -75,7 +75,7 @@ namespace DDCImprover.Core
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public readonly List<ImproverMessage> StatusMessages = new List<ImproverMessage>();
+        public List<ImproverMessage> StatusMessages { get; } = new List<ImproverMessage>();
 
         /// <summary>
         /// XML filename without path, with extension.
@@ -86,21 +86,20 @@ namespace DDCImprover.Core
         public string ArrangementType { get; private set; }
         public string LogFileFullPath { get; private set; }
 
-        private XMLPreProcessor preProcessor;
-        private XMLPostProcessor postProcessor;
-
-        private RS2014Song originalSong;
-        private RS2014Song DDCSong;
-
-        private StreamWriter logStreamWriter;
+        public RS2014Song OriginalSong { get; private set; }
+        public RS2014Song DDCSong { get; private set; }
 
         public string XMLFileFullPath { get; private set; }
         private string TempXMLFileFullPath { get; set; }
         private string DDCXMLFileFullPath { get; set; }
         private string ManualDDXMLFileFullPath { get; set; }
 
-        internal readonly List<Anchor> NGAnchors = new List<Anchor>();
-        internal readonly List<Ebeat> addedBeats = new List<Ebeat>();
+        internal List<Anchor> NGAnchors { get; } = new List<Anchor>();
+        internal List<Ebeat> AddedBeats { get; } = new List<Ebeat>();
+
+        private XMLPreProcessor preProcessor;
+        private XMLPostProcessor postProcessor;
+        private StreamWriter logStreamWriter;
 
         private bool isNonDDFile = true;
 
@@ -203,7 +202,7 @@ namespace DDCImprover.Core
                 Status = ImproverStatus.PreProcessing;
 
                 // Preprocess
-                preProcessor = new XMLPreProcessor(this);
+                preProcessor = new XMLPreProcessor(this, Log);
                 preProcessor.Process();
                 SavePreprocessedFile();
 
@@ -287,12 +286,12 @@ namespace DDCImprover.Core
         private void Cleanup()
         {
             NGAnchors.Clear();
-            addedBeats.Clear();
+            AddedBeats.Clear();
 
             preProcessor = null;
             postProcessor = null;
 
-            originalSong = null;
+            OriginalSong = null;
             DDCSong = null;
         }
 
@@ -345,8 +344,8 @@ namespace DDCImprover.Core
         {
             try
             {
-                originalSong = RS2014Song.Load(XMLFileFullPath);
-                isNonDDFile = originalSong.Levels.Count == 1;
+                OriginalSong = RS2014Song.Load(XMLFileFullPath);
+                isNonDDFile = OriginalSong.Levels.Count == 1;
                 Status = ImproverStatus.Idle;
             }
             catch (Exception ex)
@@ -371,7 +370,7 @@ namespace DDCImprover.Core
             }
             else
             {
-                DDCSong = originalSong;
+                DDCSong = OriginalSong;
             }
         }
 
@@ -384,7 +383,7 @@ namespace DDCImprover.Core
             }
 
             // Save processed file using original filename
-            originalSong.Save(XMLFileFullPath);
+            OriginalSong.Save(XMLFileFullPath);
         }
 
         private void SavePostprocessedFile()

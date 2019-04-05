@@ -176,5 +176,27 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             testSong.Levels[0].Anchors.Should().Contain(a => a.Time == noteTime);
         }
+
+        [Fact]
+        public void CustomEvent_RemoveBeats_Test()
+        {
+            testSong.Events.Add(new Event("removebeats", 112.5f));
+
+            new CustomEventsPreProcessor().Apply(testSong, nullLog);
+
+            testSong.Events.Should().NotContain(ev => ev.Code == "removebeats");
+            testSong.Ebeats.Should().NotContain(eb => eb.Time >= 112.5f);
+        }
+
+        [Fact]
+        public void CustomEvent_Width3_Test()
+        {
+            testSong.Events.Add(new Event("w3", testSong.Levels[0].Anchors[0].Time));
+
+            new CustomEventsPreProcessor().Apply(testSong, nullLog);
+
+            testSong.Events.Should().NotContain(ev => ev.Code == "w3");
+            testSong.Levels[0].Anchors[0].Width.Should().Be(3f);
+        }
     }
 }

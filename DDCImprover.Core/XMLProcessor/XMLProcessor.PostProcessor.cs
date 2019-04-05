@@ -248,9 +248,9 @@ namespace DDCImprover.Core
             /// </summary>
             private void RemoveTemporaryBeats()
             {
-                if (Parent.addedBeats.Count > 0)
+                if (Parent.AddedBeats.Count > 0)
                 {
-                    foreach (var addedBeat in Parent.addedBeats)
+                    foreach (var addedBeat in Parent.AddedBeats)
                     {
                         var beatToRemove = DDCSong.Ebeats.Find(beat => beat == addedBeat);
                         DDCSong.Ebeats.Remove(beatToRemove);
@@ -731,11 +731,11 @@ namespace DDCImprover.Core
 
                     foreach (var note in mutedNotesWithSustain)
                     {
-                        bool originallyHadMutedNote = Parent.originalSong.Levels
+                        bool originallyHadMutedNote = Parent.OriginalSong.Levels
                             .SelectMany(lev => lev.Notes)
                             .Any(n => Utils.TimeEqualToMilliseconds(n.Time, note.Time) && n.IsMute);
 
-                        bool originallyHadMutedChord = Parent.originalSong.Levels
+                        bool originallyHadMutedChord = Parent.OriginalSong.Levels
                             .SelectMany(lev => lev.Chords)
                             .SelectMany(c => c.ChordNotes)
                             .Any(cn => Utils.TimeEqualToMilliseconds(cn.Time, note.Time) && cn.IsMute && cn.Sustain != 0.0f);
