@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace DDCImprover.Core
 {
-    public partial class XMLProcessor : INotifyPropertyChanged, IEquatable<XMLProcessor>
+    public sealed class XMLProcessor : INotifyPropertyChanged, IEquatable<XMLProcessor>
     {
         /// <summary>
         /// Number of progress steps reported (GeneratingDD, PostProcessing, Completed)
@@ -231,7 +231,7 @@ namespace DDCImprover.Core
                 Status = ImproverStatus.PostProcessing;
 
                 // Postprocess
-                postProcessor = new XMLPostProcessor(this);
+                postProcessor = new XMLPostProcessor(this, preProcessor, Log);
                 postProcessor.Process();
                 SavePostprocessedFile();
             }

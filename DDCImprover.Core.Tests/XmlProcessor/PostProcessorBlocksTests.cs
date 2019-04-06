@@ -31,13 +31,72 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.Ebeats.Should().NotContain(b => b.Time > audioEnd);
         }
 
-        /*[Fact]
-        public void ChordNameProcessorTest()
+        [Fact]
+        public void ChordNameProcessor_CorrectsMinorChordNames()
         {
-            //TODO
+            var testChordTemp = new ChordTemplate
+            {
+                ChordName = "Amin",
+                DisplayName = "Amin"
+            };
+            testSong.ChordTemplates.Add(testChordTemp);
+
+            new ChordNameProcessor(new List<ImproverMessage>()).Apply(testSong, nullLog);
+
+            testChordTemp.ChordName.Should().Be("Am");
+            testChordTemp.DisplayName.Should().Be("Am");
         }
 
         [Fact]
+        public void ChordNameProcessor_HandlesArpAndNopNames()
+        {
+            var testChordTemp1 = new ChordTemplate
+            {
+                ChordName = "D9-arp",
+                DisplayName = "D9-arp"
+            };
+
+            var testChordTemp2 = new ChordTemplate
+            {
+                ChordName = "F5(no 3)-nop",
+                DisplayName = "F5(no 3)-nop"
+            };
+            testSong.ChordTemplates.Add(testChordTemp1);
+            testSong.ChordTemplates.Add(testChordTemp2);
+
+            new ChordNameProcessor(new List<ImproverMessage>()).Apply(testSong, nullLog);
+
+            testChordTemp1.ChordName.Should().Be("D9");
+            testChordTemp1.DisplayName.Should().Be("D9-arp");
+
+            testChordTemp2.ChordName.Should().Be("F5(no 3)");
+            testChordTemp2.DisplayName.Should().Be("F5(no 3)-nop");
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3)]
+        [InlineData(12)]
+        [InlineData(21)]
+        public void ChordNameProcessor_HandlesOFChords(int number)
+        {
+            var testChordTemp = new ChordTemplate
+            {
+                ChordName = $"OF{number}",
+                DisplayName = $"OF{number}",
+                Fingers = new sbyte[] { 1, -1, -1, -1, -1, -1 },
+                Frets = new sbyte[] { 8, -1, -1, -1, -1, -1 }
+            };
+            testSong.ChordTemplates.Add(testChordTemp);
+
+            new ChordNameProcessor(new List<ImproverMessage>()).Apply(testSong, nullLog);
+
+            testChordTemp.ChordName.Should().Be("");
+            testChordTemp.DisplayName.Should().Be("");
+            testChordTemp.Frets[0].Should().Be((sbyte)number);
+        }
+
+        /*[Fact]
         public void OneLevelPhraseFixerTest()
         {
             //TODO
@@ -72,7 +131,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             new FirstNoguitarSectionRestorer(firstNGSectionTime).Apply(testSong, nullLog);
 
-            testSong.Sections.Should().Contain(s => s.Time == firstNGSectionTime);
+            testSong.Sections.Should().Contain(s => s.Time == firstNGSectionTime && s.Name == "noguitar");
             testSong.Phrases.Should().Contain(p => p.Name == "NG");
             testSong.PhraseIterations.Should().Contain(pi => pi.Time == firstNGSectionTime);
         }
@@ -101,6 +160,77 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             new NoguitarAnchorRestorer(ngAnchors).Apply(testSong, nullLog);
 
             testSong.Levels[0].Anchors.Should().Contain(testAnchor);
+        }
+
+        [Fact]
+        public void CustomEvent_SlideOut_Test()
+        {
+            float chordTime = 20.222f;
+
+            var phrase = new Phrase("test", (byte)(testSong.Levels.Count - 1), PhraseMask.None);
+            testSong.Phrases.Add(phrase);
+
+            var phraseIter = new PhraseIteration
+            {
+                Time = chordTime,
+                PhraseId = testSong.Phrases.Count - 1
+            };
+            testSong.PhraseIterations.Add(phraseIter);
+
+            var template = new ChordTemplate
+            {
+                Fingers = new sbyte[] { 1, 3, 3, -1, -1, -1 },
+                Frets = new sbyte[] { 1, 3, 4, -1, -1, -1 }
+            };
+            testSong.ChordTemplates.Add(template);
+            int chordId = testSong.ChordTemplates.Count - 1;
+
+            var chord = new Chord
+            {
+                ChordId = chordId,
+                Time = chordTime,
+                ChordNotes = new List<Note>
+                {
+                    new Note
+                    {
+                        String = 0,
+                        Fret = 1,
+                        SlideUnpitchTo = 5,
+                        Sustain = 3f
+                    },
+                    new Note
+                    {
+                        String = 1,
+                        Fret = 3,
+                        SlideUnpitchTo = 7,
+                        Sustain = 3f
+                    },
+                    new Note
+                    {
+                        String = 2,
+                        Fret = 3,
+                        SlideUnpitchTo = 7,
+                        Sustain = 3f
+                    }
+                }
+            };
+
+            var hardestLevel = testSong.Levels.Last();
+
+            var handshape = new HandShape(chordId, chordTime, chordTime + 3f);
+            hardestLevel.Chords.Add(chord);
+            hardestLevel.HandShapes.Add(handshape);
+            testSong.Events.Add(new Event("so", chordTime));
+
+            int handShapeCount = hardestLevel.HandShapes.Count;
+            int chordTemplateCount = testSong.ChordTemplates.Count;
+
+            new CustomEventPostProcessor(new List<ImproverMessage>()).Apply(testSong, nullLog);
+
+            testSong.Events.Should().NotContain(ev => ev.Code == "so");
+            hardestLevel.HandShapes.Should().HaveCount(handShapeCount + 1);
+            testSong.ChordTemplates.Should().HaveCount(chordTemplateCount + 1);
+            handshape.EndTime.Should().BeLessThan(chordTime + 3f);
         }
     }
 }

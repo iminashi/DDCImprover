@@ -9,9 +9,13 @@ namespace DDCImprover.Core
     internal class XMLPreProcessor
     {
         private XMLProcessor Parent { get; }
-        internal RS2014Song Song { get; }
+        private RS2014Song Song { get; }
         public float LastPhraseTime { get; }
         public float? FirstNGSectionTime { get; }
+
+        private bool IsNonDDFile => Song.Levels.Count == 1;
+
+        private readonly Action<string> Log;
 
         internal XMLPreProcessor(XMLProcessor parent, Action<string> logAction)
         {
@@ -30,10 +34,6 @@ namespace DDCImprover.Core
                 }
             }
         }
-
-        private Action<string> Log;
-
-        private bool IsNonDDFile => Song.Levels.Count == 1;
 
         internal void Process()
         {

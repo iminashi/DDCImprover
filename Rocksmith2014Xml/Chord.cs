@@ -7,10 +7,6 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class ChordNote : Note
-    {
-    }
-
     [Flags]
     public enum ChordMask : byte
     {
@@ -145,7 +141,7 @@ namespace Rocksmith2014Xml
 
         public int ChordId { get; set; }
 
-        public List<ChordNote> ChordNotes { get; set; }
+        public List<Note> ChordNotes { get; set; }
 
         public override string ToString()
         {
@@ -212,11 +208,11 @@ namespace Rocksmith2014Xml
 
             if (!reader.IsEmptyElement && reader.ReadToDescendant("chordNote"))
             {
-                ChordNotes = new List<ChordNote>();
+                ChordNotes = new List<Note>();
 
                 while (reader.NodeType != XmlNodeType.EndElement)
                 {
-                    ChordNote cn = new ChordNote();
+                    Note cn = new Note();
                     ((IXmlSerializable)cn).ReadXml(reader);
                     ChordNotes.Add(cn);
                 }
