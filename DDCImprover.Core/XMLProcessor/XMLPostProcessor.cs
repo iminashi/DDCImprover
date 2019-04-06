@@ -37,7 +37,7 @@ namespace DDCImprover.Core
 
             CheckPhraseIterationCount();
 
-            var context = new PreProcessorContext(DDCSong, Log);
+            var context = new ProcessorContext(DDCSong, Log);
 
             context
                 // Remove temporary beats
@@ -46,7 +46,7 @@ namespace DDCImprover.Core
                 // Restore anchors at the beginning of Noguitar sections
                 .ApplyFixIf(Preferences.RestoreNoguitarSectionAnchors && Parent.NGAnchors.Count > 0, new NoguitarAnchorRestorer(Parent.NGAnchors))
 
-                // Restore END phrase position if needed
+                // Restore END phrase to original position if needed
                 .ApplyFixIf(WasNonDDFile, new ENDPhraseProcessor(OldLastPhraseTime))
 
                 // Process chord names
@@ -61,6 +61,7 @@ namespace DDCImprover.Core
                 // Add second level to phrases with only one level
                 .ApplyFixIf(Preferences.FixOneLevelPhrases, new OneLevelPhraseFixer())
 
+                // Process custom events
                 .ApplyFix(new CustomEventPostProcessor(Parent.StatusMessages));
 
             // Restore first noguitar section

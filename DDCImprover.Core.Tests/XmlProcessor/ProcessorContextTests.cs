@@ -5,15 +5,15 @@ using Xunit;
 
 namespace DDCImprover.Core.Tests.XmlProcessor
 {
-    public class PreProcessorContextTests
+    public class ProcessorContextTests
     {
         private readonly Action<string> nullLog = s => { };
         private readonly RS2014Song testSong = new RS2014Song();
-        private readonly PreProcessorContext context;
+        private readonly ProcessorContext context;
 
-        public PreProcessorContextTests()
+        public ProcessorContextTests()
         {
-            context = new PreProcessorContext(testSong, nullLog);
+            context = new ProcessorContext(testSong, nullLog);
         }
 
         [Fact]

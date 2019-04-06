@@ -42,7 +42,7 @@ namespace DDCImprover.Core
             if (Preferences.RestoreNoguitarSectionAnchors && IsNonDDFile)
                 StoreNGSectionAnchors();
 
-            var context = new PreProcessorContext(Song, Log);
+            var context = new ProcessorContext(Song, Log);
 
             context
                 // Add missing linknext to chords

@@ -3,24 +3,24 @@ using System;
 
 namespace DDCImprover.Core
 {
-    internal class PreProcessorContext
+    internal class ProcessorContext
     {
         private readonly RS2014Song song;
         private readonly Action<string> logAction;
 
-        public PreProcessorContext(RS2014Song song, Action<string> logAction)
+        public ProcessorContext(RS2014Song song, Action<string> logAction)
         {
             this.song = song;
             this.logAction = logAction;
         }
 
-        internal PreProcessorContext ApplyFix(IProcessorBlock block)
+        internal ProcessorContext ApplyFix(IProcessorBlock block)
         {
             block.Apply(song, logAction);
             return this;
         }
 
-        internal PreProcessorContext ApplyFixIf(bool condition, IProcessorBlock block)
+        internal ProcessorContext ApplyFixIf(bool condition, IProcessorBlock block)
         {
             if (condition)
             {
