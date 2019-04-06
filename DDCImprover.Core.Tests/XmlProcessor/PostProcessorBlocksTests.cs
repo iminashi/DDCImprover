@@ -96,11 +96,32 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testChordTemp.Frets[0].Should().Be((sbyte)number);
         }
 
-        /*[Fact]
+        [Fact]
         public void OneLevelPhraseFixerTest()
         {
-            //TODO
-        }*/
+            testSong.PhraseIterations.Last().Time = testSong.SongLength;
+            testSong.PhraseIterations.Last().PhraseId++;
+
+            var testPhrase = new Phrase("test", 0, PhraseMask.None);
+            testSong.Phrases.Insert(testSong.Phrases.Count - 1,testPhrase);
+            testSong.PhraseIterations.Insert(testSong.PhraseIterations.Count - 1,
+                new PhraseIteration
+                {
+                    PhraseId = testSong.Phrases.Count - 2,
+                    Time = 10f
+                });
+            testSong.Levels[0].Notes.Add(
+                new Note
+                {
+                    Sustain = 3f,
+                    Fret = 3,
+                    Time = 10f
+                });
+
+            new OneLevelPhraseFixer().Apply(testSong, nullLog);
+
+            testPhrase.MaxDifficulty.Should().Be(1);
+        }
 
         [Fact]
         public void TimeSignatureEventRemoverTest()
@@ -159,7 +180,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             new NoguitarAnchorRestorer(ngAnchors).Apply(testSong, nullLog);
 
-            testSong.Levels[0].Anchors.Should().Contain(testAnchor);
+            testSong.Levels[0].Anchors[0].Should().Be(testAnchor);
         }
 
         [Fact]

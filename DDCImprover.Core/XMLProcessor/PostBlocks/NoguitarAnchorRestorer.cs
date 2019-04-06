@@ -1,7 +1,6 @@
 ﻿using Rocksmith2014Xml;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DDCImprover.Core.PostBlocks
 {
@@ -26,19 +25,9 @@ namespace DDCImprover.Core.PostBlocks
             foreach (Anchor anchor in _ngAnchors)
             {
                 // Add anchor to the first difficulty level
-                int nextAnchorIndex = firstLevelAnchors.FindIndex(a => a.Time > anchor.Time);
-
-                if (nextAnchorIndex != -1)
+                if (firstLevelAnchors.FindIndexByTime(anchor.Time) == -1)
                 {
-                    firstLevelAnchors.Insert(nextAnchorIndex, anchor);
-                }
-                else
-                {
-                    // DDC may have moved the noguitar section
-                    if (firstLevelAnchors.Any(a => a.Time == anchor.Time))
-                        continue;
-                    else
-                        firstLevelAnchors.Add(anchor);
+                    firstLevelAnchors.InsertByTime(anchor);
                 }
 
                 Log($"--Restored anchor at time {anchor.Time.TimeToString()}");
