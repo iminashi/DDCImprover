@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -80,12 +81,13 @@ namespace DDCImprover.Core
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public List<ImproverMessage> StatusMessages { get; } = new List<ImproverMessage>();
+        public List<ImproverMessage> StatusMessages { get; private set; } = new List<ImproverMessage>();
 
         /// <summary>
         /// XML filename without path, with extension.
         /// </summary>
         public string XMLFileName { get; private set; }
+
         public string ArtistName { get; private set; }
         public string SongTitle { get; private set; }
         public string ArrangementType { get; private set; }
@@ -134,6 +136,11 @@ namespace DDCImprover.Core
 
             if (!readingSuccessful)
                 Status = ImproverStatus.LoadError;
+        }
+
+        internal void SortStatusMessages()
+        {
+            StatusMessages = StatusMessages.Distinct().OrderBy(m => m.TimeCode).ToList();
         }
 
         private void SetupFilePaths(string xmlFilePath)

@@ -84,7 +84,7 @@ namespace DDCImprover.Core
 
                 if (Parent.StatusMessages.Count > 0)
                 {
-                    Parent.StatusMessages.Sort();
+                    Parent.SortStatusMessages();
                 }
             }
 

@@ -253,5 +253,53 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.ChordTemplates.Should().HaveCount(chordTemplateCount + 1);
             handshape.EndTime.Should().BeLessThan(chordTime + 3f);
         }
+
+        [Fact]
+        public void AnchorPlaceholderNoteRemover_WorksForNotes()
+        {
+            var testNote = new Note { Time = 30f, Fret = 2, String = 2, SlideTo = 5, IsLinkNext = true };
+            testSong.Levels[0].Notes.Add(testNote);
+            testSong.Levels[0].Notes.Add(new Note { Time = 33f, Fret = 5, String = 2 });
+
+            new AnchorPlaceholderNoteRemover().Apply(testSong, nullLog);
+
+            testSong.Levels[0].Notes.Should().NotContain(n => n.Time == 33f);
+            testNote.IsLinkNext.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AnchorPlaceholderNoteRemover_WorksForChords()
+        {
+            var testChord = new Chord
+            {
+                Time = 30f,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0, SlideTo = 7, IsLinkNext = true },
+                    new Note { Fret = 5, String = 1, SlideTo = 7, IsLinkNext = true },
+                    new Note { Fret = 5, String = 2 }
+                },
+                IsLinkNext = true
+            };
+            testSong.Levels[0].Chords.Add(testChord);
+            testSong.Levels[0].Notes.Add(new Note
+            {
+                Time = 33f,
+                String = 0,
+                Fret = 7
+            });
+            testSong.Levels[0].Notes.Add(new Note
+            {
+                Time = 33f,
+                String = 1,
+                Fret = 7
+            });
+
+            new AnchorPlaceholderNoteRemover().Apply(testSong, nullLog);
+
+            testSong.Levels[0].Notes.Should().NotContain(n => n.Time == 33f);
+            testChord.IsLinkNext.Should().BeFalse();
+            testChord.ChordNotes.Should().NotContain(n => n.IsLinkNext);
+        }
     }
 }

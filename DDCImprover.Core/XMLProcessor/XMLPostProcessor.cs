@@ -62,7 +62,9 @@ namespace DDCImprover.Core
                 .ApplyFixIf(Preferences.FixOneLevelPhrases, new OneLevelPhraseFixer())
 
                 // Process custom events
-                .ApplyFix(new CustomEventPostProcessor(Parent.StatusMessages));
+                .ApplyFix(new CustomEventPostProcessor(Parent.StatusMessages))
+
+                .ApplyFix(new AnchorPlaceholderNoteRemover());
 
             // Restore first noguitar section
             if (WasNonDDFile && FirstNGSectionTime.HasValue)

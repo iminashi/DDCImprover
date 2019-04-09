@@ -1,5 +1,7 @@
 2.2
 -Added 'so' slideout custom event
+-Added linknext chord slide handshape length correction
+-Added anchor placeholder note removing
 
 2.1
 -Added 'overwrite original file' option

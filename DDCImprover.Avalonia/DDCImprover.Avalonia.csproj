@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.1.49</AssemblyVersion>
-    <FileVersion>2.2.1.49</FileVersion>
+    <AssemblyVersion>2.2.3.99</AssemblyVersion>
+    <FileVersion>2.2.3.99</FileVersion>
     <Product>DDC Improver</Product>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">

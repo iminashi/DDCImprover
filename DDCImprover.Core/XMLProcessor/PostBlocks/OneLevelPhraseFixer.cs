@@ -14,8 +14,7 @@ namespace DDCImprover.Core.PostBlocks
         {
             Log("********** Begin one level phrase fix **********");
 
-            // Skip first phrase (COUNT) and last phrase (END)
-            for (int phraseID = 1; phraseID < song.Phrases.Count - 1; phraseID++)
+            for (int phraseID = 0; phraseID < song.Phrases.Count; phraseID++)
             {
                 if (song.Phrases[phraseID].MaxDifficulty == 0)
                 {
@@ -28,7 +27,13 @@ namespace DDCImprover.Core.PostBlocks
                     foreach (var pi in phraseIterations)
                     {
                         float startTime = pi.Time;
-                        float endTime = song.PhraseIterations[song.PhraseIterations.IndexOf(pi) + 1].Time;
+                        int piIndex = song.PhraseIterations.IndexOf(pi);
+                        if(piIndex == 0 || piIndex == song.PhraseIterations.Count - 1)
+                        {
+                            // Skip first phrase (COUNT) and last phrase (END)
+                            continue;
+                        }
+                        float endTime = song.PhraseIterations[piIndex + 1].Time;
 
                         var firstLevel = song.Levels[0];
                         var secondLevel = song.Levels[1];
