@@ -13,6 +13,7 @@ using DDCImprover.Core;
 using DDCImprover.Core.ViewModels;
 using ReactiveUI;
 using System.Reactive;
+using System.Diagnostics;
 
 namespace DDCImprover.Avalonia.Views
 {
@@ -285,6 +286,15 @@ namespace DDCImprover.Avalonia.Views
             base.HandleClosed();
 
             XMLProcessor.Preferences.Save();
+        }
+
+        private void GitHubMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var processInfo = new ProcessStartInfo("https://github.com/iminashi/DDCImprover")
+            {
+                UseShellExecute = true
+            };
+            Process.Start(processInfo);
         }
     }
 }

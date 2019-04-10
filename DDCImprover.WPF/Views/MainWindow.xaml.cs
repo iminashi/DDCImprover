@@ -3,6 +3,7 @@ using DDCImprover.Core.ViewModels;
 using ReactiveUI;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -262,6 +263,11 @@ namespace DDCImprover.WPF
             {
                 ViewModel.RemoveViewLogTexts();
             }
+        }
+
+        private void GitHubMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/iminashi/DDCImprover");
         }
     }
 }

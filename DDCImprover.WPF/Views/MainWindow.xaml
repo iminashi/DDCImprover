@@ -56,6 +56,11 @@
                 <Separator />
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4" Click="ExitMenuItem_Click" />
             </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="View _Help" Click="Help_Click"/>
+                <Separator />
+                <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
+            </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
             <Button Command="{Binding Process}" Style="{StaticResource buttonStyle}" ToolTip="Process files (F5 / Ctrl+P)">

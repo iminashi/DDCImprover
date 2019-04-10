@@ -43,6 +43,11 @@
         <Separator />
         <MenuItem Header="E_xit" Click="Exit_Click" />
       </MenuItem>
+      <MenuItem Header="_Help">
+          <MenuItem Header="View _Help" Click="Help_Click"/>
+          <Separator />
+          <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
+      </MenuItem>
     </Menu>
     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="#EEEEEE">
       <StackPanel.Styles>
