@@ -10,7 +10,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
     public class PreProcessorBlocksTests
     {
         private readonly RS2014Song testSong;
-        private readonly Action<string> nullLog = s => { };
+        private readonly Action<string> nullLog = _ => { };
         private readonly PhraseMover phraseMover = new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>());
 
         public PreProcessorBlocksTests()
@@ -78,7 +78,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void WeakBeatPhraseMovingTest()
         {
-            float phraseOnAWeakBeatTime = 7.875f;
+            const float phraseOnAWeakBeatTime = 7.875f;
             var beatBefore = testSong.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
             beatBefore.Measure.Should().NotBe(XMLProcessor.TempMeasureNumber);
             testSong.PhraseIterations.Should().Contain(pi => pi.Time == phraseOnAWeakBeatTime);
@@ -101,33 +101,37 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testHandshape.EndTime.Should().BeLessThan(11.999f);
         }
 
+        private PhraseIteration AddTestPhrase(string name, float time)
+        {
+            testSong.Phrases.Add(new Phrase(name, 0, PhraseMask.None));
+            var phraseIter = new PhraseIteration
+            {
+                PhraseId = testSong.Phrases.Count - 1,
+                Time = time
+            };
+            testSong.PhraseIterations.Add(phraseIter);
+
+            return phraseIter;
+        }
+
         [Fact]
         public void PhraseMover_MoveTo_Test()
         {
-            testSong.Phrases.Add(new Phrase("moveto18s300", 0, PhraseMask.None));
-            var testPhraseIter = new PhraseIteration
-            {
-                PhraseId = testSong.Phrases.Count - 1,
-                Time = 15f
-            };
-            testSong.PhraseIterations.Add(testPhraseIter);
+            var testPhraseIter = AddTestPhrase("moveto18s300", 15f);
 
             phraseMover.Apply(testSong, nullLog);
 
             testPhraseIter.Time.Should().BeApproximately(18.3f, 0.001f);
         }
 
+
+
         [Fact]
         public void PhraseMover_MoveRelative_Test()
         {
-            float noteTime = 16.666f;
-            testSong.Phrases.Add(new Phrase("moveR1", 0, PhraseMask.None));
-            var testPhraseIter = new PhraseIteration
-            {
-                PhraseId = testSong.Phrases.Count - 1,
-                Time = 15f
-            };
-            testSong.PhraseIterations.Add(testPhraseIter);
+            const float noteTime = 16.666f;
+
+            var testPhraseIter = AddTestPhrase("moveR1", 15f);
             testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
             phraseMover.Apply(testSong, nullLog);
@@ -138,15 +142,10 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMoverMovesSectionAlso()
         {
-            float noteTime = 16.666f;
-            float phraseTime = 15f;
-            testSong.Phrases.Add(new Phrase("moveR1", 0, PhraseMask.None));
-            var testPhraseIter = new PhraseIteration
-            {
-                PhraseId = testSong.Phrases.Count - 1,
-                Time = phraseTime
-            };
-            testSong.PhraseIterations.Add(testPhraseIter);
+            const float noteTime = 16.666f;
+            const float phraseTime = 15f;
+
+            AddTestPhrase("moveR1", phraseTime);
             var testSection = new Section("riff", phraseTime, 1);
             testSong.Sections.Add(testSection);
             testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
@@ -159,16 +158,10 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMoverMovesAnchorAlso()
         {
-            float noteTime = 16.666f;
-            float phraseTime = 15f;
+            const float noteTime = 16.666f;
+            const float phraseTime = 15f;
 
-            testSong.Phrases.Add(new Phrase("moveR1", 0, PhraseMask.None));
-            var testPhraseIter = new PhraseIteration
-            {
-                PhraseId = testSong.Phrases.Count - 1,
-                Time = phraseTime
-            };
-            testSong.PhraseIterations.Add(testPhraseIter);
+            AddTestPhrase("mover1", phraseTime);
             testSong.Levels[0].Anchors.Add(new Anchor(1, phraseTime, 4));
             testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 

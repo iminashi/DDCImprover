@@ -57,7 +57,7 @@
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4" Click="ExitMenuItem_Click" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="View _Help" Click="Help_Click"/>
+                <MenuItem Header="View _Help" Click="Help_Click" InputGestureText="F1"/>
                 <Separator />
                 <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
             </MenuItem>

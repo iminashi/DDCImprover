@@ -11,7 +11,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
     public class PostProcessorBlocksTests
     {
         private readonly RS2014Song testSong;
-        private readonly Action<string> nullLog = s => { };
+        private readonly Action<string> nullLog = _ => { };
 
         public PostProcessorBlocksTests()
         {
@@ -148,7 +148,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void FirstNoguitarSectionRestorerTest()
         {
-            float firstNGSectionTime = 4.5f;
+            const float firstNGSectionTime = 4.5f;
 
             new FirstNoguitarSectionRestorer(firstNGSectionTime).Apply(testSong, nullLog);
 
@@ -186,7 +186,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void CustomEvent_SlideOut_Test()
         {
-            float chordTime = 20.222f;
+            const float chordTime = 20.222f;
 
             var phrase = new Phrase("test", (byte)(testSong.Levels.Count - 1), PhraseMask.None);
             testSong.Phrases.Add(phrase);
