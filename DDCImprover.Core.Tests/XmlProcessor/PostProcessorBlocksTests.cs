@@ -275,9 +275,9 @@ namespace DDCImprover.Core.Tests.XmlProcessor
                 Time = 30f,
                 ChordNotes = new List<Note>
                 {
-                    new Note { Fret = 5, String = 0, SlideTo = 7, IsLinkNext = true },
-                    new Note { Fret = 5, String = 1, SlideTo = 7, IsLinkNext = true },
-                    new Note { Fret = 5, String = 2 }
+                    new Note { Fret = 5, String = 0, SlideTo = 7, IsLinkNext = true, Sustain = 3f },
+                    new Note { Fret = 5, String = 1, SlideTo = 7, IsLinkNext = true, Sustain = 3f },
+                    new Note { Fret = 5, String = 2, Sustain = 3f }
                 },
                 IsLinkNext = true
             };
@@ -300,6 +300,39 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.Levels[0].Notes.Should().NotContain(n => n.Time == 33f);
             testChord.IsLinkNext.Should().BeFalse();
             testChord.ChordNotes.Should().NotContain(n => n.IsLinkNext);
+        }
+
+        [Fact]
+        public void AnchorPlaceholderNoteRemover_DoesNotRemoveWrongNotes()
+        {
+            var testChord = new Chord
+            {
+                Time = 30f,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0, IsLinkNext = true, Sustain = 3f },
+                    new Note { Fret = 5, String = 1, SlideTo = 7, IsLinkNext = true, Sustain = 3f },
+                    new Note { Fret = 5, String = 2, Sustain = 3f }
+                },
+                IsLinkNext = true
+            };
+            testSong.Levels[0].Chords.Add(testChord);
+            testSong.Levels[0].Notes.Add(new Note
+            {
+                Time = 34f,
+                String = 0,
+                Fret = 7
+            });
+            testSong.Levels[0].Notes.Add(new Note
+            {
+                Time = 33f,
+                String = 1,
+                Fret = 7
+            });
+
+            new AnchorPlaceholderNoteRemover().Apply(testSong, nullLog);
+
+            testSong.Levels[0].Notes.Should().Contain(n => n.Time == 34f);
         }
     }
 }

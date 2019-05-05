@@ -64,6 +64,7 @@ namespace DDCImprover.Core
                 // Process custom events
                 .ApplyFix(new CustomEventPostProcessor(Parent.StatusMessages))
 
+                // Remove notes that are placeholders for anchors
                 .ApplyFix(new AnchorPlaceholderNoteRemover());
 
             // Restore first noguitar section

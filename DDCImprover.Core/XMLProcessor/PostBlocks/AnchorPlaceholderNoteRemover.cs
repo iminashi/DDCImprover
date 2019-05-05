@@ -7,7 +7,7 @@ using System.Linq;
 namespace DDCImprover.Core.PostBlocks
 {
     /// <summary>
-    /// Removes notes with no sustain after slides.
+    /// Removes notes with no sustain after linknext slides.
     /// </summary>
     internal sealed class AnchorPlaceholderNoteRemover : IProcessorBlock
     {
@@ -55,13 +55,13 @@ namespace DDCImprover.Core.PostBlocks
                         // Find the first note after the chord
                         int noteIndex = notes.FindIndex(n => n.Time > chord.Time);
 
-                        if(noteIndex == - 1)
+                        if(noteIndex == -1)
                         {
                             continue;
                         }
 
-                        // Get all the chord notes that have LinkNext
-                        var chordNotes = chord.ChordNotes.Where(n => n.IsLinkNext).ToDictionary(n => n.String);
+                        // Get all the chord notes that have LinkNext slides
+                        var chordNotes = chord.ChordNotes.Where(n => n.IsLinkNext && n.IsSlide).ToDictionary(n => n.String);
                         while(chordNotes.Count > 0 && noteIndex < notes.Count)
                         {
                             var note = notes[noteIndex];

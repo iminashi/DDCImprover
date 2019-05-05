@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Rocksmith2014Xml;
 using Xunit;
 
 namespace DDCImprover.Core.Tests.XmlProcessor
@@ -21,7 +20,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             XMLProcessor processor = new XMLProcessor(@".\TestFiles\preTest_RS2.xml");
             processor.LoadXMLFile();
-            preProcessor = new XMLPreProcessor(processor, s => { });
+            preProcessor = new XMLPreProcessor(processor, _ => { });
         }
 
         [Fact]

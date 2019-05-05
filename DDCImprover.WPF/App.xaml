@@ -7,7 +7,7 @@
     <Application.Resources>
         <Image x:Key="openIcon" Source="Assets/folder32.png" />
         <Image x:Key="configIcon" Source="Assets/cogwheel32.png" />
-        <!--<Image x:Key="helpIcon" Source="Assets/information32.png" />-->
+        <Image x:Key="helpIcon" Source="Assets/information32.png" />
         <Style x:Key="buttonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>

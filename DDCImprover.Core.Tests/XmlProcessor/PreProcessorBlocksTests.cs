@@ -124,8 +124,6 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testPhraseIter.Time.Should().BeApproximately(18.3f, 0.001f);
         }
 
-
-
         [Fact]
         public void PhraseMover_MoveRelative_Test()
         {
