@@ -82,6 +82,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                     <Label Content="Max. _Threads:" Target="{x:Reference maxThreadsUpDown}"/>
@@ -164,7 +165,7 @@
                           IsChecked="{Binding Config.DisplayTimesInSeconds}"
                           VerticalAlignment="Center"
                           ToolTip="If unchecked, displays times in minutes, seconds and milliseconds."/>
-                <CheckBox Grid.Row="6" Grid.Column="0"
+                <CheckBox Grid.Row="7" Grid.Column="0"
                           Content="Enable _Logging"
                           IsChecked="{Binding Config.EnableLogging}"
                           VerticalAlignment="Center"
@@ -180,11 +181,16 @@
                     </CheckBox.ToolTip>
                 </CheckBox>-->
                 <CheckBox Grid.Row="5" Grid.Column="1"
-                          Content="Add Cro_wd Events"
+                          Content="Add Crowd _Events"
                           IsChecked="{Binding Config.AddCrowdEvents}"
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="Automatically adds crowd events if they are not already present."/>
+                <CheckBox Grid.Row="6" Grid.Column="0"
+                          Content="_Remove Anchor Placeholder Notes"
+                          IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}"
+                          VerticalAlignment="Center"
+                          ToolTip="Removes notes that come after a LinkNext slide that have zero sustain."/>
                 <CheckBox Grid.Row="6" Grid.Column="1"
                           Content="Over_write Original File"
                           IsChecked="{Binding Config.OverwriteOriginalFile}"

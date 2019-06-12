@@ -5,7 +5,7 @@ using XmlUtils;
 
 namespace DDCImprover.Core
 {
-    [Serializable, XmlRoot(Namespace = "")]
+    [XmlRoot(Namespace = "")]
     public class Configuration
     {
         public static string LogDirectory;
@@ -27,6 +27,7 @@ namespace DDCImprover.Core
         public bool PreserveENDPhraseLocation { get; set; } = false;
         public bool RestoreFirstNoguitarSection { get; set; } = false;
         public bool RestoreNoguitarSectionAnchors { get; set; } = true;
+        public bool RemoveAnchorPlaceholderNotes { get; set; } = true;
         public bool RemoveBeatsPastAudioEnd { get; set; } = true;
         public bool RemoveTimeSignatureEvents { get; set; } = false;
         public bool DisplayTimesInSeconds { get; set; } = true;

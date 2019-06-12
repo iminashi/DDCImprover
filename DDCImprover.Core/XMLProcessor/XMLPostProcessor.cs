@@ -65,7 +65,7 @@ namespace DDCImprover.Core
                 .ApplyFix(new CustomEventPostProcessor(Parent.StatusMessages))
 
                 // Remove notes that are placeholders for anchors
-                .ApplyFix(new AnchorPlaceholderNoteRemover());
+                .ApplyFixIf(Preferences.RemoveAnchorPlaceholderNotes, new AnchorPlaceholderNoteRemover());
 
             // Restore first noguitar section
             if (WasNonDDFile && FirstNGSectionTime.HasValue)
