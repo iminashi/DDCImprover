@@ -32,6 +32,30 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
+        public void ChordNameProcessor_CorrectsEmptyChordNames()
+        {
+            var testChordTemp1 = new ChordTemplate
+            {
+                ChordName = " ",
+                DisplayName = " "
+            };
+            var testChordTemp2 = new ChordTemplate
+            {
+                ChordName = "   ",
+                DisplayName = "   "
+            };
+            testSong.ChordTemplates.Add(testChordTemp1);
+            testSong.ChordTemplates.Add(testChordTemp2);
+
+            new ChordNameProcessor(new List<ImproverMessage>()).Apply(testSong, nullLog);
+
+            testChordTemp1.ChordName.Should().Be("");
+            testChordTemp1.DisplayName.Should().Be("");
+            testChordTemp2.ChordName.Should().Be("");
+            testChordTemp2.DisplayName.Should().Be("");
+        }
+
+        [Fact]
         public void ChordNameProcessor_CorrectsMinorChordNames()
         {
             var testChordTemp = new ChordTemplate

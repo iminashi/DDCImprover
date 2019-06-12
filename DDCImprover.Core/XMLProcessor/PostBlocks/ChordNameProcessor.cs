@@ -69,9 +69,9 @@ namespace DDCImprover.Core.PostBlocks
                 string newChordName = oldChordName;
                 string newDisplayName = oldDisplayName;
 
-                if (oldChordName == " ")
+                if (string.IsNullOrWhiteSpace(oldChordName))
                 {
-                    newChordName = "";
+                    newChordName = string.Empty;
                 }
                 else
                 {
@@ -85,9 +85,9 @@ namespace DDCImprover.Core.PostBlocks
                         newChordName = oldChordName.Replace("-arp", "");
                 }
 
-                if (oldDisplayName == " ")
+                if (string.IsNullOrWhiteSpace(oldDisplayName))
                 {
-                    newDisplayName = "";
+                    newDisplayName = string.Empty;
                 }
                 else
                 {
