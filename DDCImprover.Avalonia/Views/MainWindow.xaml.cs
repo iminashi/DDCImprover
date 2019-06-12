@@ -183,7 +183,7 @@ namespace DDCImprover.Avalonia.Views
                         {
                             IsReadOnly = true,
                             BorderBrush = null,
-                            BorderThickness = 0.0,
+                            BorderThickness = new Thickness(0.0),
                             Margin = new Thickness(15, 5, 0, 10),
                             FontSize = 16.0
                         };
@@ -271,7 +271,6 @@ namespace DDCImprover.Avalonia.Views
 
             configWindow.Show();
         }
-#pragma warning restore RCS1213 // Remove unused member declaration.
 
         private void Help_Click(object sender, RoutedEventArgs e)
         {

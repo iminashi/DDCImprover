@@ -26,7 +26,7 @@ namespace DDCImprover.Avalonia
                     Title = logFilePath,
                     Content = new TextBox
                     {
-                        BorderThickness = 0.0,
+                        BorderThickness = new Thickness(0.0),
                         IsReadOnly = true,
                         Text = File.ReadAllText(logFilePath),
                     }
