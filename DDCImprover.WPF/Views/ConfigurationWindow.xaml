@@ -190,7 +190,7 @@
                           Content="_Remove Anchor Placeholder Notes"
                           IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}"
                           VerticalAlignment="Center"
-                          ToolTip="Removes notes that come after a LinkNext slide that have zero sustain."/>
+                          ToolTip="Removes notes that come after a LinkNext slide and have zero sustain."/>
                 <CheckBox Grid.Row="6" Grid.Column="1"
                           Content="Over_write Original File"
                           IsChecked="{Binding Config.OverwriteOriginalFile}"

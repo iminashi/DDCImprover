@@ -54,13 +54,13 @@
                 ToolTip.Tip="Recommended: 256"/>
         <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Path=Value, ElementName=phraseLengthSlider}"/>
         </StackPanel>
-        <DropDown Grid.Column="1" Grid.Row="1"
+        <ComboBox Grid.Column="1" Grid.Row="1"
                   VerticalAlignment="Center" HorizontalAlignment="Left"
                   MinWidth="170" Margin="10,5,0,5"
                   Height="30"
                   Items="{Binding DDCRampupFiles}"
                   SelectedItem="{Binding Config.DDCRampupFile}"/>
-        <DropDown Grid.Column="1" Grid.Row="2"
+        <ComboBox Grid.Column="1" Grid.Row="2"
                   VerticalAlignment="Center" HorizontalAlignment="Left"
                   MinWidth="170" Margin="10,5,0,5"
                   Height="30"
@@ -100,7 +100,7 @@
         <CheckBox Grid.Row="4" Grid.Column="0" Content="Fix One Level Phrases" IsChecked="{Binding Config.FixOneLevelPhrases}" VerticalAlignment="Center" ToolTip.Tip="Adds a second difficulty level for phrases that have only one."/>
         <CheckBox Grid.Row="5" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="If unchecked, displays times in minutes, seconds and milliseconds."/>
         <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Automatically adds crowd events if they are not already present."/>
-        <CheckBox Grid.Row="6" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="Removes notes that come after a LinkNext slide that have zero sustain."/>
+        <CheckBox Grid.Row="6" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="Removes notes that come after a LinkNext slide and have zero sustain."/>
         <CheckBox Grid.Row="7" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="Saves logs to the 'logs' subfolder in the program folder."/>
         <CheckBox Grid.Row="6" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Overwrites the original file with the processed file."/>
       </Grid>

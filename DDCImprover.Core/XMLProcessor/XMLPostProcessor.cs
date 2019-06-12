@@ -49,6 +49,9 @@ namespace DDCImprover.Core
                 // Restore END phrase to original position if needed
                 .ApplyFixIf(WasNonDDFile, new ENDPhraseProcessor(OldLastPhraseTime))
 
+                // Removes DDC's noguitar phrase if it is no longer needed due to END phrase restoration
+                .ApplyFixIf(WasNonDDFile, new UnnecessaryNGPhraseRemover())
+
                 // Process chord names
                 .ApplyFixIf(Preferences.FixChordNames && DDCSong?.ChordTemplates.Any() == true, new ChordNameProcessor(Parent.StatusMessages))
 
@@ -74,8 +77,6 @@ namespace DDCImprover.Core
             if (WasNonDDFile)
             {
                 RemoveTemporaryMeasures();
-
-                RemoveUnnecessaryNGPhrase();
             }
 
 #if DEBUG
@@ -102,49 +103,6 @@ namespace DDCImprover.Core
 
             if (hiDensRemoved > 0)
                 Log($"{hiDensRemoved} high density statuses removed.");
-        }
-
-        /// <summary>
-        /// Removes DDC's noguitar phrase if no phrase iterations using it are found.
-        /// </summary>
-        private void RemoveUnnecessaryNGPhrase()
-        {
-            const int ngPhraseId = 1;
-
-            if (DDCSong.Phrases[ngPhraseId].MaxDifficulty != 0)
-                return;
-
-            var ngPhrasesIterations = from pi in DDCSong.PhraseIterations
-                                      where pi.PhraseId == ngPhraseId
-                                      select pi;
-
-            if (!ngPhrasesIterations.Any())
-            {
-                Log("Removed unnecessary noguitar phrase.");
-
-                DDCSong.Phrases.RemoveAt(ngPhraseId);
-
-                // Set correct phrase IDs for phrase iterations
-                foreach (var pi in DDCSong.PhraseIterations)
-                {
-                    if (pi.PhraseId > ngPhraseId)
-                    {
-                        --pi.PhraseId;
-                    }
-                }
-
-                // Set correct phrase IDs for NLDs
-                foreach (var nld in DDCSong.NewLinkedDiffs)
-                {
-                    for (int i = 0; i < nld.PhraseCount; i++)
-                    {
-                        if (nld.Phrases[i].Id > ngPhraseId)
-                        {
-                            nld.Phrases[i] = new NLDPhrase(nld.Phrases[i].Id - 1);
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
