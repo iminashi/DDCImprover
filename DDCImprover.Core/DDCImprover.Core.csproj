@@ -5,8 +5,8 @@
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>2.2.0</Version>
-    <AssemblyVersion>2.2.70.163</AssemblyVersion>
-    <FileVersion>2.2.70.163</FileVersion>
+    <AssemblyVersion>2.2.71.164</AssemblyVersion>
+    <FileVersion>2.2.71.164</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
