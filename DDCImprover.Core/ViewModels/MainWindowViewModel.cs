@@ -87,7 +87,7 @@ namespace DDCImprover.Core.ViewModels
 
             SetupObservables();
 
-            Configuration.LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            // Ensure that the log directory exists
             Directory.CreateDirectory(Configuration.LogDirectory);
 
             var thisAsm = Assembly.GetExecutingAssembly();
@@ -409,6 +409,11 @@ namespace DDCImprover.Core.ViewModels
             }
 
             ShowInStatusbar($"Processing completed in {timeElapsed}{(isSeconds ? "s" : "ms")}");
+
+            if (XMLProcessor.Preferences.CheckForArrIdReset)
+            {
+                PhraseLevelRepository.UpdateRepository();
+            }
         }
 
         public void RemoveViewLogTexts()

@@ -8,7 +8,7 @@ namespace DDCImprover.Core
     [XmlRoot(Namespace = "")]
     public class Configuration
     {
-        public static string LogDirectory;
+        public static readonly string LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
         public static string ConfigFileName = "DDCImprover.config.xml";
 
@@ -21,6 +21,7 @@ namespace DDCImprover.Core
         public bool AddCrowdEvents { get; set; } = true;
         public bool AdjustHandshapes { get; set; } = true;
         public bool CheckXML { get; set; } = true;
+        public bool CheckForArrIdReset { get; set; } = false;
         public bool EnableLogging { get; set; } = true;
         public bool FixChordNames { get; set; } = true;
         public bool FixOneLevelPhrases { get; set; } = true;

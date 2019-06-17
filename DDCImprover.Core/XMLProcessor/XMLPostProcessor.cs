@@ -77,6 +77,13 @@ namespace DDCImprover.Core
             if (WasNonDDFile)
             {
                 RemoveTemporaryMeasures();
+
+                if (Preferences.CheckForArrIdReset)
+                {
+                    CheckNeedToResetArrangementId();
+
+                    PhraseLevelRepository.QueueForSave(Parent.XMLFileFullPath, DDCSong.Phrases);
+                }
             }
 
 #if DEBUG
@@ -126,6 +133,27 @@ namespace DDCImprover.Core
             if (newPhraseIterationCount != OldPhraseIterationCount)
             {
                 Log($"PhraseIteration count does not match (Old: {OldPhraseIterationCount}, new: {newPhraseIterationCount})");
+            }
+        }
+
+        private void CheckNeedToResetArrangementId()
+        {
+            var phraseLevels = PhraseLevelRepository.TryGetLevels(Parent.XMLFileFullPath);
+
+            if (phraseLevels != null)
+            {
+                foreach (var phrase in DDCSong.Phrases)
+                {
+                    if (phraseLevels.ContainsKey(phrase.Name)
+                       && phraseLevels[phrase.Name] > phrase.MaxDifficulty)
+                    {
+                        const string msg = "At least one phrase has lower max difficulty compared to previous DD generation.";
+
+                        Log(msg);
+                        Parent.StatusMessages.Add(new ImproverMessage(msg + " The arrangement id should be reset.", MessageType.Warning));
+                        return;
+                    }
+                }
             }
         }
 

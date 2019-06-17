@@ -160,7 +160,7 @@
                           IsChecked="{Binding Config.FixOneLevelPhrases}"
                           VerticalAlignment="Center"
                           ToolTip="Adds a second difficulty level for phrases that have only one."/>
-                <CheckBox Grid.Row="5" Grid.Column="0"
+                <CheckBox Grid.Row="6" Grid.Column="0"
                           Content="Display Times in Seconds"
                           IsChecked="{Binding Config.DisplayTimesInSeconds}"
                           VerticalAlignment="Center"
@@ -186,12 +186,18 @@
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="Automatically adds crowd events if they are not already present."/>
-                <CheckBox Grid.Row="6" Grid.Column="0"
+                <CheckBox Grid.Row="5" Grid.Column="0"
                           Content="_Remove Anchor Placeholder Notes"
                           IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}"
                           VerticalAlignment="Center"
                           ToolTip="Removes notes that come after a LinkNext slide and have zero sustain."/>
                 <CheckBox Grid.Row="6" Grid.Column="1"
+                          Content="_Check For Arr. Id Reset"
+                          IsChecked="{Binding Config.CheckForArrIdReset}"
+                          VerticalAlignment="Center"
+                          Margin="7,0,0,0"
+                          ToolTip="Displays a warning for any phrases that have less levels compared to previous DD generation."/>
+                <CheckBox Grid.Row="7" Grid.Column="1"
                           Content="Over_write Original File"
                           IsChecked="{Binding Config.OverwriteOriginalFile}"
                           VerticalAlignment="Center"

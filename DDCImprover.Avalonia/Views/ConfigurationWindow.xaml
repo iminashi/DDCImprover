@@ -98,11 +98,12 @@
         <CheckBox Grid.Row="3" Grid.Column="0" Content="Remove Beats Past Audio End" IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}" VerticalAlignment="Center" ToolTip.Tip="Removes beats that come after the audio has ended."/>
         <CheckBox Grid.Row="4" Grid.Column="1" Content="Fix Chord Names" IsChecked="{Binding Config.FixChordNames}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Renames chords to match ODLC and processes commands in chord names."/>
         <CheckBox Grid.Row="4" Grid.Column="0" Content="Fix One Level Phrases" IsChecked="{Binding Config.FixOneLevelPhrases}" VerticalAlignment="Center" ToolTip.Tip="Adds a second difficulty level for phrases that have only one."/>
-        <CheckBox Grid.Row="5" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="If unchecked, displays times in minutes, seconds and milliseconds."/>
+        <CheckBox Grid.Row="6" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="If unchecked, displays times in minutes, seconds and milliseconds."/>
         <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Automatically adds crowd events if they are not already present."/>
-        <CheckBox Grid.Row="6" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="Removes notes that come after a LinkNext slide and have zero sustain."/>
+        <CheckBox Grid.Row="5" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="Removes notes that come after a LinkNext slide and have zero sustain."/>
+        <CheckBox Grid.Row="6" Grid.Column="1" Content="Check For Arr. Id Reset" IsChecked="{Binding Config.CheckForArrIdReset}" Margin="7,0,0,0" VerticalAlignment="Center" ToolTip.Tip="Displays a warning for any phrases that have less levels compared to previous DD generation."/>
         <CheckBox Grid.Row="7" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="Saves logs to the 'logs' subfolder in the program folder."/>
-        <CheckBox Grid.Row="6" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Overwrites the original file with the processed file."/>
+        <CheckBox Grid.Row="7" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="Overwrites the original file with the processed file."/>
       </Grid>
     </HeaderedContentControl>
     <Grid Grid.Row="2" Margin="0,5,0,10">
