@@ -6,9 +6,10 @@
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.23.292</AssemblyVersion>
-    <FileVersion>2.2.23.292</FileVersion>
+    <AssemblyVersion>2.2.25.292</AssemblyVersion>
+    <FileVersion>2.2.25.292</FileVersion>
     <Product>DDC Improver</Product>
+    <Copyright>Copyright ©  2019</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>

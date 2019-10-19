@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("iminashi")]
 [assembly: AssemblyProduct("DDC Improver")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,7 +51,7 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.86.292")]
-[assembly: AssemblyFileVersion("2.2.86.292")]
+[assembly: AssemblyVersion("2.2.94.292")]
+[assembly: AssemblyFileVersion("2.2.94.292")]
 [assembly: NeutralResourcesLanguage("en")]
 
