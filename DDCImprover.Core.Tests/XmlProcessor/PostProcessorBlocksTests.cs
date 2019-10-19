@@ -211,6 +211,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         public void CustomEvent_SlideOut_Test()
         {
             const float chordTime = 20.222f;
+            const float sustainTime = 3f;
 
             var phrase = new Phrase("test", (byte)(testSong.Levels.Count - 1), PhraseMask.None);
             testSong.Phrases.Add(phrase);
@@ -241,28 +242,28 @@ namespace DDCImprover.Core.Tests.XmlProcessor
                         String = 0,
                         Fret = 1,
                         SlideUnpitchTo = 5,
-                        Sustain = 3f
+                        Sustain = sustainTime
                     },
                     new Note
                     {
                         String = 1,
                         Fret = 3,
                         SlideUnpitchTo = 7,
-                        Sustain = 3f
+                        Sustain = sustainTime
                     },
                     new Note
                     {
                         String = 2,
                         Fret = 3,
                         SlideUnpitchTo = 7,
-                        Sustain = 3f
+                        Sustain = sustainTime
                     }
                 }
             };
 
             var hardestLevel = testSong.Levels.Last();
 
-            var handshape = new HandShape(chordId, chordTime, chordTime + 3f);
+            var handshape = new HandShape(chordId, chordTime, chordTime + sustainTime);
             hardestLevel.Chords.Add(chord);
             hardestLevel.HandShapes.Add(handshape);
             testSong.Events.Add(new Event("so", chordTime));
@@ -275,7 +276,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.Events.Should().NotContain(ev => ev.Code == "so");
             hardestLevel.HandShapes.Should().HaveCount(handShapeCount + 1);
             testSong.ChordTemplates.Should().HaveCount(chordTemplateCount + 1);
-            handshape.EndTime.Should().BeLessThan(chordTime + 3f);
+            handshape.EndTime.Should().BeLessThan(chordTime + sustainTime);
         }
 
         [Fact]
