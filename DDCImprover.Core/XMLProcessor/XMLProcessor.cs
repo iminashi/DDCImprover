@@ -22,13 +22,12 @@ namespace DDCImprover.Core
         internal const int TempMeasureNumber = 65535;
 
         private static Configuration preferences;
+
         public static Configuration Preferences
         {
             get => preferences ?? (preferences = new Configuration());
             set => preferences = value;
         }
-
-        public static string Version;
 
         private static readonly bool UseWine = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
@@ -411,7 +410,7 @@ namespace DDCImprover.Core
             }
 
             DDCSong.XmlComments.RemoveAll(x => x.CommentType == CommentType.DDCImprover);
-            DDCSong.XmlComments.Add(new RSXmlComment($" DDC Improver {Version} "));
+            DDCSong.XmlComments.Add(new RSXmlComment($" DDC Improver {Program.Version} "));
 
             DDCSong.Save(path, Preferences.WriteAbridgedXmlFiles);
 

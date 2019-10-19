@@ -90,10 +90,7 @@ namespace DDCImprover.Core.ViewModels
             // Ensure that the log directory exists
             Directory.CreateDirectory(Configuration.LogDirectory);
 
-            var thisAsm = Assembly.GetExecutingAssembly();
-            string version = $"v{thisAsm.GetName().Version.Major}.{thisAsm.GetName().Version.Minor}.{thisAsm.GetName().Version.Build}";
-            ProgramTitle = "DDC Improver " + version;
-            XMLProcessor.Version = version;
+            ProgramTitle = "DDC Improver " + Program.Version;
 
             try
             {
