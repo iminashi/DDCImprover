@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.25.292</AssemblyVersion>
-    <FileVersion>2.2.25.292</FileVersion>
+    <AssemblyVersion>2.2.32.292</AssemblyVersion>
+    <FileVersion>2.2.32.292</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright ©  2019</Copyright>
   </PropertyGroup>
@@ -35,6 +35,9 @@
     <None Remove="MessageBox.xaml" />
     <None Remove="Views\ConfigurationWindow.xaml" />
     <None Remove="Views\HelpWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\customevent_so.png" Link="Assets\Help\customevent_so.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\icon.ico" Link="Assets\icon.ico" />

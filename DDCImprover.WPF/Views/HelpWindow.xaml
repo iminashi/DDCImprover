@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDCImprover.WPF"
         mc:Ignorable="d"
-        Title="Help" Height="650" Width="841.776" Icon="../Assets/information32.png">
+        Title="Help" Height="650" Width="900" Icon="../Assets/information32.png">
     <FlowDocumentScrollViewer Hyperlink.Click="FlowDocHyperlink_Click">
         <FlowDocument>
             <Paragraph FontSize="24">1. Basic Usage</Paragraph>
@@ -37,7 +37,7 @@
                 If an FHP is set at the start of the phrase, it will be moved to the new position. The FHP at the old position is deleted if no note is there.
             </Paragraph>
 
-            <Paragraph FontSize="24">3. Special Chord Name Suffixes</Paragraph>
+            <Paragraph FontSize="24">3. Special Chord Names and Suffixes</Paragraph>
             <Paragraph>
                 In order to use these, the "Fix Chord Names" setting must be enabled.
             </Paragraph>
@@ -69,7 +69,9 @@
                     <Paragraph FontWeight="Bold">-arp</Paragraph>
                 </ListItem>
             </List>
-            <Paragraph Padding="20,0,0,0">Changes the handshape into an arpeggio. Can be used to make arpeggios that have chords inside. Requires a relatively new version of the Toolkit to work.
+            <Paragraph Padding="20,0,0,0">
+                Changes the handshape into an arpeggio. Can be used to make arpeggios that have chords inside.
+                Requires a relatively new version of the Toolkit to work.
             </Paragraph>
 
             <List>
@@ -77,11 +79,43 @@
                     <Paragraph FontWeight="Bold">-nop</Paragraph>
                 </ListItem>
             </List>
-            <Paragraph Padding="20,0,0,0">Changes the panel of a regular chord into the panel of a double stop. It is a really minor difference and mostly useless.
+            <Paragraph Padding="20,0,0,0">
+                Changes the panel of a regular chord into the panel of a double stop.
+                It is a really minor difference and mostly pointless.
+            </Paragraph>
+
+
+            <Paragraph FontSize="24">4. Custom Events</Paragraph>
+            <Paragraph>
+                You can place events in EOF by selecting a beat and pressing Shift+P. Enter the event text and check "Rocksmith event marker".
+            </Paragraph>
+            <List>
+                <ListItem>
+                    <Paragraph FontWeight="Bold">so ("Slide out")</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph TextAlignment="Center" >
+                <Image Source="../Assets/help/customevent_so.png" MaxWidth="887" MaxHeight="464"/>
+            </Paragraph>
+            <Paragraph Padding="20,0,0,0">
+                When placed on a chord that has an unpitched slide out, the program generates an empty handshape near the end of the slide.
+                This will cause the fingers in the handshape to slide down or up with the slide. It is a minor effect that is sometimes used in oDLC.
+                Note: The handshape is added only to the highest difficulty level.
+            </Paragraph>
+            <Paragraph Padding="20,0,0,0">
+                If the chord is on a beat you can simply use the event "so" on that beat.
+                If the chord is not on a beat, you must specify the timecode of the chord in the event text in the same format as in the phrase moving, for example "so2m16s885".
+            </Paragraph>
+            <List>
+                <ListItem>
+                    <Paragraph FontWeight="Bold">removebeats</Paragraph>
+                </ListItem>
+            </List>
+            <Paragraph Padding="20,0,0,0">
+                Removes the beats starting from the beat that is placed on until the end. Does not really have a practical use.
             </Paragraph>
             
-
-            <Paragraph FontSize="24">4. XML Checking</Paragraph>
+            <Paragraph FontSize="24">5. XML Checking</Paragraph>
             <Paragraph>The program will check the XML for the following:</Paragraph>
             <List>
                 <ListItem>
@@ -137,6 +171,11 @@
                 <ListItem>
                     <Paragraph>
                         Notes inside a noguitar phrase
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>
+                        Unpitched slide notes with LinkNext
                     </Paragraph>
                 </ListItem>
             </List>
