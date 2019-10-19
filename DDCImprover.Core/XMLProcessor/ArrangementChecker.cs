@@ -174,6 +174,12 @@ namespace DDCImprover.Core
             {
                 var note = notes[i];
 
+                // Check for notes with LinkNext and unpitched slide
+                if(note.IsLinkNext && note.IsUnpitchedSlide)
+                {
+                    AddIssue($"Unpitched slide note with LinkNext at {note.Time.TimeToString()}.", note.Time);
+                }
+
                 // Check for notes with both harmonic and pinch harmonic
                 if (note.IsHarmonic && note.IsHarmonicPinch)
                 {
@@ -235,6 +241,12 @@ namespace DDCImprover.Core
                     if (!chord.IsIgnore && chordNotes.Any(cn => cn.Sustain > 0f && cn.Fret == 7 && cn.IsHarmonic))
                     {
                         AddIssue($"7th fret harmonic note with sustain at {chord.Time.TimeToString()}.", chord.Time);
+                    }
+
+                    // Check for notes with LinkNext and unpitched slide
+                    if (chordNotes.Any(cn => cn.IsLinkNext && cn.IsUnpitchedSlide))
+                    {
+                        AddIssue($"Chord note set as unpitched slide note with LinkNext at {chord.Time.TimeToString()}.", chord.Time);
                     }
 
                     // Check for notes with both harmonic and pinch harmonic
@@ -363,7 +375,7 @@ namespace DDCImprover.Core
                         continue;
                 }
 
-                if (!closeNoteFound && chords.Count > 0 && chordIndex < chords.Count)
+                if (/*!closeNoteFound && */chords.Count > 0 && chordIndex < chords.Count)
                 {
                     while (chordIndex < chords.Count)
                     {
@@ -386,8 +398,8 @@ namespace DDCImprover.Core
                 }
 
                 // Ignore anchors that start a phrase
-                if (!closeNoteFound && song.PhraseIterations.Any(pi => Utils.TimeEqualToMilliseconds(pi.Time, anchor.Time)))
-                    continue;
+                //if (!closeNoteFound && song.PhraseIterations.Any(pi => Utils.TimeEqualToMilliseconds(pi.Time, anchor.Time)))
+                //    continue;
 
                 if (closeNoteFound)
                 {

@@ -3,6 +3,7 @@
 -Added linknext chord slide handshape length correction
 -Added anchor placeholder note removing
 -Added checking for need to reset arrangement ids
+-Added XML check for unpitched slide notes with linknext
 -Updated Avalonia to 0.8.3
 -Migrated the WPF version to run on .NET Core 3
 
