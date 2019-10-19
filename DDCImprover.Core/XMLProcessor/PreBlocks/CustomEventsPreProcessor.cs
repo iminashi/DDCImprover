@@ -14,16 +14,6 @@ namespace DDCImprover.Core.PreBlocks
         {
             var events = song.Events;
 
-            var removeBeatsEvent = events.FirstOrDefault(ev => ev.Code.Equals("removebeats", StringComparison.OrdinalIgnoreCase));
-            if (removeBeatsEvent != null)
-            {
-                song.Ebeats.RemoveAll(b => b.Time >= removeBeatsEvent.Time);
-
-                Log($"removebeats event found: Removed beats from {removeBeatsEvent.Time.TimeToString()} onward.");
-
-                events.Remove(removeBeatsEvent);
-            }
-
             var width3events = events.Where(ev => ev.Code.Equals("w3", StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var w3event in width3events)
             {

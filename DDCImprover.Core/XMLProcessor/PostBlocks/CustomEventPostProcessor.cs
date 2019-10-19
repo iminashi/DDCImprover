@@ -24,6 +24,16 @@ namespace DDCImprover.Core.PostBlocks
         {
             var events = song.Events;
 
+            var removeBeatsEvent = events.FirstOrDefault(ev => ev.Code.Equals("removebeats", StringComparison.OrdinalIgnoreCase));
+            if (removeBeatsEvent != null)
+            {
+                song.Ebeats.RemoveAll(b => b.Time >= removeBeatsEvent.Time);
+
+                Log($"removebeats event found: Removed beats from {removeBeatsEvent.Time.TimeToString()} onward.");
+
+                events.Remove(removeBeatsEvent);
+            }
+
             var slideoutEvents = events.Where(ev => ev.Code.StartsWith("so", StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var slideEvent in slideoutEvents)
             {

@@ -208,6 +208,17 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
+        public void CustomEvent_RemoveBeats_Test()
+        {
+            testSong.Events.Add(new Event("removebeats", 112.5f));
+
+            new CustomEventPostProcessor(new List<ImproverMessage>()).Apply(testSong, nullLog);
+
+            testSong.Events.Should().NotContain(ev => ev.Code == "removebeats");
+            testSong.Ebeats.Should().NotContain(eb => eb.Time >= 112.5f);
+        }
+
+        [Fact]
         public void CustomEvent_SlideOut_Test()
         {
             const float chordTime = 20.222f;
