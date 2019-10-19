@@ -74,13 +74,12 @@ namespace Rocksmith2014Xml
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
             };
 
-            using (XmlWriter writer = XmlWriter.Create(filename, settings))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("song");
-                ((IXmlSerializable)this).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            using XmlWriter writer = XmlWriter.Create(filename, settings);
+
+            writer.WriteStartDocument();
+            writer.WriteStartElement("song");
+            ((IXmlSerializable)this).WriteXml(writer);
+            writer.WriteEndElement();
         }
 
         public static RS2014Song Load(string filename)
@@ -91,13 +90,12 @@ namespace Rocksmith2014Xml
                 IgnoreWhitespace = true
             };
 
-            using (XmlReader reader = XmlReader.Create(filename, settings))
-            {
-                reader.MoveToContent();
-                RS2014Song song = new RS2014Song();
-                ((IXmlSerializable)song).ReadXml(reader);
-                return song;
-            }
+            using XmlReader reader = XmlReader.Create(filename, settings);
+
+            reader.MoveToContent();
+            RS2014Song song = new RS2014Song();
+            ((IXmlSerializable)song).ReadXml(reader);
+            return song;
         }
 
         public static Task<RS2014Song> LoadAsync(string filename)

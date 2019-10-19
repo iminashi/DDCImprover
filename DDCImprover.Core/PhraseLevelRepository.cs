@@ -18,7 +18,8 @@ namespace DDCImprover.Core
 
         private static string GetHash(string filename)
         {
-            var hash = SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(filename));
+            using SHA1 sha1 = SHA1.Create();
+            var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(filename));
             return hash.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("x2"))).ToString();
         }
 
@@ -28,26 +29,24 @@ namespace DDCImprover.Core
                 return null;
 
             string entryName = GetHash(filename);
+            using ZipArchive archive = ZipFile.OpenRead(repositoryFile);
 
-            using (ZipArchive archive = ZipFile.OpenRead(repositoryFile))
+            var entry = archive.GetEntry(entryName);
+            if (entry != null)
             {
-                var entry = archive.GetEntry(entryName);
-                if (entry != null)
+                var dict = new Dictionary<string, int>();
+
+                using StreamReader reader = new StreamReader(entry.Open());
+
+                string content = reader.ReadToEnd();
+                var pairs = content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 0; i < pairs.Length; i += 2)
                 {
-                    var dict = new Dictionary<string, int>();
-
-                    using (StreamReader reader = new StreamReader(entry.Open()))
-                    {
-                        string content = reader.ReadToEnd();
-                        var pairs = content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        for (int i = 0; i < pairs.Length; i += 2)
-                        {
-                            dict.Add(pairs[i], int.Parse(pairs[i + 1]));
-                        }
-
-                        return dict;
-                    }
+                    dict.Add(pairs[i], int.Parse(pairs[i + 1]));
                 }
+
+                return dict;
             }
 
             return null;
@@ -79,19 +78,16 @@ namespace DDCImprover.Core
             if (queue.Count == 0)
                 return;
 
-            using (ZipArchive archive = ZipFile.Open(repositoryFile, ZipArchiveMode.Update))
-            {
-                foreach (var keyVal in queue)
-                {
-                    // Delete old entry if one exists
-                    archive.GetEntry(keyVal.Key)?.Delete();
+            using ZipArchive archive = ZipFile.Open(repositoryFile, ZipArchiveMode.Update);
 
-                    var entry = archive.CreateEntry(keyVal.Key);
-                    using (StreamWriter writer = new StreamWriter(entry.Open()))
-                    {
-                        writer.Write(keyVal.Value);
-                    }
-                }
+            foreach (var keyVal in queue)
+            {
+                // Delete old entry if one exists
+                archive.GetEntry(keyVal.Key)?.Delete();
+
+                var entry = archive.CreateEntry(keyVal.Key);
+                using StreamWriter writer = new StreamWriter(entry.Open());
+                writer.Write(keyVal.Value);
             }
 
             queue.Clear();

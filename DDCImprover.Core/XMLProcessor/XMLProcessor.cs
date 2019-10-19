@@ -309,46 +309,46 @@ namespace DDCImprover.Core
 
         private bool ReadSongMetaData()
         {
-            using (XmlReader reader = XmlReader.Create(XMLFileFullPath))
+            using XmlReader reader = XmlReader.Create(XMLFileFullPath);
+
+            reader.MoveToContent();
+
+            if (reader.LocalName != "song")
             {
-                reader.MoveToContent();
+                StatusMessages.Add(new ImproverMessage("This file is not a valid Rocksmith XML file.", MessageType.Error));
+                return false;
+            }
 
-                if (reader.LocalName != "song")
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    StatusMessages.Add(new ImproverMessage("This file is not a valid Rocksmith XML file.", MessageType.Error));
-                    return false;
-                }
-
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
+                    if (reader.Name == "title")
                     {
-                        if (reader.Name == "title")
-                        {
-                            SongTitle = reader.ReadElementContentAsString();
-                        }
-                        else if (reader.Name == "artistName")
-                        {
-                            ArtistName = reader.ReadElementContentAsString();
-                        }
-                        else if (reader.Name == "arrangementProperties")
-                        {
-                            var arrProp = XNode.ReadFrom(reader) as XElement;
-                            ArrangementType = arrProp.Attribute("pathLead").Value == "1" ? "Lead" :
-                                              arrProp.Attribute("pathRhythm").Value == "1" ? "Rhythm" :
-                                              arrProp.Attribute("pathBass").Value == "1" ? "Bass" : "N/A";
+                        SongTitle = reader.ReadElementContentAsString();
+                    }
+                    else if (reader.Name == "artistName")
+                    {
+                        ArtistName = reader.ReadElementContentAsString();
+                    }
+                    else if (reader.Name == "arrangementProperties")
+                    {
+                        var arrProp = XNode.ReadFrom(reader) as XElement;
+                        ArrangementType = arrProp.Attribute("pathLead").Value == "1" ? "Lead" :
+                                          arrProp.Attribute("pathRhythm").Value == "1" ? "Rhythm" :
+                                          arrProp.Attribute("pathBass").Value == "1" ? "Bass" : "N/A";
 
-                            if (arrProp.Attribute("bonusArr").Value == "1")
-                                ArrangementType = "Bonus " + ArrangementType;
-                            else if (arrProp.Attribute("represent").Value == "0")
-                                ArrangementType = "Alt. " + ArrangementType;
+                        if (arrProp.Attribute("bonusArr").Value == "1")
+                            ArrangementType = "Bonus " + ArrangementType;
+                        else if (arrProp.Attribute("represent").Value == "0")
+                            ArrangementType = "Alt. " + ArrangementType;
 
-                            // Finished reading everything needed
-                            return true;
-                        }
+                        // Finished reading everything needed
+                        return true;
                     }
                 }
             }
+
             return false;
         }
 
@@ -441,41 +441,40 @@ namespace DDCImprover.Core
                 arguments += " -p Y";
             }
 
-            using (Process ddcProcess = new Process())
+            using Process ddcProcess = new Process();
+
+            ddcProcess.StartInfo.UseShellExecute = false;
+            ddcProcess.StartInfo.CreateNoWindow = true;
+
+            if (UseWine)
             {
-                ddcProcess.StartInfo.UseShellExecute = false;
-                ddcProcess.StartInfo.CreateNoWindow = true;
+                ddcProcess.StartInfo.FileName = "wine";
+                ddcProcess.StartInfo.Arguments = $"\"{Preferences.DDCExecutablePath}\" {arguments}";
+            }
+            else
+            {
+                ddcProcess.StartInfo.FileName = Preferences.DDCExecutablePath;
+                ddcProcess.StartInfo.Arguments = arguments;
+            }
 
-                if (UseWine)
-                {
-                    ddcProcess.StartInfo.FileName = "wine";
-                    ddcProcess.StartInfo.Arguments = $"\"{Preferences.DDCExecutablePath}\" {arguments}";
-                }
-                else
-                {
-                    ddcProcess.StartInfo.FileName = Preferences.DDCExecutablePath;
-                    ddcProcess.StartInfo.Arguments = arguments;
-                }
+            ddcProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(XMLFileFullPath);
 
-                ddcProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(XMLFileFullPath);
+            Log($"Executing 'ddc.exe {arguments}'");
 
-                Log($"Executing 'ddc.exe {arguments}'");
+            ddcProcess.Start();
+            ddcProcess.WaitForExit();
 
-                ddcProcess.Start();
-                ddcProcess.WaitForExit();
-
-                switch (ddcProcess.ExitCode)
-                {
-                    case 0:
-                        Log($"DDC exit code {ddcProcess.ExitCode}: Exited normally.");
-                        break;
-                    case 1:
-                        throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: System Error.");
-                    case 2:
-                        throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Application error.");
-                    default:
-                        throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Undefined.");
-                }
+            switch (ddcProcess.ExitCode)
+            {
+                case 0:
+                    Log($"DDC exit code {ddcProcess.ExitCode}: Exited normally.");
+                    break;
+                case 1:
+                    throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: System Error.");
+                case 2:
+                    throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Application error.");
+                default:
+                    throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Undefined.");
             }
         }
 
