@@ -2,6 +2,7 @@
 using DDCImprover.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace DDCImprover.Avalonia
@@ -15,7 +16,7 @@ namespace DDCImprover.Avalonia
             parentWindow = parent;
         }
 
-        public Task<string[]> OpenFileDialog(string title, FileFilter filter, bool multiSelect)
+        public async Task<string[]> OpenFileDialog(string title, FileFilter filter, bool multiSelect)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -24,7 +25,18 @@ namespace DDCImprover.Avalonia
                 AllowMultiple = multiSelect,
             };
 
-            return openFileDialog.ShowAsync(parentWindow);
+            var filenames = await openFileDialog.ShowAsync(parentWindow);
+
+            // TODO: Hack for the open file dialog replacing spaces with %20 on Mac
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                for (int i = 0; i < filenames.Length; i++)
+                {
+                    filenames[i] = filenames[i].Replace("%20", " ");
+                }
+            }
+
+            return filenames;
         }
 
         public void NotifyUser(string message, string caption)

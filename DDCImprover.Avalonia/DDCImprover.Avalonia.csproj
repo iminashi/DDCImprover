@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
     <AssemblyName>DDCImprover</AssemblyName>
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.32.292</AssemblyVersion>
-    <FileVersion>2.2.32.292</FileVersion>
+    <AssemblyVersion>2.2.36.292</AssemblyVersion>
+    <FileVersion>2.2.36.292</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright ©  2019</Copyright>
   </PropertyGroup>
