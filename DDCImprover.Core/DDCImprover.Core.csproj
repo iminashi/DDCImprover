@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>2.2.0</Version>
-    <AssemblyVersion>2.2.100.184</AssemblyVersion>
-    <FileVersion>2.2.100.184</FileVersion>
+    <AssemblyVersion>2.2.107.292</AssemblyVersion>
+    <FileVersion>2.2.107.292</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -76,8 +76,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="9.16.9" />
-    <PackageReference Include="ReactiveUI.Fody" Version="9.16.9" />
+    <PackageReference Include="ReactiveUI" Version="10.5.7" />
+    <PackageReference Include="ReactiveUI.Fody" Version="10.5.7" />
   </ItemGroup>
 
   <ItemGroup>

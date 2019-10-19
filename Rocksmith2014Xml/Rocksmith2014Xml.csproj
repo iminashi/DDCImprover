@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <AssemblyVersion>1.0.26.163</AssemblyVersion>
-    <FileVersion>1.0.26.163</FileVersion>
+    <AssemblyVersion>1.0.43.292</AssemblyVersion>
+    <FileVersion>1.0.43.292</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

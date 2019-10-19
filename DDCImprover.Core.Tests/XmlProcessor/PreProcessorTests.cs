@@ -10,7 +10,6 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
         public PreProcessorTests()
         {
-            Configuration.LogDirectory = @".\logs";
             testConfig.DDCExecutablePath = @".\ddc\ddc.exe";
             testConfig.EnableLogging = false;
             testConfig.RestoreNoguitarSectionAnchors = true;

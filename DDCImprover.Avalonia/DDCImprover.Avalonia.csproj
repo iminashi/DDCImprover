@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.17.184</AssemblyVersion>
-    <FileVersion>2.2.17.184</FileVersion>
+    <AssemblyVersion>2.2.23.292</AssemblyVersion>
+    <FileVersion>2.2.23.292</FileVersion>
     <Product>DDC Improver</Product>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
@@ -50,12 +50,12 @@
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\OF.png" Link="Assets\Help\OF.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.8.0" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.0" />
-    <PackageReference Include="System.Reactive.Core" Version="4.1.5" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.1.5" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.1.5" />
+    <PackageReference Include="Avalonia" Version="0.8.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.8.3" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.3" />
+    <PackageReference Include="System.Reactive.Core" Version="4.2.0" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="4.2.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
