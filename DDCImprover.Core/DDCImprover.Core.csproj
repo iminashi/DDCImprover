@@ -7,7 +7,7 @@
     <Version>2.2.0</Version>
     <AssemblyVersion>2.2.128.293</AssemblyVersion>
     <FileVersion>2.2.128.293</FileVersion>
-    <Copyright>Copyright ©  2019</Copyright>
+    <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

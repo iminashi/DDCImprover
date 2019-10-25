@@ -9,6 +9,7 @@
     <AssemblyName>DDCImprover</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <Authors>iminashi</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

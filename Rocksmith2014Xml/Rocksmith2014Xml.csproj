@@ -5,6 +5,9 @@
     <LangVersion>latest</LangVersion>
     <AssemblyVersion>1.0.51.293</AssemblyVersion>
     <FileVersion>1.0.51.293</FileVersion>
+    <Company>iminashi</Company>
+    <Authors>iminashi</Authors>
+    <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

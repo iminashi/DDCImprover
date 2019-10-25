@@ -9,7 +9,7 @@
     <AssemblyVersion>2.2.36.292</AssemblyVersion>
     <FileVersion>2.2.36.292</FileVersion>
     <Product>DDC Improver</Product>
-    <Copyright>Copyright ©  2019</Copyright>
+    <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
