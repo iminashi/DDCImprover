@@ -15,7 +15,6 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -142,9 +141,9 @@ namespace DDCImprover.Core.ViewModels
         }
 
         /// <summary>
-        /// Checks if DDC executable exists and prompts the user for its location if not found.
+        /// Checks if the DDC executable exists and prompts the user for its location if not found.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The result of the check.</returns>
         public async Task<DDCExecutableCheckResult> CheckDDCExecutable()
         {
             if (!File.Exists(XMLProcessor.Preferences.DDCExecutablePath))
@@ -215,9 +214,9 @@ namespace DDCImprover.Core.ViewModels
         }
 
         /// <summary>
-        /// Creates XML Processors and adds them to the list.
+        /// Creates the XML Processors and adds them to the XMLProcessors collection.
         /// </summary>
-        /// <param name="filenames"></param>
+        /// <param name="filenames">A list of the names of XML files to load.</param>
         public async Task AddFilesAsync(IEnumerable<string> filenames)
         {
 #if DEBUG
@@ -299,7 +298,7 @@ namespace DDCImprover.Core.ViewModels
         /// <summary>
         /// Creates a tooltip from skipped filenames for the statusbar message.
         /// </summary>
-        /// <param name="skippedFiles"></param>
+        /// <param name="skippedFiles">Collection of filenames that were skipped.</param>
         private void UpdateStatusBarForSkippedFiles(ConcurrentBag<string> skippedFiles)
         {
             string tooltip = skippedFiles.Aggregate(
@@ -379,9 +378,18 @@ namespace DDCImprover.Core.ViewModels
                 await Task.WhenAll(consumers).ConfigureAwait(false);
             }*/
 
-            ProcessingCompleted();
+            ShowElapsedTime();
+
+            if (XMLProcessor.Preferences.CheckForArrIdReset)
+            {
+                PhraseLevelRepository.UpdateRepository();
+            }
         }
 
+        /// <summary>
+        /// Loads the XML files for each processor.
+        /// </summary>
+        /// <returns>All XML processors that were loaded successfully.</returns>
         private IEnumerable<XMLProcessor> SetupXMLProcessors()
         {
             foreach (var xmlProcessor in XMLProcessors.ToArray())
@@ -393,7 +401,10 @@ namespace DDCImprover.Core.ViewModels
             }
         }
 
-        private void ProcessingCompleted()
+        /// <summary>
+        /// Shows the time it took to process the files in the statusbar.
+        /// </summary>
+        private void ShowElapsedTime()
         {
             stopwatch.Stop();
 
@@ -406,26 +417,24 @@ namespace DDCImprover.Core.ViewModels
             }
 
             ShowInStatusbar($"Processing completed in {timeElapsed}{(isSeconds ? "s" : "ms")}");
-
-            if (XMLProcessor.Preferences.CheckForArrIdReset)
-            {
-                PhraseLevelRepository.UpdateRepository();
-            }
         }
 
+        /// <summary>
+        /// Removes the "View" text from the Log column for all opened files.
+        /// </summary>
         public void RemoveViewLogTexts()
         {
             foreach (var xmlProcessor in XMLProcessors)
             {
-                xmlProcessor.LogViewText = "";
+                xmlProcessor.LogViewText = string.Empty;
             }
         }
 
         /// <summary>
         /// Sets the message to be displayed in the statusbar.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="tooltip"></param>
+        /// <param name="message">The message to show in the statusbar.</param>
+        /// <param name="tooltip">The tooltip for the message.</param>
         private void ShowInStatusbar(string message, string tooltip = null)
         {
             StatusbarMessage = message;

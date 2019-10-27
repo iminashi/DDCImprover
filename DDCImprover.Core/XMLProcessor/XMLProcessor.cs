@@ -206,7 +206,7 @@ namespace DDCImprover.Core
             try
             {
                 StatusMessages.Clear();
-                LogViewText = "";
+                LogViewText = string.Empty;
 
                 Log($"Processing file {XMLFileFullPath}");
 
