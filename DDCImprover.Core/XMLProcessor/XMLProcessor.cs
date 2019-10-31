@@ -137,175 +137,6 @@ namespace DDCImprover.Core
                 Status = ImproverStatus.LoadError;
         }
 
-        internal void SortStatusMessages()
-        {
-            StatusMessages = StatusMessages.Distinct().OrderBy(m => m.TimeCode).ToList();
-        }
-
-        private void SetupFilePaths(string xmlFilePath)
-        {
-            XMLFileFullPath = xmlFilePath;
-
-            FileInfo xmlFileInfo = new FileInfo(XMLFileFullPath);
-
-            XMLFileName = xmlFileInfo.Name;
-
-            TempXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "ORIGINAL_" + XMLFileName);
-            DDCXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DDC_" + XMLFileName);
-            ManualDDXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DD_" + XMLFileName);
-
-            LogFileFullPath = Path.Combine(Configuration.LogDirectory, XMLFileName + ".log");
-        }
-
-        private void Log(string message)
-        {
-            if (Preferences.EnableLogging)
-            {
-                logStreamWriter?.WriteLine(message);
-            }
-        }
-
-        private bool TryOpenLogFile()
-        {
-            try
-            {
-                logStreamWriter = File.CreateText(LogFileFullPath);
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine($"Could not open log file ({LogFileFullPath}).");
-                Debug.WriteLine(e.Message);
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Applies workarounds, executes DDC and saves processed file.
-        /// </summary>
-        /// <param name="progress">Progress reporter.</param>
-        public void ProcessFile(IProgress<ProgressValue> progress)
-        {
-            if (Status == ImproverStatus.LoadError)
-                return;
-
-            if (Preferences.EnableLogging)
-            {
-                int tries = 0;
-                while (!TryOpenLogFile())
-                {
-                    if (++tries > 10)
-                        break;
-
-                    LogFileFullPath = Regex.Replace(LogFileFullPath, @"_*\d*\.log$", $"_{tries}.log");
-                }
-            }
-
-            try
-            {
-                StatusMessages.Clear();
-                LogViewText = string.Empty;
-
-                Log($"Processing file {XMLFileFullPath}");
-
-                Status = ImproverStatus.PreProcessing;
-
-                // Preprocess
-                preProcessor = new XMLPreProcessor(this, Log);
-                preProcessor.Process();
-                SavePreprocessedFile();
-
-                // Generate DD
-                if (isNonDDFile)
-                {
-                    progress?.Report(ProgressValue.OneStep);
-
-                    Status = ImproverStatus.GeneratingDD;
-                    GenerateDD();
-
-                    progress?.Report(ProgressValue.OneStep);
-                }
-                else
-                {
-                    progress?.Report(ProgressValue.TwoSteps);
-                }
-
-                LoadDDCXMLFile();
-
-                Status = ImproverStatus.PostProcessing;
-
-                // Postprocess
-                postProcessor = new XMLPostProcessor(this, preProcessor, Log);
-                postProcessor.Process();
-                SavePostprocessedFile();
-            }
-            catch (DDCException e)
-            {
-                Log("ERROR: " + e.Message);
-                StatusMessages.Add(new ImproverMessage(e.Message, MessageType.Error));
-
-                Status = ImproverStatus.DDCError;
-            }
-            catch (Exception e)
-            {
-                //if (Debugger.IsAttached)
-                //    Debugger.Break();
-
-                Log("ERROR: " + e.Message);
-                Log(e.StackTrace);
-
-                StatusMessages.Add(new ImproverMessage(e.Message, MessageType.Error));
-                Status = ImproverStatus.ProcessingError;
-            }
-            finally
-            {
-                if (File.Exists(TempXMLFileFullPath))
-                {
-                    // Delete processed pre-DDC XML file
-                    if (File.Exists(XMLFileFullPath))
-                    {
-                        File.Delete(XMLFileFullPath);
-                    }
-
-                    // Restore original XML file
-                    File.Move(TempXMLFileFullPath, XMLFileFullPath);
-                }
-
-                if (Preferences.EnableLogging && logStreamWriter != null)
-                {
-                    LogViewText = "View";
-                    logStreamWriter.Close();
-                }
-
-                // Processing completed without errors if status is PostProcessing
-                if (Status == ImproverStatus.PostProcessing)
-                {
-                    Status = ImproverStatus.Completed;
-                    progress?.Report(ProgressValue.OneStep);
-                }
-                else
-                {
-                    progress?.Report(ProgressValue.Error);
-                }
-
-                Cleanup();
-            }
-        }
-
-        private void Cleanup()
-        {
-            NGAnchors.Clear();
-            AddedBeats.Clear();
-
-            preProcessor = null;
-            postProcessor = null;
-
-            OriginalSong = null;
-            DDCSong = null;
-        }
-
         private bool ReadSongMetaData()
         {
             using XmlReader reader = XmlReader.Create(XMLFileFullPath);
@@ -351,6 +182,37 @@ namespace DDCImprover.Core
             return false;
         }
 
+        internal void SortStatusMessages()
+        {
+            StatusMessages = StatusMessages
+                .Distinct()
+                .OrderBy(m => m.TimeCode)
+                .ToList();
+        }
+
+        private void SetupFilePaths(string xmlFilePath)
+        {
+            XMLFileFullPath = xmlFilePath;
+
+            FileInfo xmlFileInfo = new FileInfo(XMLFileFullPath);
+
+            XMLFileName = xmlFileInfo.Name;
+
+            TempXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "ORIGINAL_" + XMLFileName);
+            DDCXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DDC_" + XMLFileName);
+            ManualDDXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DD_" + XMLFileName);
+
+            LogFileFullPath = Path.Combine(Configuration.LogDirectory, XMLFileName + ".log");
+        }
+
+        private void Log(string message)
+        {
+            if (Preferences.EnableLogging)
+            {
+                logStreamWriter?.WriteLine(message);
+            }
+        }
+
         public ImproverStatus LoadXMLFile()
         {
             try
@@ -368,6 +230,158 @@ namespace DDCImprover.Core
             }
 
             return Status;
+        }
+
+        /// <summary>
+        /// Applies workarounds, executes DDC and saves processed file.
+        /// </summary>
+        /// <param name="progress">Progress reporter.</param>
+        public void ProcessFile(IProgress<ProgressValue> progress)
+        {
+            if (Status == ImproverStatus.LoadError)
+                return;
+
+            if (Preferences.EnableLogging)
+                InitializeLogging();
+
+            try
+            {
+                StatusMessages.Clear();
+                LogViewText = string.Empty;
+
+                Log($"Processing file {XMLFileFullPath}");
+
+                Preprocess();
+
+                if (isNonDDFile)
+                    GenerateDD(progress);
+                else
+                    progress?.Report(ProgressValue.TwoSteps);
+
+                LoadDDCXMLFile();
+
+                Postprocess();
+            }
+            catch (DDCException e)
+            {
+                Log("ERROR: " + e.Message);
+                StatusMessages.Add(new ImproverMessage(e.Message, MessageType.Error));
+
+                Status = ImproverStatus.DDCError;
+            }
+            catch (Exception e)
+            {
+                Log("ERROR: " + e.Message);
+                Log(e.StackTrace);
+
+                StatusMessages.Add(new ImproverMessage(e.Message, MessageType.Error));
+                Status = ImproverStatus.ProcessingError;
+            }
+            finally
+            {
+                DeleteTempFiles();
+
+                if (Preferences.EnableLogging && logStreamWriter != null)
+                {
+                    LogViewText = "View";
+                    logStreamWriter.Close();
+                }
+
+                // Processing completed without errors if status is PostProcessing
+                if (Status == ImproverStatus.PostProcessing)
+                {
+                    Status = ImproverStatus.Completed;
+                    progress?.Report(ProgressValue.OneStep);
+                }
+                else
+                {
+                    progress?.Report(ProgressValue.Error);
+                }
+
+                Cleanup();
+            }
+        }
+
+        private void InitializeLogging()
+        {
+            int tries = 0;
+            while (!TryOpenLogFile())
+            {
+                if (++tries > 10)
+                    break;
+
+                LogFileFullPath = Regex.Replace(LogFileFullPath, @"_*\d*\.log$", $"_{tries}.log");
+            }
+        }
+
+        private bool TryOpenLogFile()
+        {
+            try
+            {
+                logStreamWriter = File.CreateText(LogFileFullPath);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Could not open log file ({LogFileFullPath}).");
+                Debug.WriteLine(e.Message);
+
+                return false;
+            }
+        }
+
+        private void Preprocess()
+        {
+            Status = ImproverStatus.PreProcessing;
+            preProcessor = new XMLPreProcessor(this, Log);
+            preProcessor.Process();
+            SavePreprocessedFile();
+        }
+
+        private void GenerateDD(IProgress<ProgressValue> progress)
+        {
+            progress?.Report(ProgressValue.OneStep);
+
+            Status = ImproverStatus.GeneratingDD;
+            ExecuteDDC();
+
+            progress?.Report(ProgressValue.OneStep);
+        }
+
+        private void Postprocess()
+        {
+            Status = ImproverStatus.PostProcessing;
+            postProcessor = new XMLPostProcessor(this, preProcessor, Log);
+            postProcessor.Process();
+            SavePostprocessedFile();
+        }
+
+        private void DeleteTempFiles()
+        {
+            if (File.Exists(TempXMLFileFullPath))
+            {
+                // Delete the preprocessed XML file
+                if (File.Exists(XMLFileFullPath))
+                {
+                    File.Delete(XMLFileFullPath);
+                }
+
+                // Restore original XML file
+                File.Move(TempXMLFileFullPath, XMLFileFullPath);
+            }
+        }
+
+        private void Cleanup()
+        {
+            NGAnchors.Clear();
+            AddedBeats.Clear();
+
+            preProcessor = null;
+            postProcessor = null;
+
+            OriginalSong = null;
+            DDCSong = null;
         }
 
         private void LoadDDCXMLFile()
@@ -417,28 +431,12 @@ namespace DDCImprover.Core
             Log($"Processed DD file saved as {path}");
         }
 
-        private void GenerateDD()
+        private void ExecuteDDC()
         {
             if (!File.Exists(Preferences.DDCExecutablePath))
                 throw new FileNotFoundException("Could not find DDC executable", Preferences.DDCExecutablePath);
 
-            string arguments = $"\"{XMLFileName}\" -l {Preferences.DDCPhraseLength} -t N";
-
-            if (!string.IsNullOrEmpty(Preferences.DDCRampupFile) && Preferences.DDCRampupFile != "ddc_default")
-            {
-                string rmpPath = Path.Combine(Path.GetDirectoryName(Preferences.DDCExecutablePath), $"{Preferences.DDCRampupFile}.xml");
-                arguments += $" -m \"{rmpPath}\"";
-            }
-            if (!string.IsNullOrEmpty(Preferences.DDCConfigFile) && Preferences.DDCConfigFile != "ddc_default")
-            {
-                string cfgPath = Path.Combine(Path.GetDirectoryName(Preferences.DDCExecutablePath), $"{Preferences.DDCConfigFile}.cfg");
-                arguments += $" -c \"{cfgPath}\"";
-            }
-
-            if (Preferences.OverwriteOriginalFile)
-            {
-                arguments += " -p Y";
-            }
+            string arguments = CreateDDCArguments();
 
             using Process ddcProcess = new Process();
 
@@ -475,6 +473,29 @@ namespace DDCImprover.Core
                 default:
                     throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Undefined.");
             }
+        }
+
+        private string CreateDDCArguments()
+        {
+            string arguments = $"\"{XMLFileName}\" -l {Preferences.DDCPhraseLength} -t N";
+
+            if (!string.IsNullOrEmpty(Preferences.DDCRampupFile) && Preferences.DDCRampupFile != "ddc_default")
+            {
+                string rmpPath = Path.Combine(Path.GetDirectoryName(Preferences.DDCExecutablePath), $"{Preferences.DDCRampupFile}.xml");
+                arguments += $" -m \"{rmpPath}\"";
+            }
+            if (!string.IsNullOrEmpty(Preferences.DDCConfigFile) && Preferences.DDCConfigFile != "ddc_default")
+            {
+                string cfgPath = Path.Combine(Path.GetDirectoryName(Preferences.DDCExecutablePath), $"{Preferences.DDCConfigFile}.cfg");
+                arguments += $" -c \"{cfgPath}\"";
+            }
+
+            if (Preferences.OverwriteOriginalFile)
+            {
+                arguments += " -p Y";
+            }
+
+            return arguments;
         }
 
         public bool Equals(XMLProcessor other)
