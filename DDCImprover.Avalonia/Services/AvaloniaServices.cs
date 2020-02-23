@@ -25,18 +25,7 @@ namespace DDCImprover.Avalonia
                 AllowMultiple = multiSelect,
             };
 
-            var filenames = await openFileDialog.ShowAsync(parentWindow);
-
-            // TODO: Hack for the open file dialog replacing spaces with %20 on Mac
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                for (int i = 0; i < filenames.Length; i++)
-                {
-                    filenames[i] = filenames[i].Replace("%20", " ");
-                }
-            }
-
-            return filenames;
+            return await openFileDialog.ShowAsync(parentWindow);
         }
 
         public void NotifyUser(string message, string caption)

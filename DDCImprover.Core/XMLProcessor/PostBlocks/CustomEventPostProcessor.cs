@@ -9,7 +9,7 @@ namespace DDCImprover.Core.PostBlocks
 {
     /// <summary>
     /// Postprocesses custom events. Available:
-    /// "so"
+    /// "so", "removebeats"
     /// </summary>
     internal sealed class CustomEventPostProcessor : IProcessorBlock
     {

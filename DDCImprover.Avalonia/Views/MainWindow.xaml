@@ -2,14 +2,14 @@
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:core="clr-namespace:DDCImprover.Core;assembly?DDCImprover.Core"
-        xmlns:local="clr-namespace:DDCImprover.Avalonia;assembly?DDCImprover"
+        xmlns:local="clr-namespace:DDCImprover.Avalonia"
         Icon="resm:DDCImprover.Avalonia.Assets.icon.ico"
         Title="{Binding ProgramTitle, Mode=OneTime}"
         Height="450" Width="765" MinWidth="765" MinHeight="350">
 
   <Window.DataTemplates>
-    <DataTemplate DataType="{x:Type core:XMLProcessor}">
-      <local:EventStackPanel Orientation="Horizontal" Margin="0,3">
+    <DataTemplate>
+      <StackPanel Orientation="Horizontal" Margin="0,3">
         <TextBlock Text="{Binding ArtistName}" Width="160" />
         <TextBlock Text="{Binding SongTitle}" Width="163" />
         <TextBlock Text="{Binding ArrangementType}" Width="100" />
@@ -20,25 +20,20 @@
                    Foreground="Blue"
                    Cursor="Hand"
                    PointerReleased="LogLink_MouseButtonUp"/>
-      </local:EventStackPanel>
+      </StackPanel>
     </DataTemplate>
   </Window.DataTemplates>
   <DockPanel>
     <Menu DockPanel.Dock="Top" Background="#EEEEEE">
       <MenuItem Header="_File">
         <MenuItem Header="_Open Files..."
-                  Command="{Binding OpenFiles}"
-                  IsEnabled="{Binding !IsProcessingFiles}"
-                  Icon="{StaticResource openIcon}"/>
+                  Command="{Binding OpenFiles}"/>
         <MenuItem Header="_Add Files..." Command="{Binding AddFiles}"/>
         <MenuItem Header="C_lose All"
-                  Command="{Binding CloseAll}"
-                  IsEnabled="{Binding !IsProcessingFiles}" />
-        <!-- Command binding enable/disable is not working on menus so binding to IsEnabled manually -->
+                  Command="{Binding CloseAll}" />
         <Separator />
         <MenuItem Header="_Configuration"
                   IsEnabled="{Binding !IsProcessingFiles}"
-                  Icon="{StaticResource configIcon}"
                   Click="Configuration_Click"/>
         <Separator />
         <MenuItem Header="E_xit" Click="Exit_Click" />

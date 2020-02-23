@@ -6,7 +6,7 @@ namespace DDCImprover.Core.PreBlocks
 {
     /// <summary>
     /// Processes custom events. Available:
-    /// "removebeats", "w3"
+    /// "w3"
     /// </summary>
     internal sealed class CustomEventsPreProcessor : IProcessorBlock
     {

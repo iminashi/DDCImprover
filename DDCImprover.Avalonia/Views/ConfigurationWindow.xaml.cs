@@ -19,6 +19,11 @@ namespace DDCImprover.Avalonia.Views
         private readonly ConfigurationWindowViewModel viewModel;
         private readonly MainWindow parentWindow;
 
+        public ConfigurationWindow()
+        {
+            InitializeComponent();
+        }
+
         public ConfigurationWindow(ConfigurationWindowViewModel viewModel, MainWindow parent)
         {
             InitializeComponent();
@@ -47,9 +52,9 @@ namespace DDCImprover.Avalonia.Views
             Close();
         }
 
-        protected override void HandleClosed()
+        protected override void OnClosed(EventArgs e)
         {
-            base.HandleClosed();
+            base.OnClosed(e);
 
             parentWindow.ConfigWindowOpen = false;
         }

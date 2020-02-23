@@ -1,4 +1,5 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿<Window x:Class="DDCImprover.Avalonia.Views.ConfigurationWindow"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:DDCImprover.Avalonia.Views;assembly=DDCImprover"

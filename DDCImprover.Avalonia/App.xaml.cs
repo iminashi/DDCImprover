@@ -1,5 +1,7 @@
 ﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using DDCImprover.Avalonia.Views;
 
 namespace DDCImprover.Avalonia
 {
@@ -8,6 +10,14 @@ namespace DDCImprover.Avalonia
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        public override void OnFrameworkInitializationCompleted()
+        {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                desktop.MainWindow = new MainWindow();
+
+            base.OnFrameworkInitializationCompleted();
         }
     }
 }

@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.36.292</AssemblyVersion>
-    <FileVersion>2.2.36.292</FileVersion>
+    <AssemblyVersion>2.2.67.54</AssemblyVersion>
+    <FileVersion>2.2.67.54</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
@@ -26,15 +26,10 @@
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="**\*.xaml">
+    <AvaloniaResource Include="**\*.xaml">
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Assets\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="MessageBox.xaml" />
-    <None Remove="Views\ConfigurationWindow.xaml" />
-    <None Remove="Views\HelpWindow.xaml" />
+    </AvaloniaResource>
+    <AvaloniaResource Include="Assets\*" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\customevent_so.png" Link="Assets\Help\customevent_so.png" />
@@ -54,26 +49,15 @@
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\OF.png" Link="Assets\Help\OF.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.8.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.8.3" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.3" />
-    <PackageReference Include="System.Reactive.Core" Version="4.2.0" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.2.0" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.2.0" />
+    <PackageReference Include="Avalonia" Version="0.9.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.3" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.3" />
+    <PackageReference Include="System.Reactive.Core" Version="4.3.2" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="4.3.2" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="MessageBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\ConfigurationWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\HelpWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Help\" />

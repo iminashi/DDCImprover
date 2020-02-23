@@ -6,6 +6,11 @@ namespace DDCImprover.Avalonia
 {
     public class MessageBox : Window
     {
+        public MessageBox()
+        {
+            InitializeComponent();
+        }
+
         public MessageBox(string message, string caption)
         {
             InitializeComponent();

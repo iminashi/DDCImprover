@@ -5,8 +5,8 @@
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>2.2.0</Version>
-    <AssemblyVersion>2.2.128.293</AssemblyVersion>
-    <FileVersion>2.2.128.293</FileVersion>
+    <AssemblyVersion>2.2.191.54</AssemblyVersion>
+    <FileVersion>2.2.191.54</FileVersion>
     <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
 
@@ -77,12 +77,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.0.2">
+    <PackageReference Include="Fody" Version="6.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="10.5.7" />
-    <PackageReference Include="ReactiveUI.Fody" Version="10.5.7" />
+    <PackageReference Include="ReactiveUI" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
   </ItemGroup>
 
   <ItemGroup>

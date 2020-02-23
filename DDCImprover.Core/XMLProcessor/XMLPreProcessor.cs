@@ -63,7 +63,7 @@ namespace DDCImprover.Core
                 // Apply workaround for DDC moving phrases
                 .ApplyFixIf(IsNonDDFile, new WeakBeatPhraseMovingFix())
 
-                // Enable 'unpitchedSlides' arrengement property if needed
+                // Enable 'unpitchedSlides' arrangement property if needed
                 .ApplyFix(new UnpitchedSlideChecker())
 
                 // Adjust handshape lengths

@@ -1,4 +1,5 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿<Window x:Class="DDCImprover.Avalonia.Views.HelpWindow"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Help" Width="900" Height="600">
   <ScrollViewer>

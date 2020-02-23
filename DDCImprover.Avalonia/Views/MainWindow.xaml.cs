@@ -86,7 +86,7 @@ namespace DDCImprover.Avalonia.Views
         {
             base.OnKeyDown(e);
 
-            if(e.Modifiers == InputModifiers.Control)
+            if(e.KeyModifiers == KeyModifiers.Control)
             {
                 switch(e.Key)
                 {
@@ -101,7 +101,7 @@ namespace DDCImprover.Avalonia.Views
                         break;
                 }
             }
-            else if(e.Modifiers == InputModifiers.None)
+            else if(e.KeyModifiers == KeyModifiers.None)
             {
                 if(e.Key == Key.F5)
                 {
@@ -257,7 +257,32 @@ namespace DDCImprover.Avalonia.Views
 
 #pragma warning disable RCS1213 // Remove unused member declaration.
         private void Exit_Click(object sender, RoutedEventArgs e)
-            => Application.Current.Exit();
+            => Close();
+
+        private void LogLink_MouseButtonUp(object sender, PointerReleasedEventArgs e)
+        {
+            string logFilePath = (sender as TextBlock)?.Tag as string;
+
+            if (File.Exists(logFilePath))
+            {
+                Window logWin = new Window
+                {
+                    Width = 700,
+                    Height = 600,
+                    Title = logFilePath,
+                    Content = new TextBox
+                    {
+                        BorderThickness = new Thickness(0.0),
+                        IsReadOnly = true,
+                        Text = File.ReadAllText(logFilePath),
+                    }
+                };
+
+                logWin.Show();
+
+                e.Handled = true;
+            }
+        }
 
         private void Configuration_Click(object sender, RoutedEventArgs e)
         {
@@ -280,9 +305,9 @@ namespace DDCImprover.Avalonia.Views
         }
 
         // Save configuration on exit.
-        protected override void HandleClosed()
-        {
-            base.HandleClosed();
+        protected override void OnClosed(EventArgs e)
+    {
+            base.OnClosed(e);
 
             XMLProcessor.Preferences.Save();
         }

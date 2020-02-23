@@ -1,16 +1,14 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Logging.Serilog;
-using DDCImprover.Avalonia.Views;
+using Avalonia.ReactiveUI;
 
 namespace DDCImprover.Avalonia
 {
     internal static class Program
     {
         private static void Main(string[] args)
-        {
-            BuildAvaloniaApp().Start<MainWindow>();
-        }
+            => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
