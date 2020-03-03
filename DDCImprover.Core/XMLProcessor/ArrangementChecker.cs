@@ -90,7 +90,7 @@ namespace DDCImprover.Core
                     for (int i = startIndex + 1; i < events.Count; i++)
                     {
                         var @event = events[i];
-                        if (@event.Code == "E3" || @event.Code == "D3")
+                        if ((@event.Code == "E3" || @event.Code == "D3") && !Utils.TimeEqualToMilliseconds(@event.Time, introApplauseStart.Value))
                         {
                             AddIssue($"Expected an end applause event (E13) after intro applause event (E3), instead found {@event.Code}.", @event.Time);
                         }
