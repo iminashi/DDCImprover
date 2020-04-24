@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <Version>2.2.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.2.67.54</AssemblyVersion>
-    <FileVersion>2.2.67.54</FileVersion>
+    <AssemblyVersion>2.2.69.115</AssemblyVersion>
+    <FileVersion>2.2.69.115</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
@@ -49,12 +49,12 @@
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\OF.png" Link="Assets\Help\OF.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.9.3" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.3" />
-    <PackageReference Include="System.Reactive.Core" Version="4.3.2" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.3.2" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.3.2" />
+    <PackageReference Include="Avalonia" Version="0.9.9" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.9" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.9" />
+    <PackageReference Include="System.Reactive.Core" Version="4.4.1" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="4.4.1" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
