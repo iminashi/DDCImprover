@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <AssemblyVersion>1.0.70.115</AssemblyVersion>
-    <FileVersion>1.0.70.115</FileVersion>
+    <AssemblyVersion>1.0.71.116</AssemblyVersion>
+    <FileVersion>1.0.71.116</FileVersion>
     <Company>iminashi</Company>
     <Authors>iminashi</Authors>
-    <Copyright>Copyright © 2019</Copyright>
+    <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

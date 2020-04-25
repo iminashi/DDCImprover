@@ -1,3 +1,9 @@
+2.3
+-Fixed a minor bug with crowd event placement checking
+-Bring the main window to the front when closing a child window (WPF version)
+-Updated Avalonia to 0.9.9
+-Updated .NET Core version to 3.1 (WPF version)
+
 2.2
 -Added 'so' slideout custom event
 -Added linknext chord slide handshape length correction
