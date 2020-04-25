@@ -110,6 +110,9 @@ namespace DDCImprover.WPF
                         Document = statusMessagesFlowDoc
                     }
                 };
+
+                messagesWindow.Closing += (s, e) => Activate();
+
                 messagesWindow.Show();
             }
         }
@@ -200,6 +203,8 @@ namespace DDCImprover.WPF
                         //HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
                     }
                 };
+
+                logWin.Closing += (s, e) => Activate();
 
                 TextOptions.SetTextFormattingMode(logWin, TextFormattingMode.Display);
 
