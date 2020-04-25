@@ -14,7 +14,6 @@ namespace DDCImprover.Core.PostBlocks
             var penultimateBeat = song.Ebeats[song.Ebeats.Count - 2];
             float audioEnd = song.SongLength;
             float lastBeatTime = lastBeat.Time;
-            int beatsRemoved = 0;
             bool first = true;
 
             if (lastBeatTime < audioEnd)
@@ -31,7 +30,6 @@ namespace DDCImprover.Core.PostBlocks
                 }
 
                 song.Ebeats.Remove(lastBeat);
-                beatsRemoved++;
 
                 if (first)
                 {
