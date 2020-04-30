@@ -149,7 +149,6 @@ namespace DDCImprover.Core.PreBlocks
                     _addedBeats.Add(beatToAdd);
                 }
             }
-
         }
     }
 }

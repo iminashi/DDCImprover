@@ -38,7 +38,7 @@ namespace DDCImprover.Core.PreBlocks
                     double note32nd = Math.Round((beat2.Time - beat1.Time) / 8, 3, MidpointRounding.AwayFromZero);
                     bool shortenBy16thNote = false;
 
-                    // Check if chord that starts the handshape is a linknext slide
+                    // Check if the chord that starts the handshape is a linknext slide
                     var startChord = level.Chords?.FindByTime(precedingStartTime);
                     if (startChord?.IsLinkNext == true && startChord?.ChordNotes?.Any(cn => cn.IsSlide) == true)
                     {
@@ -62,7 +62,7 @@ namespace DDCImprover.Core.PreBlocks
                         double newEndTime = Math.Round(followingStartTime - minDistance, 3, MidpointRounding.AwayFromZero);
                         int safetyCount = 0;
 
-                        // Shorten distance for very small note values
+                        // Shorten the distance for very small note values
                         while (newEndTime <= precedingStartTime && ++safetyCount < 3)
                         {
                             minDistance = Math.Round(minDistance / 2, 3, MidpointRounding.AwayFromZero);

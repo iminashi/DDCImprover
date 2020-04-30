@@ -1,19 +1,22 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.Layout;
+
 using DDCImprover.Core;
 using DDCImprover.Core.ViewModels;
+
 using ReactiveUI;
-using System.Reactive;
+
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace DDCImprover.Avalonia.Views
 {
@@ -86,9 +89,9 @@ namespace DDCImprover.Avalonia.Views
         {
             base.OnKeyDown(e);
 
-            if(e.KeyModifiers == KeyModifiers.Control)
+            if (e.KeyModifiers == KeyModifiers.Control)
             {
-                switch(e.Key)
+                switch (e.Key)
                 {
                     case Key.O:
                         Observable.Return(/*addingFiles:*/ false).InvokeCommand(ViewModel.OpenFiles);
@@ -101,13 +104,13 @@ namespace DDCImprover.Avalonia.Views
                         break;
                 }
             }
-            else if(e.KeyModifiers == KeyModifiers.None)
+            else if (e.KeyModifiers == KeyModifiers.None)
             {
-                if(e.Key == Key.F5)
+                if (e.Key == Key.F5)
                 {
                     Observable.Return(Unit.Default).InvokeCommand(ViewModel.Process);
                 }
-                else if(e.Key == Key.F1)
+                else if (e.Key == Key.F1)
                 {
                     Help_Click(this, new RoutedEventArgs());
                 }
@@ -201,43 +204,6 @@ namespace DDCImprover.Avalonia.Views
             return viewer;
         }
 
-        /*private string GenerateStatusMessageString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            foreach (XMLProcessor xmlProcessor in ViewModel.XMLProcessors.Where(x => x.StatusMessages.Count > 0))
-            {
-                stringBuilder.Append(xmlProcessor.SongTitle);
-
-                // Add arrangement type unless it is "N/A"
-                if (!xmlProcessor.ArrangementType.StartsWith("N"))
-                    stringBuilder.Append(" (").Append(xmlProcessor.ArrangementType).Append(")");
-
-                // Add [XML Filename]
-                stringBuilder.Append(" [").Append(xmlProcessor.XMLFileName).Append("]").AppendLine(Environment.NewLine); // Add two newlines
-
-                foreach (MessageType messageType in Enum.GetValues(typeof(MessageType)))
-                {
-                    var messages = from message in xmlProcessor.StatusMessages
-                                   where message.Type == messageType
-                                   select message.Message;
-
-                    if (messages.Any())
-                    {
-                        stringBuilder.Append(messageType).AppendLine("s: ");
-
-                        foreach (string message in messages)
-                        {
-                            stringBuilder.Append("• ").AppendLine(message);
-                        }
-                    }
-                }
-                stringBuilder.AppendLine();
-            }
-
-            return stringBuilder.ToString();
-        }*/
-
         private void ShowProcessingMessages()
         {
             Window messagesWindow = new Window
@@ -246,11 +212,7 @@ namespace DDCImprover.Avalonia.Views
                 Icon = this.Icon,
                 Height = 450,
                 Width = 700,
-                Content = GenerateStatusMessage()/*new TextBox
-                {
-                    Text = GenerateStatusMessageString(),
-                    IsReadOnly = true
-                }*/
+                Content = GenerateStatusMessage()
             };
             messagesWindow.Show();
         }
@@ -306,7 +268,7 @@ namespace DDCImprover.Avalonia.Views
 
         // Save configuration on exit.
         protected override void OnClosed(EventArgs e)
-    {
+        {
             base.OnClosed(e);
 
             XMLProcessor.Preferences.Save();
