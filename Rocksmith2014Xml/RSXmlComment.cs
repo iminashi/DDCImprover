@@ -29,10 +29,10 @@ namespace Rocksmith2014Xml
                         _commentType = CommentType.Toolkit;
                     else if (Value.IgnoreCaseContains("EOF"))
                         _commentType = CommentType.EOF;
-                    else if (Value.IgnoreCaseContains("DDC v"))
-                        _commentType = CommentType.DDC;
                     else if (Value.IgnoreCaseContains("DDC Improver"))
                         _commentType = CommentType.DDCImprover;
+                    else if (Value.IgnoreCaseContains("DDC v"))
+                        _commentType = CommentType.DDC;
                     else
                         _commentType = CommentType.Unknown;
                 }

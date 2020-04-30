@@ -20,9 +20,10 @@ namespace Rocksmith2014Xml
         PullOff = 1 << 7,
         Tremolo = 1 << 8,
         HarmonicPinch = 1 << 9,
-        PickDirection = 1 << 10
-        //Tap = 1 << 11
-        // TODO: Add righthand, pluck and slap?
+        PickDirection = 1 << 10,
+        Slap = 1 << 11,
+        Pluck = 1 << 12,
+        RightHand = 1 << 13
     }
 
     public class Note : IXmlSerializable, IComparable<Note>, IHasTimeCode
@@ -37,9 +38,6 @@ namespace Rocksmith2014Xml
 
             Bend = other.Bend;
             LeftHand = other.LeftHand;
-            Pluck = other.Pluck;
-            RightHand = other.RightHand;
-            Slap = other.Slap;
             SlideTo = other.SlideTo;
             SlideUnpitchTo = other.SlideUnpitchTo;
             Tap = other.Tap;
@@ -164,18 +162,6 @@ namespace Rocksmith2014Xml
             }
         }
 
-        /*public bool IsTap
-        {
-            get => (Mask & NoteMask.Tap) != 0;
-            set
-            {
-                if (value)
-                    Mask |= NoteMask.Tap;
-                else
-                    Mask &= ~NoteMask.Tap;
-            }
-        }*/
-
         public bool IsTremolo
         {
             get => (Mask & NoteMask.Tremolo) != 0;
@@ -185,6 +171,42 @@ namespace Rocksmith2014Xml
                     Mask |= NoteMask.Tremolo;
                 else
                     Mask &= ~NoteMask.Tremolo;
+            }
+        }
+
+        public bool IsSlap
+        {
+            get => (Mask & NoteMask.Slap) != 0;
+            set
+            {
+                if (value)
+                    Mask |= NoteMask.Slap;
+                else
+                    Mask &= ~NoteMask.Slap;
+            }
+        }
+
+        public bool IsPluck
+        {
+            get => (Mask & NoteMask.Pluck) != 0;
+            set
+            {
+                if (value)
+                    Mask |= NoteMask.Pluck;
+                else
+                    Mask &= ~NoteMask.Pluck;
+            }
+        }
+
+        public bool IsRightHand
+        {
+            get => (Mask & NoteMask.RightHand) != 0;
+            set
+            {
+                if (value)
+                    Mask |= NoteMask.RightHand;
+                else
+                    Mask &= ~NoteMask.RightHand;
             }
         }
 
@@ -232,11 +254,8 @@ namespace Rocksmith2014Xml
             => (Mask & NoteMask.HammerOn) != 0 || (Mask & NoteMask.PullOff) != 0;
 
         public sbyte LeftHand { get; set; } = -1;
-        public sbyte Pluck { get; set; } = -1;
-        public sbyte Slap { get; set; } = -1;
         public sbyte SlideTo { get; set; } = -1;
         public sbyte SlideUnpitchTo { get; set; } = -1;
-        public sbyte RightHand { get; set; } = -1;
         public sbyte String { get; set; }
 
         public byte Tap { get; set; }
@@ -283,12 +302,6 @@ namespace Rocksmith2014Xml
                     case "leftHand":
                         LeftHand = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
-                    case "pluck":
-                        Pluck = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
-                        break;
-                    case "slap":
-                        Slap = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
-                        break;
                     case "slideTo":
                         SlideTo = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
@@ -297,9 +310,6 @@ namespace Rocksmith2014Xml
                         break;
                     case "string":
                         String = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
-                        break;
-                    case "rightHand":
-                        RightHand = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
                     case "vibrato":
                         Vibrato = byte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -341,9 +351,18 @@ namespace Rocksmith2014Xml
                     case "pickDirection":
                         Mask |= (NoteMask)(Utils.ParseBinary(reader.Value) << 10);
                         break;
-                    //case "tap":
-                    //    Mask |= (NoteMask)(Utils.ParseBinary(reader.Value) << 11);
-                    //    break;
+                    case "slap":
+                        if(sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
+                            Mask |= NoteMask.Slap;
+                        break;
+                    case "pluck":
+                        if(sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
+                            Mask |= NoteMask.Pluck;
+                        break;
+                    case "rightHand":
+                        if (sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
+                            Mask |= NoteMask.RightHand;
+                        break;
                 }
             }
 
@@ -424,8 +443,8 @@ namespace Rocksmith2014Xml
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("palmMute", "0");
 
-            if (Pluck != -1)
-                writer.WriteAttributeString("pluck", Pluck.ToString(NumberFormatInfo.InvariantInfo));
+            if (IsPluck)
+                writer.WriteAttributeString("pluck", "1");
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("pluck", "-1");
 
@@ -434,12 +453,12 @@ namespace Rocksmith2014Xml
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("pullOff", "0");
 
-            if (Slap != -1)
-                writer.WriteAttributeString("slap", Slap.ToString(NumberFormatInfo.InvariantInfo));
+            if (IsSlap)
+                writer.WriteAttributeString("slap", "1");
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("slap", "-1");
 
-            if (SlideTo != -1)
+            if (IsSlide)
                 writer.WriteAttributeString("slideTo", SlideTo.ToString(NumberFormatInfo.InvariantInfo));
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("slideTo", "-1");
@@ -459,12 +478,12 @@ namespace Rocksmith2014Xml
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("pickDirection", "0");
 
-            if (RightHand != -1)
-                writer.WriteAttributeString("rightHand", RightHand.ToString(NumberFormatInfo.InvariantInfo));
+            if (IsRightHand)
+                writer.WriteAttributeString("rightHand", "1");
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("rightHand", "-1");
 
-            if (SlideUnpitchTo != -1)
+            if (IsUnpitchedSlide)
                 writer.WriteAttributeString("slideUnpitchTo", SlideUnpitchTo.ToString(NumberFormatInfo.InvariantInfo));
             else if (!RS2014Song.UseAbridgedXml)
                 writer.WriteAttributeString("slideUnpitchTo", "-1");

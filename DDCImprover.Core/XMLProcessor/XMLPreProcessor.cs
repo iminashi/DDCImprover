@@ -106,15 +106,15 @@ namespace DDCImprover.Core
 
             foreach (var note in Song.Levels.SelectMany(lev => lev.Notes))
             {
-                if (note.IsTap && note.RightHand == -1)
+                if (note.IsTap && !note.IsRightHand)
                 {
-                    note.RightHand = 1;
+                    note.IsRightHand = true;
                     rightHandCount++;
                 }
             }
 
             if (rightHandCount != 0)
-                Log($"Set 'righthand' to 1 on {rightHandCount} tap note{(rightHandCount == 1 ? "" : "s")}.");
+                Log($"Set 'rightHand' to 1 on {rightHandCount} tap note{(rightHandCount == 1 ? "" : "s")}.");
         }
 
         /// <summary>

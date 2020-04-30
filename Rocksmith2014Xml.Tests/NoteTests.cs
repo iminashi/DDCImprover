@@ -109,6 +109,9 @@ namespace Rocksmith2014Xml.Tests
             note.IsPalmMute.Should().BeFalse();
             note.IsPullOff.Should().BeFalse();
             note.IsTremolo.Should().BeFalse();
+            note.IsPluck.Should().BeFalse();
+            note.IsSlap.Should().BeFalse();
+            note.IsRightHand.Should().BeFalse();
 
             note.Mask = NoteMask.Accent | NoteMask.HammerOn | NoteMask.Harmonic | NoteMask.HarmonicPinch | NoteMask.Ignore;
 
@@ -122,6 +125,9 @@ namespace Rocksmith2014Xml.Tests
             note.IsPalmMute.Should().BeFalse();
             note.IsPullOff.Should().BeFalse();
             note.IsTremolo.Should().BeFalse();
+            note.IsPluck.Should().BeFalse();
+            note.IsSlap.Should().BeFalse();
+            note.IsRightHand.Should().BeFalse();
 
             note.Mask = NoteMask.LinkNext | NoteMask.Mute | NoteMask.PalmMute | NoteMask.PickDirection | NoteMask.PullOff | NoteMask.Tremolo;
 
@@ -135,6 +141,25 @@ namespace Rocksmith2014Xml.Tests
             note.IsPalmMute.Should().BeTrue();
             note.IsPullOff.Should().BeTrue();
             note.IsTremolo.Should().BeTrue();
+            note.IsPluck.Should().BeFalse();
+            note.IsSlap.Should().BeFalse();
+            note.IsRightHand.Should().BeFalse();
+
+            note.Mask = NoteMask.Slap | NoteMask.Pluck | NoteMask.RightHand;
+
+            note.IsAccent.Should().BeFalse();
+            note.IsHammerOn.Should().BeFalse();
+            note.IsHarmonic.Should().BeFalse();
+            note.IsHarmonicPinch.Should().BeFalse();
+            note.IsIgnore.Should().BeFalse();
+            note.IsLinkNext.Should().BeFalse();
+            note.IsMute.Should().BeFalse();
+            note.IsPalmMute.Should().BeFalse();
+            note.IsPullOff.Should().BeFalse();
+            note.IsTremolo.Should().BeFalse();
+            note.IsPluck.Should().BeTrue();
+            note.IsSlap.Should().BeTrue();
+            note.IsRightHand.Should().BeTrue();
         }
 
         [Fact]
@@ -215,10 +240,7 @@ namespace Rocksmith2014Xml.Tests
                 Bend = 7f,
                 Fret = 22,
                 LeftHand = 3,
-                Mask = NoteMask.Accent | NoteMask.Ignore | NoteMask.LinkNext | NoteMask.Mute,
-                Pluck = 1,
-                RightHand = 1,
-                Slap = 1,
+                Mask = NoteMask.Accent | NoteMask.Ignore | NoteMask.LinkNext | NoteMask.Mute | NoteMask.Slap,
                 SlideTo = 7,
                 SlideUnpitchTo = 9,
                 String = 4,
@@ -244,9 +266,6 @@ namespace Rocksmith2014Xml.Tests
             Assert.Equal(note1.Fret, note2.Fret);
             Assert.Equal(note1.LeftHand, note2.LeftHand);
             Assert.Equal(note1.Mask, note2.Mask);
-            Assert.Equal(note1.Pluck, note2.Pluck);
-            Assert.Equal(note1.RightHand, note2.RightHand);
-            Assert.Equal(note1.Slap, note2.Slap);
             Assert.Equal(note1.SlideTo, note2.SlideTo);
             Assert.Equal(note1.SlideUnpitchTo, note2.SlideUnpitchTo);
             Assert.Equal(note1.String, note2.String);
