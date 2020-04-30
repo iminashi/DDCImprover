@@ -3,6 +3,7 @@ using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Rocksmith2014Xml;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -44,6 +45,7 @@ namespace DDCImprover.Core.ViewModels
         public ReactiveCommand<bool, Unit> OpenFiles { get; private set; }
         public ReactiveCommand<Unit, Unit> CloseFile { get; private set; }
         public ReactiveCommand<Unit, Unit> CloseAll { get; private set; }
+        public ReactiveCommand<Unit, Unit> RemoveDD { get; private set; }
 
         #endregion
 
@@ -66,6 +68,9 @@ namespace DDCImprover.Core.ViewModels
 
         [Reactive]
         public IList SelectedItems { get; set; }
+
+        [Reactive]
+        public bool MatchPhrasesToSections { get; set; }
 
         #endregion
 
@@ -113,6 +118,8 @@ namespace DDCImprover.Core.ViewModels
             OpenFiles = ReactiveCommand.CreateFromTask<bool>(LoadFiles_Implementation, canOpenOrCloseAll);
 
             CloseAll = ReactiveCommand.Create(CloseAllCommand_Implementation, canOpenOrCloseAll);
+
+            RemoveDD = ReactiveCommand.CreateFromTask(RemoveDD_Implementation);
 
             var canClose = this.WhenAnyValue(
                 x => x.SelectedItems,
@@ -181,6 +188,41 @@ namespace DDCImprover.Core.ViewModels
             foreach (var processor in SelectedItems.Cast<XMLProcessor>().ToArray())
             {
                 XMLProcessors.Remove(processor);
+            }
+
+            SelectedItems = null;
+        }
+
+        /// <summary>
+        /// Removes dynamic difficulty levels from the files the user chooses.
+        /// </summary>
+        private async Task RemoveDD_Implementation()
+        {
+            var fileNames = await services
+                .OpenFileDialog(
+                    "Select RS2014 XML File(s) to Remove DD From",
+                    FileFilter.RSXmlFiles,
+                    multiSelect: true).ConfigureAwait(false);
+
+            if (fileNames?.Length > 0)
+            {
+                ShowInStatusbar("Removing DD...");
+
+                await Task.Run(() => Parallel.ForEach(
+                    fileNames,
+                    new ParallelOptions { MaxDegreeOfParallelism = XMLProcessor.Preferences.MaxThreads },
+                    fn => {
+                        RS2014Song song = RS2014Song.Load(fn);
+                        DDRemover.RemoveDD(song, MatchPhrasesToSections);
+                        string oldFileName = Path.GetFileName(fn);
+                        string newFileName = oldFileName.StartsWith("DDC_") ?
+                            oldFileName.Substring(4) :
+                            oldFileName;
+                        song.Save(Path.Combine(Path.GetDirectoryName(fn), "NDD_" + newFileName));
+                    }))
+                    .ConfigureAwait(false);
+
+                ShowInStatusbar("Removing DD completed.");
             }
         }
 

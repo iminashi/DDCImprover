@@ -1,28 +1,12 @@
 ﻿<Window x:Class="DDCImprover.Avalonia.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:core="clr-namespace:DDCImprover.Core;assembly?DDCImprover.Core"
+        xmlns:core="clr-namespace:DDCImprover.Core;assembly=DDCImprover.Core"
         xmlns:local="clr-namespace:DDCImprover.Avalonia"
+        xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
         Icon="resm:DDCImprover.Avalonia.Assets.icon.ico"
         Title="{Binding ProgramTitle, Mode=OneTime}"
         Height="450" Width="765" MinWidth="765" MinHeight="350">
-
-  <Window.DataTemplates>
-    <DataTemplate>
-      <StackPanel Orientation="Horizontal" Margin="0,3">
-        <TextBlock Text="{Binding ArtistName}" Width="160" />
-        <TextBlock Text="{Binding SongTitle}" Width="163" />
-        <TextBlock Text="{Binding ArrangementType}" Width="100" />
-        <TextBlock Text="{Binding XMLFileName}" Width="153" />
-        <TextBlock Text="{Binding StatusHumanized}" Width="100" />
-        <TextBlock Text="{Binding LogViewText}"
-                   Tag="{Binding LogFileFullPath}"
-                   Foreground="Blue"
-                   Cursor="Hand"
-                   PointerReleased="LogLink_MouseButtonUp"/>
-      </StackPanel>
-    </DataTemplate>
-  </Window.DataTemplates>
   <DockPanel>
     <Menu DockPanel.Dock="Top" Background="#EEEEEE">
       <MenuItem Header="_File">
@@ -38,10 +22,20 @@
         <Separator />
         <MenuItem Header="E_xit" Click="Exit_Click" />
       </MenuItem>
+      <MenuItem Header="_Tools">
+        <MenuItem Header="_Quick Remove DD..." Command="{Binding RemoveDD}" />
+        <MenuItem Header="_Match Phrases with Sections"
+                  ToolTip.Tip="{x:Static text:Tooltips.MatchPhrasesWithSections}">
+          <MenuItem.Icon>
+            <CheckBox Width="20" Height="20"
+                      IsChecked="{Binding MatchPhrasesToSections}"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
       <MenuItem Header="_Help">
-          <MenuItem Header="View _Help" Click="Help_Click"/>
-          <Separator />
-          <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
+        <MenuItem Header="View _Help" Click="Help_Click"/>
+        <Separator />
+        <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
       </MenuItem>
     </Menu>
     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="#EEEEEE">
@@ -100,12 +94,12 @@
         <ContextMenu>
           <MenuItem Header="Add Files..." Command="{Binding AddFiles}"/>
           <Separator />
-          <!--<MenuItem Header="Close" Command="{Binding CloseFile}" />-->
+          <MenuItem Header="Close" Command="{Binding CloseFile}" />
           <MenuItem Header="Close All" Command="{Binding CloseAll}" IsEnabled="{Binding !IsProcessingFiles}" />
         </ContextMenu>
       </Grid.ContextMenu>
       <Border BorderThickness="1" BorderBrush="#DEDEDE" Background="#F0F0F0">
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Margin="5,0" Orientation="Horizontal">
           <TextBlock Text="Artist:" Width="160" />
           <TextBlock Text="Title:" Width="163" />
           <TextBlock Text="Arrangement:" Width="100" />
@@ -115,10 +109,26 @@
         </StackPanel>
       </Border>
 
-      <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
-        <ItemsControl Foreground="Black"
-                      Items="{Binding XMLProcessors, Mode=OneTime}"/>
-      </ScrollViewer>
+      <ListBox Items="{Binding XMLProcessors, Mode=OneTime}"
+               Grid.Row="1"
+               Name="listBox">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal" Margin="0,3">
+              <TextBlock Text="{Binding ArtistName}" Width="160" />
+              <TextBlock Text="{Binding SongTitle}" Width="163" />
+              <TextBlock Text="{Binding ArrangementType}" Width="100" />
+              <TextBlock Text="{Binding XMLFileName}" Width="153" />
+              <TextBlock Text="{Binding StatusHumanized}" Width="100" />
+              <TextBlock Text="{Binding LogViewText}"
+                         Tag="{Binding LogFileFullPath}"
+                         Foreground="Blue"
+                         Cursor="Hand"
+                         PointerReleased="LogLink_MouseButtonUp"/>
+             </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
     </Grid>
   </DockPanel>
 </Window>

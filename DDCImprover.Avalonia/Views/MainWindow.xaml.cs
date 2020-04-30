@@ -80,6 +80,8 @@ namespace DDCImprover.Avalonia.Views
                         configViewModel.EnumerateDDCSettings();
                 });
 
+            this.FindControl<ListBox>("listBox").SelectionChanged += (s, arg) => ViewModel.SelectedItems = (s as ListBox).SelectedItems;
+
 #if DEBUG
             this.AttachDevTools();
 #endif

@@ -6,21 +6,17 @@
     <Authors>iminashi</Authors>
     <Version>2.3.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.3.5.121</AssemblyVersion>
-    <FileVersion>2.3.5.121</FileVersion>
+    <AssemblyVersion>2.3.43.121</AssemblyVersion>
+    <FileVersion>2.3.43.121</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.2|AnyCPU'">
+    <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.2|AnyCPU'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <AllowedReferenceRelatedFileExtensions>
-      .none
-    </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">

@@ -71,6 +71,10 @@ namespace DDCImprover.WPF
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ViewModel.XMLProcessors);
             view.SortDescriptions.Add(new SortDescription(nameof(XMLProcessor.XMLFileName), ListSortDirection.Ascending));
 
+            ViewModel.RemoveDD.IsExecuting
+                .ObserveOnDispatcher()
+                .Subscribe(executing => Cursor = executing ? Cursors.AppStarting : Cursors.Arrow);
+
             Focus();
         }
 

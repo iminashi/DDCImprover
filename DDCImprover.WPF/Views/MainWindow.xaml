@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDCImprover.WPF"
+        xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
         mc:Ignorable="d"
         Title="{Binding ProgramTitle, Mode=OneTime}"
         Height="450" Width="765" MinWidth="765" MinHeight="350"
@@ -56,6 +57,12 @@
                 <Separator />
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4" Click="ExitMenuItem_Click" />
             </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Quick Remove DD..." Command="{Binding RemoveDD}" />
+                <CheckBox Content="Match Phrases with Sections"
+                          IsChecked="{Binding MatchPhrasesToSections}"
+                          ToolTip="{x:Static text:Tooltips.MatchPhrasesWithSections}" />
+            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="View _Help"
                           Click="Help_Click"
@@ -66,7 +73,7 @@
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
-            <Button Command="{Binding Process}" Style="{StaticResource buttonStyle}" ToolTip="Process files (F5 / Ctrl+P)">
+            <Button Command="{Binding Process}" Style="{StaticResource buttonStyle}" ToolTip="Process files (F5 / Ctrl+P)" ToolTipService.ShowOnDisabled="True">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/arrow32.png" Height="32"/>
                     <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Process</TextBlock>
