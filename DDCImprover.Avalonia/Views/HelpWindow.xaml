@@ -51,21 +51,21 @@
       </TextBlock>
       <TextBlock Classes="Title">3. Special Chord Names and Suffixes</TextBlock>
       <TextBlock>In order to use these, the "Fix Chord Names" setting must be enabled.</TextBlock>
-      <TextBlock Classes="SubTitle">•	OF</TextBlock>
+      <TextBlock Classes="SubTitle">• OF</TextBlock>
       <TextBlock>
         OF (One Finger / One Fret) moves the finger present in a handshape that has only one note to the specified fret number, e.g. OF5 moves it to the 5th fret. Possible use cases: tapped harmonics and artificial harmonics.
       </TextBlock>
       <Image Source="resm:DDCImprover.Avalonia.Assets.Help.OF.png"/>
-      <TextBlock Classes="SubTitle">•	FIXOPEN</TextBlock>
+      <TextBlock Classes="SubTitle">• FIXOPEN</TextBlock>
       <TextBlock>
         FIXOPEN automates a fix for a specific case in which an open string in a chord is sustained over FHP changes.
       </TextBlock>
       <Image Source="resm:DDCImprover.Avalonia.Assets.Help.fixopen.png"/>
-      <TextBlock Classes="SubTitle">•	-arp</TextBlock>
+      <TextBlock Classes="SubTitle">• -arp</TextBlock>
       <TextBlock>
         Changes the handshape into an arpeggio. Can be used to make arpeggios that have chords inside. Requires a relatively new version of the Toolkit to work.
       </TextBlock>
-      <TextBlock Classes="SubTitle">•	-nop</TextBlock>
+      <TextBlock Classes="SubTitle">• -nop</TextBlock>
       <TextBlock>
         Changes the panel of a regular chord into the panel of a double stop. It is a really minor difference and mostly pointless.
       </TextBlock>
@@ -73,7 +73,7 @@
       <TextBlock>
         You can place events in EOF by selecting a beat and pressing Shift+P. Enter the event text and check "Rocksmith event marker".
       </TextBlock>
-      <TextBlock Classes="SubTitle">•so ("Slide out")</TextBlock>
+      <TextBlock Classes="SubTitle">• so ("Slide out")</TextBlock>
       <Image Source="resm:DDCImprover.Avalonia.Assets.Help.customevent_so.png"/>
       <TextBlock>
         When placed on a chord that has an unpitched slide out, the program generates an empty handshape near the end of the slide.
@@ -84,7 +84,7 @@
         If the chord is on a beat you can simply use the event "so" on that beat.
         If the chord is not on a beat, you must specify the timecode of the chord in the event text in the same format as in the phrase moving, for example "so2m16s885".
       </TextBlock>
-      <TextBlock Classes="SubTitle">•removebeats</TextBlock>
+      <TextBlock Classes="SubTitle">• removebeats</TextBlock>
       <TextBlock>
         Removes the beats starting from the beat that is placed on until the end. Does not really have a practical use.
       </TextBlock>
@@ -92,18 +92,18 @@
       <TextBlock Classes="Title">5. XML Checking</TextBlock>
       <TextBlock>The program will check the XML for the following:</TextBlock>
 
-      <TextBlock Classes="List">•	23rd and 24th fret notes without ignore status</TextBlock>
-      <TextBlock Classes="List">•	7th fret harmonic notes with a sustain</TextBlock>
-      <TextBlock Classes="List">•	Chords at the end of a handshape</TextBlock>
-      <TextBlock Classes="List">•	Crowd event placement</TextBlock>
-      <TextBlock Classes="List">•	Tone change placement</TextBlock>
-      <TextBlock Classes="List">•	Fret/bend mismatches in LinkNext</TextBlock>
-      <TextBlock Classes="List">•	Missing bend values</TextBlock>
-      <TextBlock Classes="List">•	Mismatches between anchor position and chord fingering</TextBlock>
-      <TextBlock Classes="List">•	Anchors (FHP) that should be on a note but are up to 5ms off</TextBlock>
-      <TextBlock Classes="List">•	Notes that are set as both harmonic and pinch harmonic</TextBlock>
-      <TextBlock Classes="List">•	Notes inside a noguitar phrase</TextBlock>
-      <TextBlock Classes="List">•	Unpitched slide notes with LinkNext</TextBlock>
+      <TextBlock Classes="List">• 23rd and 24th fret notes without ignore status</TextBlock>
+      <TextBlock Classes="List">• 7th fret harmonic notes with a sustain</TextBlock>
+      <TextBlock Classes="List">• Chords at the end of a handshape</TextBlock>
+      <TextBlock Classes="List">• Crowd event placement</TextBlock>
+      <TextBlock Classes="List">• Tone change placement</TextBlock>
+      <TextBlock Classes="List">• Fret/bend mismatches in LinkNext</TextBlock>
+      <TextBlock Classes="List">• Missing bend values</TextBlock>
+      <TextBlock Classes="List">• Mismatches between anchor position and chord fingering</TextBlock>
+      <TextBlock Classes="List">• Anchors (FHP) that should be on a note but are up to 5ms off</TextBlock>
+      <TextBlock Classes="List">• Notes that are set as both harmonic and pinch harmonic</TextBlock>
+      <TextBlock Classes="List">• Notes inside a noguitar phrase</TextBlock>
+      <TextBlock Classes="List">• Unpitched slide notes with LinkNext</TextBlock>
     </StackPanel>
   </ScrollViewer>
 </Window>
