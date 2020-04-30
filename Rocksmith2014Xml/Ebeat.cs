@@ -24,7 +24,7 @@ namespace Rocksmith2014Xml
             string result = Time.ToString("F3");
 
             if (Measure != -1)
-                result += $": Measure: {Measure.ToString()}";
+                result += $": Measure: {Measure}";
 
             return result;
         }

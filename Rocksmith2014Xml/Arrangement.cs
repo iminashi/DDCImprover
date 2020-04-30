@@ -24,7 +24,7 @@ namespace Rocksmith2014Xml
 
         public override string ToString()
         {
-            return $"Difficulty: {Difficulty.ToString()}, Notes: {Notes.Count.ToString()}, Chords: {Chords.Count.ToString()}, Handshapes: {HandShapes.Count.ToString()}, Anchors: {Anchors.Count.ToString()}";
+            return $"Difficulty: {Difficulty}, Notes: {Notes.Count}, Chords: {Chords.Count}, Handshapes: {HandShapes.Count}, Anchors: {Anchors.Count}";
         }
 
         #region IXmlSerializable Implementation

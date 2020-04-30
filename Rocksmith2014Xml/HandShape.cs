@@ -25,7 +25,7 @@ namespace Rocksmith2014Xml
 
         public override string ToString()
         {
-            return $"{StartTime.ToString("F3")} - {EndTime.ToString("F3")}: Chord ID {ChordId.ToString()}";
+            return $"{StartTime:F3} - {EndTime:F3}: Chord ID {ChordId}";
         }
 
         #region IXmlSerializable Implementation

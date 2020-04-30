@@ -15,7 +15,7 @@ namespace Rocksmith2014Xml
 
         public override string ToString()
         {
-            return $"{Time.ToString("F3")}: Phrase ID: {PhraseId.ToString()}, Variation: \"{Variation}\"";
+            return $"{Time:F3}: Phrase ID: {PhraseId}, Variation: \"{Variation}\"";
         }
 
         #region IXmlSerializable Implementation

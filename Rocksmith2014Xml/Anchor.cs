@@ -23,7 +23,7 @@ namespace Rocksmith2014Xml
 
         public override string ToString()
         {
-            return $"{Time.ToString("F3")}: Fret {Fret.ToString()}, Width: {Width.ToString("F3")}";
+            return $"{Time:F3}: Fret {Fret}, Width: {Width:F3}";
         }
 
         #region IXmlSerializable Implementation

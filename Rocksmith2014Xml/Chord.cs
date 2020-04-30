@@ -145,7 +145,7 @@ namespace Rocksmith2014Xml
 
         public override string ToString()
         {
-            return $"{Time.ToString("F3")}: Id: {ChordId}";
+            return $"{Time:F3}: Id: {ChordId}";
         }
 
         public int CompareTo(Chord other)
