@@ -2,19 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DDCImprover.Core
 {
     internal static class DDRemover
     {
-        public static void RemoveDD(RS2014Song song, bool matchPhrasesToSections)
+        public static async Task RemoveDD(RS2014Song song, bool matchPhrasesToSections, bool deleteTranscriptionTrack)
         {
-            var trTrack = GenerateTranscriptionTrack(song);
+            var trTrack = await GenerateTranscriptionTrack(song).ConfigureAwait(false);
 
             song.Levels.Clear();
             song.Levels.Add(trTrack);
 
             song.NewLinkedDiffs.Clear();
+            song.LinkedDiffs.Clear();
 
             if (matchPhrasesToSections)
             {
@@ -67,23 +69,28 @@ namespace DDCImprover.Core
 
             //TODO: Remove unused chord templates?
 
+            if(deleteTranscriptionTrack)
+            {
+                song.TranscriptionTrack = new Arrangement();
+            }
+
             AddComment(song);
         }
 
-        private static Arrangement GenerateTranscriptionTrack(RS2014Song song)
+        private static async Task<Arrangement> GenerateTranscriptionTrack(RS2014Song song)
         {
-            var phrases = song.Phrases;
             var notes = new List<Note>();
             var chords = new List<Chord>();
             var handshapes = new List<HandShape>();
             var anchors = new List<Anchor>();
+            var tasks = new Task[4];
 
             // Ignore the last phrase iteration (END)
             for (int i = 0; i < song.PhraseIterations.Count - 1; i++)
             {
                 var phraseIteration = song.PhraseIterations[i];
                 int phraseId = phraseIteration.PhraseId;
-                int maxDifficulty = phrases[phraseId].MaxDifficulty;
+                int maxDifficulty = song.Phrases[phraseId].MaxDifficulty;
 
                 float phraseStartTime = phraseIteration.Time;
                 float phraseEndTime = song.PhraseIterations[i + 1].Time;
@@ -101,10 +108,12 @@ namespace DDCImprover.Core
                 var anchorsInPhraseIteration = highestLevelForPhrase.Anchors
                     .Where(a => a.Time >= phraseStartTime && a.Time < phraseEndTime);
 
-                notes.AddRange(notesInPhraseIteration);
-                chords.AddRange(chordsInPhraseIteration);
-                handshapes.AddRange(handShapesInPhraseIteration);
-                anchors.AddRange(anchorsInPhraseIteration);
+                tasks[0] = Task.Run(() => notes.AddRange(notesInPhraseIteration));
+                tasks[1] = Task.Run(() => chords.AddRange(chordsInPhraseIteration));
+                tasks[2] = Task.Run(() => handshapes.AddRange(handShapesInPhraseIteration));
+                tasks[3] = Task.Run(() => anchors.AddRange(anchorsInPhraseIteration));
+
+                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
 
             var arr = new Arrangement { Difficulty = 0 };

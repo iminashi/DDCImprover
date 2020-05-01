@@ -26,8 +26,8 @@
         <TaskbarItemInfo>
             <TaskbarItemInfo.ProgressState>
                 <MultiBinding Converter="{StaticResource boolTaskbarStateConverter}" Mode="OneWay">
-                    <Binding Path="IsProcessingFiles"/>
-                    <Binding Path="ErrorDuringProcessing"/>
+                    <Binding Path="DataContext.IsProcessingFiles" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                    <Binding Path="DataContext.ErrorDuringProcessing" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
                 </MultiBinding>
             </TaskbarItemInfo.ProgressState>
             <TaskbarItemInfo.ProgressValue>
@@ -62,6 +62,8 @@
                 <CheckBox Content="Match Phrases with Sections"
                           IsChecked="{Binding MatchPhrasesToSections}"
                           ToolTip="{x:Static text:Tooltips.MatchPhrasesWithSections}" />
+                <CheckBox Content="Delete the Transcription Track"
+                          IsChecked="{Binding DeleteTranscriptionTrack}" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="View _Help"

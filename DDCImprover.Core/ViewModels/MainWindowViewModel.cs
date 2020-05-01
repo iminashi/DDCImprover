@@ -72,6 +72,9 @@ namespace DDCImprover.Core.ViewModels
         [Reactive]
         public bool MatchPhrasesToSections { get; set; }
 
+        [Reactive]
+        public bool DeleteTranscriptionTrack { get; set; }
+
         #endregion
 
         #region Observables as Properties
@@ -210,10 +213,12 @@ namespace DDCImprover.Core.ViewModels
 
                 await Task.Run(() => Parallel.ForEach(
                     fileNames,
-                    new ParallelOptions { MaxDegreeOfParallelism = XMLProcessor.Preferences.MaxThreads },
-                    fn => {
+                    new ParallelOptions {
+                        MaxDegreeOfParallelism = Math.Max(1, XMLProcessor.Preferences.MaxThreads - 1)
+                    },
+                    async fn => {
                         RS2014Song song = RS2014Song.Load(fn);
-                        DDRemover.RemoveDD(song, MatchPhrasesToSections);
+                        await DDRemover.RemoveDD(song, MatchPhrasesToSections, DeleteTranscriptionTrack).ConfigureAwait(false);
                         string oldFileName = Path.GetFileName(fn);
                         string newFileName = oldFileName.StartsWith("DDC_") ?
                             oldFileName.Substring(4) :
@@ -222,7 +227,8 @@ namespace DDCImprover.Core.ViewModels
                     }))
                     .ConfigureAwait(false);
 
-                ShowInStatusbar("Removing DD completed.");
+                string files = fileNames.Length == 1 ? "File" : "Files";
+                ShowInStatusbar($"Removing DD completed. {files} saved with NDD_ prefix.");
             }
         }
 
