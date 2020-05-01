@@ -5,8 +5,8 @@
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>2.3.0</Version>
-    <AssemblyVersion>2.3.55.122</AssemblyVersion>
-    <FileVersion>2.3.55.122</FileVersion>
+    <AssemblyVersion>2.3.56.122</AssemblyVersion>
+    <FileVersion>2.3.56.122</FileVersion>
     <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
 
@@ -81,8 +81,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="11.3.7" />
-    <PackageReference Include="ReactiveUI.Fody" Version="11.3.7" />
+    <PackageReference Include="ReactiveUI" Version="11.3.8" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.3.8" />
   </ItemGroup>
 
   <ItemGroup>
