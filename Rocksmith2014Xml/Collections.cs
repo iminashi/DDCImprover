@@ -72,8 +72,8 @@ namespace Rocksmith2014Xml
         public PhraseIterationCollection() : base("phraseIteration") { }
     }
 
-    public sealed class ArrangementCollection : XmlCountListEx<Arrangement>
+    public sealed class LevelCollection : XmlCountListEx<Level>
     {
-        public ArrangementCollection() : base("level") { }
+        public LevelCollection() : base("level") { }
     }
 }

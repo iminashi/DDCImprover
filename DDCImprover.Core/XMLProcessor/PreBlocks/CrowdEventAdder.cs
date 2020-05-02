@@ -34,7 +34,7 @@ namespace DDCImprover.Core.PreBlocks
 
         private void AddIntroApplauseEvent(RS2014Song song, Action<string> Log)
         {
-            Arrangement firstPhraseLevel;
+            Level firstPhraseLevel;
 
             if (song.Levels.Count == 1)
             {

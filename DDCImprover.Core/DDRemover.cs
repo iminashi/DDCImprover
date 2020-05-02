@@ -71,13 +71,13 @@ namespace DDCImprover.Core
 
             if(deleteTranscriptionTrack)
             {
-                song.TranscriptionTrack = new Arrangement();
+                song.TranscriptionTrack = new Level();
             }
 
             AddComment(song);
         }
 
-        private static async Task<Arrangement> GenerateTranscriptionTrack(RS2014Song song)
+        private static async Task<Level> GenerateTranscriptionTrack(RS2014Song song)
         {
             var notes = new List<Note>();
             var chords = new List<Chord>();
@@ -116,7 +116,7 @@ namespace DDCImprover.Core
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
 
-            var arr = new Arrangement { Difficulty = 0 };
+            var arr = new Level { Difficulty = 0 };
             arr.Notes.AddRange(notes);
             arr.Chords.AddRange(chords);
             arr.Anchors.AddRange(anchors);

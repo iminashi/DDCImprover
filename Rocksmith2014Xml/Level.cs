@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class Arrangement : IXmlSerializable
+    public sealed class Level : IXmlSerializable
     {
         public sbyte Difficulty { get; set; }
         public NoteCollection Notes { get; set; }
@@ -13,7 +13,7 @@ namespace Rocksmith2014Xml
         public AnchorCollection Anchors { get; set; }
         public HandShapeCollection HandShapes { get; set; }
 
-        public Arrangement()
+        public Level()
         {
             Difficulty = -1;
             Notes = new NoteCollection();

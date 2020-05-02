@@ -61,8 +61,8 @@ namespace Rocksmith2014Xml
         public ToneCollection Tones { get; set; }
         public SectionCollection Sections { get; set; }
         public EventCollection Events { get; set; }
-        public Arrangement TranscriptionTrack { get; set; }
-        public ArrangementCollection Levels { get; set; }
+        public Level TranscriptionTrack { get; set; }
+        public LevelCollection Levels { get; set; }
 
         public void Save(string filename, bool writeAbridgedXml = true)
         {
@@ -244,11 +244,11 @@ namespace Rocksmith2014Xml
                         ((IXmlSerializable)Events).ReadXml(reader);
                         break;
                     case "transcriptionTrack":
-                        TranscriptionTrack = new Arrangement();
+                        TranscriptionTrack = new Level();
                         ((IXmlSerializable)TranscriptionTrack).ReadXml(reader);
                         break;
                     case "levels":
-                        Levels = new ArrangementCollection();
+                        Levels = new LevelCollection();
                         ((IXmlSerializable)Levels).ReadXml(reader);
                         break;
 
