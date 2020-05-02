@@ -20,9 +20,10 @@ Some of the features in the program have nothing to do with DDC and it can also 
 - Removes beats that come after the audio has ended
 - Checks the XML for issues
 
-# Used Libraries/Technologies
+# Libraries Used
 
 - [.NET Core](https://github.com/dotnet/core)
+- [WPF](https://github.com/dotnet/wpf)
 - [Avalonia](https://github.com/AvaloniaUI/Avalonia)
 - [ReactiveUI](https://github.com/reactiveui/ReactiveUI)
 - [DynamicData](https://github.com/reactiveui/DynamicData)
