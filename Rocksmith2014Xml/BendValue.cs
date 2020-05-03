@@ -51,7 +51,8 @@ namespace Rocksmith2014Xml
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
-            writer.WriteAttributeString("step", Step.ToString("F3", NumberFormatInfo.InvariantInfo));
+            if(Step != 0f || !RS2014Song.UseAbridgedXml)
+                writer.WriteAttributeString("step", Step.ToString("F3", NumberFormatInfo.InvariantInfo));
         }
 
         #endregion
