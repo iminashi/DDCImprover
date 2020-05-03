@@ -86,6 +86,9 @@ namespace DDCImprover.Core
                 }
             }
 
+            if(Preferences.RemoveTranscriptionTrack)
+                DDCSong.TranscriptionTrack = new Level();
+
 #if DEBUG
             RemoveHighDensityStatuses();
 #endif
@@ -104,6 +107,7 @@ namespace DDCImprover.Core
                 if (chord.IsHighDensity)
                 {
                     chord.IsHighDensity = false;
+                    chord.ChordNotes = null;
                     ++hiDensRemoved;
                 }
             }
