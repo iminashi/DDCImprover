@@ -10,10 +10,7 @@ namespace Rocksmith2014Xml
     {
         public readonly int Id;
 
-        public NLDPhrase(int id)
-        {
-            Id = id;
-        }
+        public NLDPhrase(int id) => Id = id;
     }
 
     public sealed class NewLinkedDiff : IXmlSerializable

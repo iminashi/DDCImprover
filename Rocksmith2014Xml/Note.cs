@@ -268,14 +268,10 @@ namespace Rocksmith2014Xml
         #endregion
 
         public override string ToString()
-        {
-            return $"{Time.ToString("F3", NumberFormatInfo.InvariantInfo)}: Fret: {Fret}, String: {String}";
-        }
+            => $"{Time.ToString("F3", NumberFormatInfo.InvariantInfo)}: Fret: {Fret}, String: {String}";
 
         public int CompareTo(Note other)
-        {
-            return Time.CompareTo(other.Time);
-        }
+            => Time.CompareTo(other.Time);
 
         #region IXmlSerializable Implementation
 
@@ -288,13 +284,13 @@ namespace Rocksmith2014Xml
                 switch (reader.Name)
                 {
                     case "time":
-                        Time = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+                        Time = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
                     case "sustain":
-                        Sustain = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+                        Sustain = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
                     case "bend":
-                        Bend = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+                        Bend = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
                     case "fret":
                         Fret = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);

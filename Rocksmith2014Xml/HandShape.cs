@@ -24,9 +24,7 @@ namespace Rocksmith2014Xml
         public HandShape() { }
 
         public override string ToString()
-        {
-            return $"{StartTime:F3} - {EndTime:F3}: Chord ID {ChordId}";
-        }
+            => $"{StartTime:F3} - {EndTime:F3}: Chord ID {ChordId}";
 
         #region IXmlSerializable Implementation
 

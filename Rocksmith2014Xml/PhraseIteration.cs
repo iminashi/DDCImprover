@@ -14,9 +14,7 @@ namespace Rocksmith2014Xml
         public HeroLevelCollection HeroLevels { get; set; }
 
         public override string ToString()
-        {
-            return $"{Time:F3}: Phrase ID: {PhraseId}, Variation: \"{Variation}\"";
-        }
+            => $"{Time:F3}: Phrase ID: {PhraseId}, Variation: \"{Variation}\"";
 
         #region IXmlSerializable Implementation
 

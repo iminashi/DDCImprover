@@ -99,9 +99,7 @@ namespace Rocksmith2014Xml
         }
 
         public static Task<RS2014Song> LoadAsync(string filename)
-        {
-            return Task.Run(() => Load(filename));
-        }
+            => Task.Run(() => Load(filename));
 
         #region IXmlSerializable Implementation
 

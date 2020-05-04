@@ -22,9 +22,7 @@ namespace Rocksmith2014Xml
         public Section() { }
 
         public override string ToString()
-        {
-            return $"{Time:F3}: {Name} #{Number}";
-        }
+            => $"{Time:F3}: {Name} #{Number}";
 
         #region IXmlSerializable Implementation
 

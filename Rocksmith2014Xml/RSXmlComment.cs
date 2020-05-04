@@ -17,7 +17,7 @@ namespace Rocksmith2014Xml
     {
         private CommentType _commentType;
 
-        public string Value { get; set; }
+        public string Value { get; }
 
         public CommentType CommentType
         {

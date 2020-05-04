@@ -144,14 +144,10 @@ namespace Rocksmith2014Xml
         public List<Note> ChordNotes { get; set; }
 
         public override string ToString()
-        {
-            return $"{Time:F3}: Id: {ChordId}";
-        }
+            => $"{Time:F3}: Id: {ChordId}";
 
         public int CompareTo(Chord other)
-        {
-            return Time.CompareTo(other.Time);
-        }
+            => Time.CompareTo(other.Time);
 
         #region IXmlSerializable Implementation
 

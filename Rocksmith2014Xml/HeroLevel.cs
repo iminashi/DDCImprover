@@ -18,9 +18,7 @@ namespace Rocksmith2014Xml
         }
 
         public override string ToString()
-        {
-            return $"Hero {Hero}: Difficulty {Difficulty}";
-        }
+            => $"Hero {Hero}: Difficulty {Difficulty}";
 
         #region IXmlSerializable Implementation
 

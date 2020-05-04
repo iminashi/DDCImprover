@@ -10,9 +10,7 @@ namespace Rocksmith2014Xml
         public int[] Strings = new int[6];
 
         public override string ToString()
-        {
-            return $"String0: {Strings[0]}, String1: {Strings[1]}, String2: {Strings[2]}, String3: {Strings[3]}, String4: {Strings[4]}, String5: {Strings[5]}";
-        }
+            => $"String0: {Strings[0]}, String1: {Strings[1]}, String2: {Strings[2]}, String3: {Strings[3]}, String4: {Strings[4]}, String5: {Strings[5]}";
 
         #region IXmlSerializable Implementation
 

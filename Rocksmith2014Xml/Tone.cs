@@ -20,9 +20,7 @@ namespace Rocksmith2014Xml
         }
 
         public override string ToString()
-        {
-            return $"{Time:F3}: {Name}";
-        }
+            => $"{Time:F3}: {Name}";
 
         #region IXmlSerializable Implementation
 

@@ -39,9 +39,7 @@ namespace Rocksmith2014Xml
         public Phrase() { }
 
         public override string ToString()
-        {
-            return $"{Name}, Max Diff: {MaxDifficulty}, Mask: {Mask}";
-        }
+            => $"{Name}, Max Diff: {MaxDifficulty}, Mask: {Mask}";
 
         #region IXmlSerializable Serializable
 
