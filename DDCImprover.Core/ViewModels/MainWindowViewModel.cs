@@ -205,16 +205,21 @@ namespace DDCImprover.Core.ViewModels
                 .OpenFileDialog(
                     "Select RS2014 XML File(s) to Remove DD From",
                     FileFilter.RSXmlFiles,
-                    multiSelect: true).ConfigureAwait(false);
+                    multiSelect: true)
+                .ConfigureAwait(false);
 
             if (fileNames?.Length > 0)
             {
                 ShowInStatusbar("Removing DD...");
 
+#if DEBUG
+                Stopwatch stopwatch = Stopwatch.StartNew();
+#endif
+
                 await Task.Run(() => Parallel.ForEach(
                     fileNames,
                     new ParallelOptions {
-                        MaxDegreeOfParallelism = Math.Max(1, XMLProcessor.Preferences.MaxThreads - 1)
+                        MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 4)
                     },
                     async fn => {
                         RS2014Song song = RS2014Song.Load(fn);
@@ -228,7 +233,11 @@ namespace DDCImprover.Core.ViewModels
                     .ConfigureAwait(false);
 
                 string files = fileNames.Length == 1 ? "File" : "Files";
-                ShowInStatusbar($"Removing DD completed. {files} saved with NDD_ prefix.");
+                string statusText = $"Removing DD completed. {files} saved with NDD_ prefix.";
+#if DEBUG
+                statusText += " Elapsed: " + stopwatch.ElapsedMilliseconds;
+#endif
+                ShowInStatusbar(statusText);
             }
         }
 
@@ -395,36 +404,6 @@ namespace DDCImprover.Core.ViewModels
                 options,
                 (xmlProcessor) => xmlProcessor.ProcessFile(progressReporter)))
                 .ConfigureAwait(false);
-
-            /*using (var blockingCollection = new BlockingCollection<XMLProcessor>(XMLProcessors.Count))
-            {
-                var producer = Task.Run(() =>
-                {
-                    foreach (var xmlProcessor in XMLProcessors.Where(x => x.Status != ImproverStatus.LoadError).ToArray())
-                    {
-                        if (xmlProcessor.LoadXMLFile() != ImproverStatus.LoadError)
-                        {
-                            blockingCollection.Add(xmlProcessor);
-                        }
-                    }
-
-                    blockingCollection.CompleteAdding();
-                });
-
-                var consumers = Enumerable.Range(0, XMLProcessor.Preferences.MaxThreads)
-                    .Select(_ => Task.Run(() =>
-                    {
-                        foreach(var xmlProcessor in blockingCollection.GetConsumingEnumerable())
-                        {
-                            xmlProcessor.ProcessFile(progressReporter);
-                        }
-                    }))
-                    .ToArray();
-
-                await producer;
-
-                await Task.WhenAll(consumers).ConfigureAwait(false);
-            }*/
 
             ShowElapsedTime();
 

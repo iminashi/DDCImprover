@@ -41,10 +41,7 @@ namespace Rocksmith2014Xml
             }
         }
 
-        public RSXmlComment(string comment)
-        {
-            Value = comment;
-        }
+        public RSXmlComment(string comment) => Value = comment;
 
         public override string ToString() => Value;
     }
