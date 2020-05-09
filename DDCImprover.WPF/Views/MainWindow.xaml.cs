@@ -51,6 +51,9 @@ namespace DDCImprover.WPF
                 .ObserveOnDispatcher()
                 .Subscribe(_ => ShowProcessingMessages());
 
+            // Reset "view log" text if user clears log files
+            configViewModel.LogsCleared.Subscribe(_ => ViewModel.RemoveViewLogTexts());
+
             // Check DDC executable when window is activated
             Observable.FromEventPattern<EventArgs>(this, "Activated")
                 .Take(1) // Do only once
@@ -267,11 +270,6 @@ namespace DDCImprover.WPF
             };
 
             configWin.ShowDialog();
-
-            if (configWin.LogsCleared)
-            {
-                ViewModel.RemoveViewLogTexts();
-            }
         }
 
         private void GitHubMenuItem_Click(object sender, RoutedEventArgs e)

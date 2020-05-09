@@ -60,10 +60,7 @@ namespace DDCImprover.Avalonia.Views
                 .Subscribe(processing => Cursor = processing ? new Cursor(StandardCursorType.AppStarting) : new Cursor(StandardCursorType.Arrow));
 
             // Reset "view log" text if user clears log files
-            this.WhenAnyValue(x => x.configViewModel.LogsCleared)
-                .Where(cleared => cleared)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(_ => ViewModel.RemoveViewLogTexts());
+            configViewModel.LogsCleared.Subscribe(_ => ViewModel.RemoveViewLogTexts());
 
             // Display processing messages when needed
             ViewModel.ShouldDisplayProcessingMessages

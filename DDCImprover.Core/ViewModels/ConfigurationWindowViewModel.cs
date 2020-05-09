@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace DDCImprover.Core.ViewModels
@@ -17,8 +19,9 @@ namespace DDCImprover.Core.ViewModels
 
         #region Reactive Properties
 
-        [Reactive]
-        public bool LogsCleared { get; set; }
+        private readonly Subject<Unit> logsCleared = new Subject<Unit>();
+
+        public IObservable<Unit> LogsCleared { get; }
 
         [Reactive]
         public string LogsDeletedText { get; private set; }
@@ -44,6 +47,8 @@ namespace DDCImprover.Core.ViewModels
         {
             this.services = services;
             Config = config;
+
+            LogsCleared = logsCleared.AsObservable();
 
             DeleteLogs = ReactiveCommand.Create(DeleteLogs_Impl);
 
@@ -89,7 +94,7 @@ namespace DDCImprover.Core.ViewModels
                     }
                 }
 
-                LogsCleared = true;
+                logsCleared.OnNext(Unit.Default);
                 LogsDeletedText = $"{filesDeleted} file{(filesDeleted == 1 ? "" : "s")} deleted.";
             }
         }

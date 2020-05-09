@@ -9,14 +9,8 @@ namespace DDCImprover.Avalonia.Views
 {
     public class ConfigurationWindow : Window
     {
-        /// <summary>
-        /// Indicates whether the user clicked the 'Delete All Logs' button.
-        /// </summary>
-        public bool LogsCleared => viewModel.LogsCleared;
-
         public static double ProcessorCount { get; set; } = Environment.ProcessorCount;
 
-        private readonly ConfigurationWindowViewModel viewModel;
         private readonly MainWindow parentWindow;
 
         public ConfigurationWindow()
@@ -35,9 +29,7 @@ namespace DDCImprover.Avalonia.Views
             parentWindow = parent;
             parentWindow.ConfigWindowOpen = true;
 
-            DataContext = this.viewModel = viewModel;
-
-            this.viewModel.LogsCleared = false;
+            DataContext = viewModel;
 
             this.FindControl<Button>("closeButton").Click += Close_Click;
         }
