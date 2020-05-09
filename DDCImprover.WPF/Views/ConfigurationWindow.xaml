@@ -29,13 +29,6 @@
                 <Label Content="_Phrase Length:" Target="{x:Reference phraseLengthUpDown}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <Label Grid.Row="1" Content="Ramp-_up:" Target="{x:Reference ddcRampUpComboBox}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <Label Grid.Row="2" Content="Confi_g:" Target="{x:Reference ddcConfigComboBox}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button Content="_Select DDC Executable..."
-                        Command="{Binding SelectDDCExecutable}"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Margin="0,0,15,0"
-                        Padding="10,2"/>
                 <local:NumericUpDown x:Name="phraseLengthUpDown"
                                      Grid.Column="1"
                                      HorizontalAlignment="Left"
@@ -46,6 +39,13 @@
                                      Maximum="256"
                                      Margin="10,0,0,0"
                                      ToolTip="{x:Static text:ConfigurationTooltips.PhraseLength}" />
+                <Button Content="_Select DDC Executable..."
+                        Command="{Binding SelectDDCExecutable}"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,15,0"
+                        Padding="10,2"/>
                 <ComboBox x:Name="ddcRampUpComboBox"
                           Grid.Column="1" Grid.Row="1"
                           VerticalAlignment="Center"
@@ -96,38 +96,16 @@
                         ToolTip="{x:Static text:ConfigurationTooltips.MaxThreads}"/>
                 </StackPanel>
                 <CheckBox Grid.Row="1" Grid.Column="0"
-                          x:Name="adjHSCheckBox"
                           IsChecked="{Binding Config.AdjustHandshapes}"
                           Content="Adjust _Handshapes"
                           VerticalAlignment="Center"
                           ToolTip="{x:Static text:ConfigurationTooltips.AdjustHandshapes}"/>
-                <!--<Grid Grid.Column="1" ToolTip="Minimum distance allowed between two handshapes (default: 0.050s)." IsEnabled="{Binding IsChecked, ElementName=adjHSCheckBox}">
-                    <Label  Content="_Minimum Distance:" Target="{Binding ElementName=hsMinDistanceUpDown}"/>
-                    <local:NumericUpDown x:Name="hsMinDistanceUpDown" HorizontalAlignment="Right" DecimalPlaces="3" Value="{Binding MinDistanceBetweenHandshapes}" Maximum="0.500" Minimum="0.010" MinWidth="65" Increment="0.010" MaxWidth="90" Margin="0,0,8,0"/>
-                </Grid>-->
                 <CheckBox Grid.Row="1" Grid.Column="1" 
-                          Name="checkXmlCB" 
                           Content="Check _XML"
                           IsChecked="{Binding Config.CheckXML}"
                           Margin="7,0,0,0"
                           VerticalAlignment="Center"
                           ToolTip="{x:Static text:ConfigurationTooltips.CheckXML}"/>
-                <!--<CheckBox Grid.Row="2" Grid.Column="1"
-                          Content="Strict"
-                          Margin="30,0,0,0"
-                          IsChecked="{Binding Config.StrictXMLChecking}"
-                          VerticalAlignment="Center"
-                          ToolTip="TODO">
-                    <CheckBox.Style>
-                        <Style TargetType="CheckBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=checkXmlCB,Path=IsChecked}" Value="False">
-                                    <Setter Property="IsEnabled" Value="False"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </CheckBox.Style>
-                </CheckBox>-->
                 <CheckBox Grid.Row="2" Grid.Column="0"
                           Content="Restore _First Noguitar Section"
                           IsChecked="{Binding Config.RestoreFirstNoguitarSection}"
@@ -139,65 +117,55 @@
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.RestoreNoguitarAnchors}"/>
+                <CheckBox Grid.Row="3" Grid.Column="0"
+                          Content="Remove _Beats Past Audio End"
+                          IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}"
+                          VerticalAlignment="Center"
+                          ToolTip="{x:Static text:ConfigurationTooltips.RemoveBeats}"/>
                 <CheckBox Grid.Row="3" Grid.Column="1"
                           Content="_Keep END Phrase Location"
                           IsChecked="{Binding Config.PreserveENDPhraseLocation}"
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.RestoreEndPhrase}"/>
-                <CheckBox Grid.Row="3" Grid.Column="0"
-                          Content="Remove _Beats Past Audio End"
-                          IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}"
+                <CheckBox Grid.Row="4" Grid.Column="0"
+                          Content="Fix _One Level Phrases"
+                          IsChecked="{Binding Config.FixOneLevelPhrases}"
                           VerticalAlignment="Center"
-                          ToolTip="{x:Static text:ConfigurationTooltips.RemoveBeats}"/>
+                          ToolTip="{x:Static text:ConfigurationTooltips.FixOneLevel}"/>
                 <CheckBox Grid.Row="4" Grid.Column="1"
                           Content="Fix Chord _Names"
                           IsChecked="{Binding Config.FixChordNames}"
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.FixChordNames}"/>
-                <CheckBox Grid.Row="4" Grid.Column="0"
-                          Content="Fix _One Level Phrases"
-                          IsChecked="{Binding Config.FixOneLevelPhrases}"
+                <CheckBox Grid.Row="5" Grid.Column="0"
+                          Content="_Remove Anchor Placeholder Notes"
+                          IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}"
                           VerticalAlignment="Center"
-                          ToolTip="{x:Static text:ConfigurationTooltips.FixOneLevel}"/>
-                <CheckBox Grid.Row="6" Grid.Column="0"
-                          Content="Display Times in Seconds"
-                          IsChecked="{Binding Config.DisplayTimesInSeconds}"
-                          VerticalAlignment="Center"
-                          ToolTip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
-                <CheckBox Grid.Row="7" Grid.Column="0"
-                          Content="Enable _Logging"
-                          IsChecked="{Binding Config.EnableLogging}"
-                          VerticalAlignment="Center"
-                          ToolTip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
-                <!--<CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="_Remove Empty Phrases Added by DDC" IsChecked="{Binding Config.RemoveEmptyPhrasesAddedByDDC}" VerticalAlignment="Center" Visibility="Collapsed">
-                    <CheckBox.ToolTip>
-                        <ToolTip>
-                            <StackPanel>
-                                <TextBlock Margin="0,0,0,10">Removes empty phrases added by DDC.</TextBlock>
-                                <TextBlock>Should not be normally necessary.</TextBlock>
-                            </StackPanel>
-                        </ToolTip>
-                    </CheckBox.ToolTip>
-                </CheckBox>-->
+                          ToolTip="{x:Static text:ConfigurationTooltips.RemovePlaceholders}"/>
                 <CheckBox Grid.Row="5" Grid.Column="1"
                           Content="Add Crowd _Events"
                           IsChecked="{Binding Config.AddCrowdEvents}"
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
-                <CheckBox Grid.Row="5" Grid.Column="0"
-                          Content="_Remove Anchor Placeholder Notes"
-                          IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}"
+                <CheckBox Grid.Row="6" Grid.Column="0"
+                          Content="Display Times in Seconds"
+                          IsChecked="{Binding Config.DisplayTimesInSeconds}"
                           VerticalAlignment="Center"
-                          ToolTip="{x:Static text:ConfigurationTooltips.RemovePlaceholders}"/>
+                          ToolTip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
                 <CheckBox Grid.Row="6" Grid.Column="1"
                           Content="_Check For Arr. Id Reset"
                           IsChecked="{Binding Config.CheckForArrIdReset}"
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.CheckArrIdReset}"/>
+                <CheckBox Grid.Row="7" Grid.Column="0"
+                          Content="Enable _Logging"
+                          IsChecked="{Binding Config.EnableLogging}"
+                          VerticalAlignment="Center"
+                          ToolTip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
                 <CheckBox Grid.Row="7" Grid.Column="1"
                           Content="Over_write Original File"
                           IsChecked="{Binding Config.OverwriteOriginalFile}"

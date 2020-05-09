@@ -4,7 +4,9 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:DDCImprover.Avalonia.Views;assembly=DDCImprover"
         xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
-        Title="Configuration" SizeToContent="WidthAndHeight">
+        Title="Configuration"
+        SizeToContent="WidthAndHeight"
+        CanResize="False">
   <Window.Styles>
     <Style Selector="HeaderedContentControl">
       <Setter Property="Template">
@@ -36,6 +38,16 @@
         <TextBlock Grid.Row="0" Text="Phrase Length:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="1" Text="Ramp-up:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="2" Text="Config:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <NumericUpDown Classes="nup"
+                       Grid.Column="1"
+                       x:Name="phraseLengthSlider"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Margin="10,5,0,5"
+                       Width="100"
+                       Value="{Binding Config.DDCPhraseLength}"
+                       Minimum="8" Maximum="256"
+                       ToolTip.Tip="{x:Static text:ConfigurationTooltips.PhraseLength}"/>
         <Button Content="Select DDC Executable..."
                 Command="{Binding SelectDDCExecutable}"
                 Grid.Column="1"
@@ -43,18 +55,6 @@
                 VerticalAlignment="Center"
                 Margin="15,0,15,0"
                 Padding="10,2"/>
-        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-        <NumericUpDown Classes="nup"
-                x:Name="phraseLengthSlider"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                Margin="10,5,0,5"
-                Width="100"
-                Value="{Binding Config.DDCPhraseLength}"
-                Minimum="8" Maximum="256"
-                ToolTip.Tip="{x:Static text:ConfigurationTooltips.PhraseLength}"/>
-        <!--<TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Path=Value, ElementName=phraseLengthSlider}"/>-->
-        </StackPanel>
         <ComboBox Grid.Column="1" Grid.Row="1"
                   VerticalAlignment="Center" HorizontalAlignment="Left"
                   MinWidth="170" Margin="10,5,0,5"
@@ -91,17 +91,17 @@
           <TextBlock Text="{Binding ElementName=maxThreadsSlider, Path=Value}" VerticalAlignment="Center"/>
           <!--<NumericUpDown x:Name="maxThreadsUpDown" Value="{Binding Config.MaxThreads}" Width="50" Minimum="1" Maximum="{Binding Source={x:Static sys:Environment.ProcessorCount}, Mode=OneTime}" ToolTip="Sets the number files processed simultaneously."/>-->
         </StackPanel>
-        <CheckBox Grid.Row="1" Grid.Column="0" x:Name="adjHSCheckBox" IsChecked="{Binding Config.AdjustHandshapes}" Content="Adjust Handshapes" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AdjustHandshapes}"/>
+        <CheckBox Grid.Row="1" Grid.Column="0" Content="Adjust Handshapes" IsChecked="{Binding Config.AdjustHandshapes}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AdjustHandshapes}"/>
         <CheckBox Grid.Row="1" Grid.Column="1" Content="Check XML" IsChecked="{Binding Config.CheckXML}" Margin="7,0,0,0" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckXML}"/>
         <CheckBox Grid.Row="2" Grid.Column="0" Content="Restore First Noguitar Section" IsChecked="{Binding Config.RestoreFirstNoguitarSection}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreNoguitarSection}"/>
         <CheckBox Grid.Row="2" Grid.Column="1" Content="Restore Noguitar Anchors" IsChecked="{Binding Config.RestoreNoguitarSectionAnchors}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreNoguitarAnchors}"/>
-        <CheckBox Grid.Row="3" Grid.Column="1" Content="Keep END Phrase Location" IsChecked="{Binding Config.PreserveENDPhraseLocation}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreEndPhrase}"/>
         <CheckBox Grid.Row="3" Grid.Column="0" Content="Remove Beats Past Audio End" IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemoveBeats}"/>
-        <CheckBox Grid.Row="4" Grid.Column="1" Content="Fix Chord Names" IsChecked="{Binding Config.FixChordNames}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixChordNames}"/>
+        <CheckBox Grid.Row="3" Grid.Column="1" Content="Keep END Phrase Location" IsChecked="{Binding Config.PreserveENDPhraseLocation}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreEndPhrase}"/>
         <CheckBox Grid.Row="4" Grid.Column="0" Content="Fix One Level Phrases" IsChecked="{Binding Config.FixOneLevelPhrases}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixOneLevel}"/>
-        <CheckBox Grid.Row="6" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
-        <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
+        <CheckBox Grid.Row="4" Grid.Column="1" Content="Fix Chord Names" IsChecked="{Binding Config.FixChordNames}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixChordNames}"/>
         <CheckBox Grid.Row="5" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemovePlaceholders}"/>
+        <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
+        <CheckBox Grid.Row="6" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
         <CheckBox Grid.Row="6" Grid.Column="1" Content="Check For Arr. Id Reset" IsChecked="{Binding Config.CheckForArrIdReset}" Margin="7,0,0,0" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckArrIdReset}"/>
         <CheckBox Grid.Row="7" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
         <CheckBox Grid.Row="7" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.OverwriteFile}"/>
