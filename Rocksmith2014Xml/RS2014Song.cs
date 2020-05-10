@@ -12,7 +12,7 @@ namespace Rocksmith2014Xml
     [XmlRoot("song")]
     public class RS2014Song : IXmlSerializable
     {
-        internal static bool UseAbridgedXml;
+        internal static bool UseAbridgedXml { get; set; }
 
         public readonly List<RSXmlComment> XmlComments = new List<RSXmlComment>();
 

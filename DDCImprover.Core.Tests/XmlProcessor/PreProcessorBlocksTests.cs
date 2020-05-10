@@ -176,7 +176,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             new CustomEventsPreProcessor().Apply(testSong, nullLog);
 
             testSong.Events.Should().NotContain(ev => ev.Code == "w3");
-            testSong.Levels[0].Anchors[0].Width.Should().Be(3f);
+            testSong.Levels[0].Anchors[0].Width.Should().Be(3);
         }
     }
 }

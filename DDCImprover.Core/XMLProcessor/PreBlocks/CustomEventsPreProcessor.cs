@@ -23,7 +23,7 @@ namespace DDCImprover.Core.PreBlocks
 
                 foreach (var anchor in modifiedAnchors)
                 {
-                    anchor.Width = 3.0f;
+                    anchor.Width = 3;
                     Log($"Changed width of anchor at {anchor.Time.TimeToString()} to 3.");
                 }
 

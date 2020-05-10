@@ -10,11 +10,11 @@ namespace Rocksmith2014Xml
     {
         public byte Fret { get; set; }
         public float Time { get; set; }
-        public float Width { get; set; }
+        public byte Width { get; set; }
 
         public Anchor() { }
 
-        public Anchor(byte fret, float time, float width = 4f)
+        public Anchor(byte fret, float time, byte width = 4)
         {
             Fret = fret;
             Time = time;
@@ -32,7 +32,7 @@ namespace Rocksmith2014Xml
         {
             Time = float.Parse(reader.GetAttribute("time"), NumberFormatInfo.InvariantInfo);
             Fret = byte.Parse(reader.GetAttribute("fret"), NumberFormatInfo.InvariantInfo);
-            Width = float.Parse(reader.GetAttribute("width"), NumberFormatInfo.InvariantInfo);
+            Width = (byte)float.Parse(reader.GetAttribute("width"), NumberFormatInfo.InvariantInfo);
 
             reader.ReadStartElement();
         }
