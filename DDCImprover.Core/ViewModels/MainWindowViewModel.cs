@@ -73,7 +73,7 @@ namespace DDCImprover.Core.ViewModels
         public bool MatchPhrasesToSections { get; set; }
 
         [Reactive]
-        public bool DeleteTranscriptionTrack { get; set; }
+        public bool DeleteTranscriptionTrack { get; set; } = true;
 
         #endregion
 
