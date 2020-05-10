@@ -49,7 +49,6 @@ namespace Rocksmith2014Xml
         public XmlCountList<LinkedDiff> LinkedDiffs { get; set; }
         public XmlCountList<PhraseProperty> PhraseProperties { get; set; }
         public ChordTemplateCollection ChordTemplates { get; set; }
-        //fretHandMuteTemplates
         public EbeatCollection Ebeats { get; set; }
 
         public string ToneBase { get; set; }
@@ -372,8 +371,6 @@ namespace Rocksmith2014Xml
                 ((IXmlSerializable)ChordTemplates).WriteXml(writer);
                 writer.WriteEndElement();
             }
-
-            //fretHandMuteTemplates
 
             if (Ebeats != null)
             {

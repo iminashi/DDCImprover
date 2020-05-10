@@ -101,6 +101,9 @@ namespace DDCImprover.Avalonia.Views
                     case Key.A:
                         Observable.Return(Unit.Default).InvokeCommand(ViewModel.AddFiles);
                         break;
+                    case Key.R:
+                        Observable.Return(Unit.Default).InvokeCommand(ViewModel.RemoveDD);
+                        break;
                 }
             }
             else if (e.KeyModifiers == KeyModifiers.None)

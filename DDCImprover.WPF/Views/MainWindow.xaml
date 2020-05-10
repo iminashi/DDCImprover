@@ -20,6 +20,7 @@
         <KeyBinding Command="{Binding AddFiles}" Key="A" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding Process}" Key="P" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding Process}" Key="F5"/>
+        <KeyBinding Command="{Binding RemoveDD}" Key="R" Modifiers="Ctrl"/>
     </Window.InputBindings>
 
     <Window.TaskbarItemInfo>
@@ -58,7 +59,7 @@
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4" Click="ExitMenuItem_Click" />
             </MenuItem>
             <MenuItem Header="_Tools">
-                <MenuItem Header="_Quick Remove DD..." Command="{Binding RemoveDD}" />
+                <MenuItem Header="_Quick Remove DD..." Command="{Binding RemoveDD}" InputGestureText="Ctrl+R" />
                 <CheckBox Content="Match Phrases with Sections"
                           IsChecked="{Binding MatchPhrasesToSections}"
                           ToolTip="{x:Static text:Tooltips.MatchPhrasesWithSections}" />
