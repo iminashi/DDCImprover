@@ -16,7 +16,7 @@ namespace Rocksmith2014Xml
 
         public readonly List<RSXmlComment> XmlComments = new List<RSXmlComment>();
 
-        private byte Version { get; set; } = 8;
+        public byte Version { get; set; } = 8;
         public string Arrangement { get; set; }
         //public string WaveFilePath { get; set; }
         public int Part { get; set; }
