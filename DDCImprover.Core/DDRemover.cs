@@ -83,7 +83,7 @@ namespace DDCImprover.Core
             var chords = new List<Chord>();
             var handshapes = new List<HandShape>();
             var anchors = new List<Anchor>();
-            var tasks = new Task[4];
+            var tasks = Enumerable.Repeat(Task.CompletedTask, 4).ToArray();
 
             // Ignore the last phrase iteration (END)
             for (int i = 0; i < song.PhraseIterations.Count - 1; i++)
@@ -108,13 +108,13 @@ namespace DDCImprover.Core
                 var anchorsInPhraseIteration = highestLevelForPhrase.Anchors
                     .Where(a => a.Time >= phraseStartTime && a.Time < phraseEndTime);
 
-                tasks[0] = Task.Run(() => notes.AddRange(notesInPhraseIteration));
-                tasks[1] = Task.Run(() => chords.AddRange(chordsInPhraseIteration));
-                tasks[2] = Task.Run(() => handshapes.AddRange(handShapesInPhraseIteration));
-                tasks[3] = Task.Run(() => anchors.AddRange(anchorsInPhraseIteration));
-
-                await Task.WhenAll(tasks).ConfigureAwait(false);
+                tasks[0] = tasks[0].ContinueWith(_ => notes.AddRange(notesInPhraseIteration));
+                tasks[1] = tasks[1].ContinueWith(_ => chords.AddRange(chordsInPhraseIteration));
+                tasks[2] = tasks[2].ContinueWith(_ => handshapes.AddRange(handShapesInPhraseIteration));
+                tasks[3] = tasks[3].ContinueWith(_ => anchors.AddRange(anchorsInPhraseIteration));
             }
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             var arr = new Level { Difficulty = 0 };
             arr.Notes.AddRange(notes);
