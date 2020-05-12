@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    [XmlRoot("phraseProperty", Namespace = "")]
     public sealed class PhraseProperty : IXmlSerializable
     {
         public int PhraseId { get; set; }

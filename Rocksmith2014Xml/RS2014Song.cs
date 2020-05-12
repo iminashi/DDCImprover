@@ -14,7 +14,7 @@ namespace Rocksmith2014Xml
     {
         internal static bool UseAbridgedXml { get; set; }
 
-        public readonly List<RSXmlComment> XmlComments = new List<RSXmlComment>();
+        public List<RSXmlComment> XmlComments { get; } = new List<RSXmlComment>();
 
         public byte Version { get; set; } = 8;
         public string Arrangement { get; set; }
