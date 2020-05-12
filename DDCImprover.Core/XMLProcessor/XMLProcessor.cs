@@ -179,6 +179,10 @@ namespace DDCImprover.Core
                 }
             }
 
+            StatusMessages.Add(new ImproverMessage(
+                "Unable to read song metadata. " +
+                "The file is missing one or more of these tags:\n" +
+                "title, artistName, arrangementProperties", MessageType.Error));
             return false;
         }
 
