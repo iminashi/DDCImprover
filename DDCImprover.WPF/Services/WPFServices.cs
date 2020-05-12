@@ -31,7 +31,8 @@ namespace DDCImprover.WPF
 
         public void NotifyUser(string message, string caption)
         {
-            MessageBox.Show(message, caption);
+            MessageBoxImage icon = (caption == "Error") ? MessageBoxImage.Error : MessageBoxImage.None;
+            MessageBox.Show(message, caption, MessageBoxButton.OK, icon);
         }
     }
 }
