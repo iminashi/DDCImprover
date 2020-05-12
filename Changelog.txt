@@ -1,6 +1,8 @@
 2.3
 -Add "Quick Remove DD" feature
 -Fixed a minor bug with crowd event placement checking
+-Fixed the tab order in the configuration window
+-Fixed a null reference exception in the chord slide handshape length fix
 -Bring the main window to the front when closing a child window (WPF version)
 -Updated Avalonia to 0.9.9
 -Updated .NET Core version to 3.1 (WPF version)
