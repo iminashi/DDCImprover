@@ -49,18 +49,13 @@ namespace DDCImprover.Avalonia.Views
             InitializeComponent();
 
             services = new AvaloniaServices(this);
-
-            DataContext = ViewModel = new MainWindowViewModel(services);
-
-            configViewModel = new ConfigurationWindowViewModel(services, XMLProcessor.Preferences);
+            configViewModel = new ConfigurationWindowViewModel(services);
+            DataContext = ViewModel = new MainWindowViewModel(services, configViewModel);
 
             // Change mouse cursor when processing files
             this.WhenAnyValue(x => x.ViewModel.IsProcessingFiles)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(processing => Cursor = processing ? new Cursor(StandardCursorType.AppStarting) : new Cursor(StandardCursorType.Arrow));
-
-            // Reset "view log" text if user clears log files
-            configViewModel.LogsCleared.Subscribe(_ => ViewModel.RemoveViewLogTexts());
 
             // Display processing messages when needed
             ViewModel.ShouldDisplayProcessingMessages

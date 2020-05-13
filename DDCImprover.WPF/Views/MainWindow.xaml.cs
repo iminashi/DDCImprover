@@ -38,8 +38,8 @@ namespace DDCImprover.WPF
             InitializeComponent();
 
             services = new WPFServices();
-            DataContext = ViewModel = new MainWindowViewModel(services);
-            configViewModel = new ConfigurationWindowViewModel(services, XMLProcessor.Preferences);
+            configViewModel = new ConfigurationWindowViewModel(services);
+            DataContext = ViewModel = new MainWindowViewModel(services, configViewModel);
 
             // Change mouse cursor when processing files
             this.WhenAnyValue(x => x.ViewModel.IsProcessingFiles)
@@ -50,9 +50,6 @@ namespace DDCImprover.WPF
             ViewModel.ShouldDisplayProcessingMessages
                 .ObserveOnDispatcher()
                 .Subscribe(_ => ShowProcessingMessages());
-
-            // Reset "view log" text if user clears log files
-            configViewModel.LogsCleared.Subscribe(_ => ViewModel.RemoveViewLogTexts());
 
             // Check DDC executable when window is activated
             Observable.FromEventPattern<EventArgs>(this, "Activated")

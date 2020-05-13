@@ -30,33 +30,30 @@ namespace DDCImprover.Core
         public bool RestoreNoguitarSectionAnchors { get; set; } = true;
         public bool RemoveAnchorPlaceholderNotes { get; set; } = true;
         public bool RemoveBeatsPastAudioEnd { get; set; } = true;
+        public bool RemoveHighDensityStatuses { get; set; } = true;
         public bool RemoveTimeSignatureEvents { get; set; } = false;
         public bool RemoveTranscriptionTrack { get; set; } = false;
         public bool DisplayTimesInSeconds { get; set; } = true;
         public bool WriteAbridgedXmlFiles { get; set; } = true;
         public bool OverwriteOriginalFile { get; set; } = false;
 
-        public void ValidateValues()
+        public static void LoadConfiguration()
         {
-            if (MaxThreads < 1 || MaxThreads > Environment.ProcessorCount)
-                MaxThreads = Environment.ProcessorCount;
-
-            if (DDCPhraseLength < 8)
-                DDCPhraseLength = 8;
-            else if (DDCPhraseLength > 256)
-                DDCPhraseLength = 256;
-
-            if (string.IsNullOrWhiteSpace(DDCRampupFile))
-                DDCRampupFile = "ddc_default";
-
-            if (string.IsNullOrWhiteSpace(DDCConfigFile))
-                DDCConfigFile = "ddc_default";
+            try
+            {
+                XMLProcessor.Preferences = Load();
+            }
+            catch
+            {
+                // Use default preferences
+                XMLProcessor.Preferences = new Configuration();
+            }
         }
 
         /// <summary>
         /// Deserializes configuration from an XML file.
         /// </summary>
-        public static Configuration Load()
+        private static Configuration Load()
         {
             if (string.IsNullOrEmpty(ConfigFileName))
                 throw new InvalidOperationException("Configuration filename is not set.");
@@ -77,6 +74,23 @@ namespace DDCImprover.Core
                 throw new InvalidOperationException("Configuration filename is not set.");
 
             ReflectionConfig.SaveToXml(ConfigFileName, this);
+        }
+
+        private void ValidateValues()
+        {
+            if (MaxThreads < 1 || MaxThreads > Environment.ProcessorCount)
+                MaxThreads = Environment.ProcessorCount;
+
+            if (DDCPhraseLength < 8)
+                DDCPhraseLength = 8;
+            else if (DDCPhraseLength > 256)
+                DDCPhraseLength = 256;
+
+            if (string.IsNullOrWhiteSpace(DDCRampupFile))
+                DDCRampupFile = "ddc_default";
+
+            if (string.IsNullOrWhiteSpace(DDCConfigFile))
+                DDCConfigFile = "ddc_default";
         }
     }
 }

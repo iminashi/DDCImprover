@@ -83,7 +83,7 @@ namespace DDCImprover.Core.ViewModels
 
         #endregion
 
-        public MainWindowViewModel(IPlatformSpecificServices services)
+        public MainWindowViewModel(IPlatformSpecificServices services, ConfigurationWindowViewModel configViewModel)
         {
             // TODO: Remove?
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -94,20 +94,13 @@ namespace DDCImprover.Core.ViewModels
 
             SetupObservables();
 
+            // Reset "view log" text if user clears log files
+            configViewModel.LogsCleared.Subscribe(_ => RemoveViewLogTexts());
+
             // Ensure that the log directory exists
             Directory.CreateDirectory(Configuration.LogDirectory);
 
             ProgramTitle = "DDC Improver " + Program.Version;
-
-            try
-            {
-                XMLProcessor.Preferences = Configuration.Load();
-            }
-            catch
-            {
-                // Use default preferences
-                XMLProcessor.Preferences = new Configuration();
-            }
         }
 
         private void CreateReactiveCommands()
@@ -140,7 +133,7 @@ namespace DDCImprover.Core.ViewModels
 
         private void SetupObservables()
         {
-            // Keep maximum value of progressbar up to date
+            // Keep the maximum value of the progressbar up to date
             this.WhenAnyValue(x => x.XMLProcessors.Count)
                 .Where(c => c > 0)
                 .Subscribe(count => ProgressMaximum = count * XMLProcessor.ProgressSteps);
@@ -232,7 +225,7 @@ namespace DDCImprover.Core.ViewModels
                     }))
                     .ConfigureAwait(false);
 
-                string files = fileNames.Length == 1 ? "File" : "Files";
+                string files = (fileNames.Length == 1) ? "File" : "Files";
                 string statusText = $"Removing DD completed. {files} saved with NDD_ prefix.";
 #if DEBUG
                 statusText += " Elapsed: " + stopwatch.ElapsedMilliseconds;

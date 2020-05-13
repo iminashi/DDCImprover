@@ -43,10 +43,12 @@ namespace DDCImprover.Core.ViewModels
 
         private readonly IPlatformSpecificServices services;
 
-        public ConfigurationWindowViewModel(IPlatformSpecificServices services, Configuration config)
+        public ConfigurationWindowViewModel(IPlatformSpecificServices services)
         {
             this.services = services;
-            Config = config;
+
+            Configuration.LoadConfiguration();
+            Config = XMLProcessor.Preferences;
 
             LogsCleared = logsCleared.AsObservable();
 
