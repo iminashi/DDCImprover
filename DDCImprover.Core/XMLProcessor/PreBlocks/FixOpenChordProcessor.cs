@@ -20,7 +20,7 @@ namespace DDCImprover.Core.PreBlocks
                 if (chordName.Contains("FIXOPEN"))
                 {
                     // Remove open notes from the chord template
-                    for (int i = 0; i < 5; ++i)
+                    for (int i = 0; i < 6; ++i)
                     {
                         if (currentChordTemplate.Frets[i] == 0)
                             currentChordTemplate.Frets[i] = -1;
