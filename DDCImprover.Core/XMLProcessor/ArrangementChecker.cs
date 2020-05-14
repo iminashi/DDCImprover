@@ -140,7 +140,10 @@ namespace DDCImprover.Core
                 else if (note.IsBend)
                 {
                     float thisNoteLastBendValue = note.BendValues.Last().Step;
-                    float nextNoteFirstBendValue = nextNote.BendValues?[0].Step ?? 0f;
+                    float nextNoteFirstBendValue = 0f;
+                    // If the next note has bend values and the first one is at the same timecode as the note, compare to that bend value
+                    if (nextNote.BendValues?.Count > 0 && Utils.TimeEqualToMilliseconds(nextNote.Time, nextNote.BendValues[0].Time))
+                        nextNoteFirstBendValue = nextNote.BendValues[0].Step;
 
                     if (thisNoteLastBendValue != nextNoteFirstBendValue)
                     {

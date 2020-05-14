@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrangementCheckerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlProcessor\PostProcessorBlocksTests.cs" />
     <Compile Include="XmlProcessor\PreProcessorBlocksTests.cs" />
