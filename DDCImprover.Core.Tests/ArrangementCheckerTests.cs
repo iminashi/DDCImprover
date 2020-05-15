@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
+
 using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using Xunit;
 
 namespace DDCImprover.Core.Tests
@@ -11,6 +13,7 @@ namespace DDCImprover.Core.Tests
     {
         private readonly List<ImproverMessage> messages;
         private readonly RS2014Song song;
+        private readonly Action<string> nullLog = _ => { };
 
         public ArrangementCheckerTests()
         {
@@ -40,7 +43,7 @@ namespace DDCImprover.Core.Tests
                 Sustain = 1f,
             });
 
-            ArrangementChecker checker = new ArrangementChecker(song, messages, _ => { });
+            ArrangementChecker checker = new ArrangementChecker(song, messages, nullLog);
             checker.CheckNotes(song.Levels[0]);
 
             messages.Should().HaveCount(1);
@@ -72,10 +75,34 @@ namespace DDCImprover.Core.Tests
                 }
             });
 
-            ArrangementChecker checker = new ArrangementChecker(song, messages, _ => { });
+            ArrangementChecker checker = new ArrangementChecker(song, messages, nullLog);
             checker.CheckNotes(song.Levels[0]);
 
             messages.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void DetectsLinknextSlideMismatch()
+        {
+            song.Levels[0].Notes.Add(new Note
+            {
+                Fret = 1,
+                Sustain = 1f,
+                IsLinkNext = true,
+                SlideTo = 5
+            });
+            song.Levels[0].Notes.Add(new Note
+            {
+                Fret = 10,
+                Time = 1f,
+                Sustain = 1f,
+            });
+
+            ArrangementChecker checker = new ArrangementChecker(song, messages, nullLog);
+            checker.CheckNotes(song.Levels[0]);
+
+            messages.Should().HaveCount(1);
+            messages[0].Message.Should().Contain("fret mismatch");
         }
     }
 }

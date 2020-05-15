@@ -1,9 +1,13 @@
 ﻿using DDCImprover.Core.PostBlocks;
+
 using FluentAssertions;
+
 using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Xunit;
 
 namespace DDCImprover.Core.Tests.XmlProcessor
@@ -127,7 +131,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.PhraseIterations.Last().PhraseId++;
 
             var testPhrase = new Phrase("test", 0, PhraseMask.None);
-            testSong.Phrases.Insert(testSong.Phrases.Count - 1,testPhrase);
+            testSong.Phrases.Insert(testSong.Phrases.Count - 1, testPhrase);
             testSong.PhraseIterations.Insert(testSong.PhraseIterations.Count - 1,
                 new PhraseIteration
                 {
@@ -369,6 +373,87 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             new AnchorPlaceholderNoteRemover().Apply(testSong, nullLog);
 
             testSong.Levels[0].Notes.Should().Contain(n => n.Time == 34f);
+        }
+
+        [Fact]
+        public void HighDensityRemover_RemovesHighDensityAndChordNotes()
+        {
+            var testChord = new Chord
+            {
+                Time = 10f,
+                IsHighDensity = true,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0 },
+                    new Note { Fret = 7, String = 1 },
+                    new Note { Fret = 7, String = 2 }
+                }
+            };
+            testSong.Levels[0].Chords.Add(testChord);
+            testSong.Levels[0].HandShapes.Add(new HandShape
+            {
+                StartTime = 10f,
+                EndTime = 15f
+            });
+
+            new HighDensityRemover().Apply(testSong, nullLog);
+
+            testSong.Levels[0].Chords[0].IsHighDensity.Should().BeFalse();
+            testSong.Levels[0].Chords[0].ChordNotes.Should().BeNull();
+        }
+
+        [Fact]
+        public void HighDensityRemover_DetectsFirstNonMutedChord()
+        {
+            testSong.Levels[0].Chords.Add(new Chord
+            {
+                Time = 10f,
+                IsHighDensity = true,
+                IsFretHandMute = true,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0 },
+                    new Note { Fret = 7, String = 1 },
+                    new Note { Fret = 7, String = 2 }
+                }
+            });
+            testSong.Levels[0].Chords.Add(new Chord
+            {
+                Time = 11f,
+                IsHighDensity = true,
+                IsFretHandMute = true,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0 },
+                    new Note { Fret = 7, String = 1 },
+                    new Note { Fret = 7, String = 2 }
+                }
+            });
+            testSong.Levels[0].Chords.Add(new Chord
+            {
+                Time = 11f,
+                IsHighDensity = true,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0 },
+                    new Note { Fret = 7, String = 1 },
+                    new Note { Fret = 7, String = 2 }
+                }
+            });
+            testSong.Levels[0].HandShapes.Add(new HandShape
+            {
+                StartTime = 10f,
+                EndTime = 15f
+            });
+
+            new HighDensityRemover().Apply(testSong, nullLog);
+
+            testSong.Levels[0].Chords[0].IsHighDensity.Should().BeFalse();
+            testSong.Levels[0].Chords[1].IsHighDensity.Should().BeFalse();
+            testSong.Levels[0].Chords[2].IsHighDensity.Should().BeFalse();
+            testSong.Levels[0].Chords[0].ChordNotes.Should().BeNull();
+            testSong.Levels[0].Chords[1].ChordNotes.Should().BeNull();
+            testSong.Levels[0].Chords[2].ChordNotes.Should().NotBeNull();
         }
     }
 }

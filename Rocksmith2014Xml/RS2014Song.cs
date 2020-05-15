@@ -43,13 +43,13 @@ namespace Rocksmith2014Xml
 
         public string LastConversionDateTime { get; set; }
 
-        public PhraseCollection Phrases { get; set; }
-        public PhraseIterationCollection PhraseIterations { get; set; }
+        public PhraseCollection Phrases { get; set; } = new PhraseCollection();
+        public PhraseIterationCollection PhraseIterations { get; set; } = new PhraseIterationCollection();
         public NewLinkedDiffCollection NewLinkedDiffs { get; set; }
         public XmlCountList<LinkedDiff> LinkedDiffs { get; set; }
         public XmlCountList<PhraseProperty> PhraseProperties { get; set; }
         public ChordTemplateCollection ChordTemplates { get; set; }
-        public EbeatCollection Ebeats { get; set; }
+        public EbeatCollection Ebeats { get; set; } = new EbeatCollection();
 
         public string ToneBase { get; set; }
         public string ToneA { get; set; }
@@ -184,11 +184,9 @@ namespace Rocksmith2014Xml
                         break;
 
                     case "phrases":
-                        Phrases = new PhraseCollection();
                         ((IXmlSerializable)Phrases).ReadXml(reader);
                         break;
                     case "phraseIterations":
-                        PhraseIterations = new PhraseIterationCollection();
                         ((IXmlSerializable)PhraseIterations).ReadXml(reader);
                         break;
                     case "newLinkedDiffs":
@@ -208,7 +206,6 @@ namespace Rocksmith2014Xml
                         ((IXmlSerializable)ChordTemplates).ReadXml(reader);
                         break;
                     case "ebeats":
-                        Ebeats = new EbeatCollection();
                         ((IXmlSerializable)Ebeats).ReadXml(reader);
                         break;
 

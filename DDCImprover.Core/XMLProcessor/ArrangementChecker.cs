@@ -394,7 +394,7 @@ namespace DDCImprover.Core
                         continue;
                 }
 
-                if (/*!closeNoteFound && */chords.Count > 0 && chordIndex < chords.Count)
+                if (chords.Count > 0 && chordIndex < chords.Count)
                 {
                     while (chordIndex < chords.Count)
                     {
@@ -415,10 +415,6 @@ namespace DDCImprover.Core
                     if (closeNoteFound && Utils.TimeEqualToMilliseconds(closeNoteTime, anchor.Time))
                         continue;
                 }
-
-                // Ignore anchors that start a phrase
-                //if (!closeNoteFound && song.PhraseIterations.Any(pi => Utils.TimeEqualToMilliseconds(pi.Time, anchor.Time)))
-                //    continue;
 
                 if (closeNoteFound)
                 {
