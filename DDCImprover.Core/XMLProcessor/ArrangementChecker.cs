@@ -45,8 +45,8 @@ namespace DDCImprover.Core
             {
                 CheckNotes(level);
                 CheckChords(level);
-                CheckHandshapes(level.HandShapes, song.ChordTemplates, level.Anchors);
-                CheckAnchors(level.Anchors, level.Notes, level.Chords);
+                CheckHandshapes(level, song.ChordTemplates);
+                CheckAnchors(level);
             }
         }
 
@@ -303,8 +303,11 @@ namespace DDCImprover.Core
             }
         }
 
-        internal void CheckHandshapes(HandShapeCollection handShapes, ChordTemplateCollection chordTemplates, AnchorCollection anchors)
+        internal void CheckHandshapes(Level level, ChordTemplateCollection chordTemplates)
         {
+            var handShapes = level.HandShapes;
+            var anchors = level.Anchors;
+
             for (int i = 0; i < handShapes.Count; i++)
             {
                 // Check anchor position relative to handshape fingering
@@ -356,12 +359,15 @@ namespace DDCImprover.Core
         }
 
         // Looks for anchors that are very close to a note but not exactly on a note
-        internal void CheckAnchors(AnchorCollection anchors, NoteCollection notes, ChordCollection chords)
+        internal void CheckAnchors(Level level)
         {
+            var notes = level.Notes;
+            var chords = level.Chords;
+
             int noteIndex = 0;
             int chordIndex = 0;
 
-            foreach (var anchor in anchors)
+            foreach (var anchor in level.Anchors)
             {
                 float closeNoteTime = -1f;
                 bool closeNoteFound = false;
