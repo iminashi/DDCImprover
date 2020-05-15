@@ -43,8 +43,8 @@ namespace DDCImprover.Core
 
             foreach (var level in song.Levels)
             {
-                CheckNotes(level.Notes);
-                CheckChords(level.Chords, level.Notes, level.HandShapes);
+                CheckNotes(level);
+                CheckChords(level);
                 CheckHandshapes(level.HandShapes, song.ChordTemplates, level.Anchors);
                 CheckAnchors(level.Anchors, level.Notes, level.Chords);
             }
@@ -103,8 +103,18 @@ namespace DDCImprover.Core
             }
         }
 
-        private void CheckLinkNext(Note note, int currentIndex, NoteCollection notes)
+        private void CheckLinkNext(Note note, int currentIndex, Level level)
         {
+            var notes = level.Notes;
+
+            // Check if the note is linked to a chord
+            if (level.Chords.Exists(c => Utils.TimeEqualToMilliseconds(c.Time, note.Time + note.Sustain)
+                && c.ChordNotes?.Exists(cn => cn.String == note.String) == true))
+            {
+                AddIssue($"Note incorrectly linked to a chord at {note.Time.TimeToString()}.", note.Time);
+                return;
+            }
+
             int nextNoteIndex = currentIndex == -1 ?
                 notes.FindIndex(n => n.Time > note.Time && n.String == note.String) :
                 notes.FindIndex(currentIndex + 1, n => n.String == note.String);
@@ -171,11 +181,11 @@ namespace DDCImprover.Core
             return false;
         }
 
-        internal void CheckNotes(NoteCollection notes)
+        internal void CheckNotes(Level level)
         {
-            for (int i = 0; i < notes.Count; i++)
+            for (int i = 0; i < level.Notes.Count; i++)
             {
-                var note = notes[i];
+                var note = level.Notes[i];
 
                 // Check for notes with LinkNext and unpitched slide
                 if(note.IsLinkNext && note.IsUnpitchedSlide)
@@ -220,7 +230,7 @@ namespace DDCImprover.Core
                 // Check linkNext notes
                 if (note.IsLinkNext)
                 {
-                    CheckLinkNext(note, i, notes);
+                    CheckLinkNext(note, i, level);
                 }
 
                 // Check for notes inside noguitar sections
@@ -231,11 +241,11 @@ namespace DDCImprover.Core
             }
         }
 
-        internal void CheckChords(ChordCollection chords, NoteCollection notes, HandShapeCollection handshapes)
+        internal void CheckChords(Level level)
         {
-            for (int i = 0; i < chords.Count; i++)
+            for (int i = 0; i < level.Chords.Count; i++)
             {
-                var chord = chords[i];
+                var chord = level.Chords[i];
                 var chordNotes = chord.ChordNotes;
 
                 if (chordNotes != null)
@@ -267,7 +277,7 @@ namespace DDCImprover.Core
                     foreach (var cn in chordNotes)
                     {
                         if (cn.IsLinkNext)
-                            CheckLinkNext(cn, -1, notes);
+                            CheckLinkNext(cn, -1, level);
                     }
                 }
 
@@ -278,7 +288,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check chords at the end of handshape (no handshape sustain)
-                var handShape = handshapes.Find(hs => hs.ChordId == chord.ChordId && chord.Time >= hs.StartTime && chord.Time <= hs.EndTime);
+                var handShape = level.HandShapes.Find(hs => hs.ChordId == chord.ChordId && chord.Time >= hs.StartTime && chord.Time <= hs.EndTime);
 
                 if (handShape?.EndTime - chord.Time <= 0.005f)
                 {

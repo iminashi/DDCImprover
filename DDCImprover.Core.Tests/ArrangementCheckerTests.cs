@@ -41,7 +41,7 @@ namespace DDCImprover.Core.Tests
             });
 
             ArrangementChecker checker = new ArrangementChecker(song, messages, _ => { });
-            checker.CheckNotes(song.Levels[0].Notes);
+            checker.CheckNotes(song.Levels[0]);
 
             messages.Should().HaveCount(1);
             messages[0].Message.Should().Contain("mismatch");
@@ -73,7 +73,7 @@ namespace DDCImprover.Core.Tests
             });
 
             ArrangementChecker checker = new ArrangementChecker(song, messages, _ => { });
-            checker.CheckNotes(song.Levels[0].Notes);
+            checker.CheckNotes(song.Levels[0]);
 
             messages.Should().HaveCount(0);
         }
