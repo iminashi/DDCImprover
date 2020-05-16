@@ -71,7 +71,7 @@
     </HeaderedContentControl>
 
     <HeaderedContentControl Header="Program Settings" Background="#EEEEEE" Grid.Row="1" Margin="10,10,10,5">
-      <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*,*,*,*,*">
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*,*,*,*,*,*">
         <Grid.Styles>
           <Style Selector="CheckBox">
             <Setter Property="Margin" Value="2,4,4,4"/>
@@ -101,10 +101,11 @@
         <CheckBox Grid.Row="4" Grid.Column="1" Content="Fix Chord Names" IsChecked="{Binding Config.FixChordNames}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixChordNames}"/>
         <CheckBox Grid.Row="5" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemovePlaceholders}"/>
         <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
-        <CheckBox Grid.Row="6" Grid.Column="0" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
-        <CheckBox Grid.Row="6" Grid.Column="1" Content="Check For Arr. Id Reset" IsChecked="{Binding Config.CheckForArrIdReset}" Margin="7,0,0,0" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckArrIdReset}"/>
-        <CheckBox Grid.Row="7" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
+        <CheckBox Grid.Row="6" Grid.Column="0" Content="Remove High Density Statuses" IsChecked="{Binding Config.RemoveHighDensityStatuses}" VerticalAlignment="Center"/>
+        <CheckBox Grid.Row="6" Grid.Column="1" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
+        <CheckBox Grid.Row="7" Grid.Column="0" Content="Check For Arr. Id Reset" IsChecked="{Binding Config.CheckForArrIdReset}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckArrIdReset}"/>
         <CheckBox Grid.Row="7" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.OverwriteFile}"/>
+        <CheckBox Grid.Row="8" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
       </Grid>
     </HeaderedContentControl>
     <Grid Grid.Row="2" Margin="0,5,0,10">

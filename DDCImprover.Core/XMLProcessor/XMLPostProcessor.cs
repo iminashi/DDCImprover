@@ -68,7 +68,10 @@ namespace DDCImprover.Core
                 .ApplyFix(new CustomEventPostProcessor(Parent.StatusMessages))
 
                 // Remove notes that are placeholders for anchors
-                .ApplyFixIf(Preferences.RemoveAnchorPlaceholderNotes, new AnchorPlaceholderNoteRemover());
+                .ApplyFixIf(Preferences.RemoveAnchorPlaceholderNotes, new AnchorPlaceholderNoteRemover())
+
+                // Removes "high density" statuses and chord notes from chords that have them
+                .ApplyFixIf(Preferences.RemoveHighDensityStatuses, new HighDensityRemover());
 
             // Restore first noguitar section
             if (WasNonDDFile && FirstNGSectionTime.HasValue)
@@ -89,31 +92,9 @@ namespace DDCImprover.Core
             if(Preferences.RemoveTranscriptionTrack)
                 DDCSong.TranscriptionTrack = new Level();
 
-#if DEBUG
-            RemoveHighDensityStatuses();
-#endif
-
             ValidateDDCXML();
 
             Log("-------------------- Postprocessing Completed --------------------");
-        }
-
-        private void RemoveHighDensityStatuses()
-        {
-            int hiDensRemoved = 0;
-
-            foreach (var chord in DDCSong.Levels.SelectMany(lev => lev.Chords))
-            {
-                if (chord.IsHighDensity)
-                {
-                    chord.IsHighDensity = false;
-                    chord.ChordNotes = null;
-                    ++hiDensRemoved;
-                }
-            }
-
-            if (hiDensRemoved > 0)
-                Log($"{hiDensRemoved} high density statuses removed.");
         }
 
         /// <summary>

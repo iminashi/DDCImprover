@@ -211,7 +211,8 @@ namespace DDCImprover.Core.ViewModels
 
                 await Task.Run(() => Parallel.ForEach(
                     fileNames,
-                    new ParallelOptions {
+                    new ParallelOptions
+                    {
                         MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 4)
                     },
                     async fn => {
