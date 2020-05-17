@@ -41,7 +41,7 @@
       <MenuItem Header="_Help">
         <MenuItem Header="View _Help" Click="Help_Click"/>
         <Separator />
-        <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
+        <MenuItem Header="_GitHub Page" Command="{Binding OpenGitHubPage}"/>
       </MenuItem>
     </Menu>
     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="#EEEEEE">
@@ -52,7 +52,7 @@
           <Setter Property="Margin" Value="5,3"/>
         </Style>
       </StackPanel.Styles>
-      <Button Command="{Binding Process}" ToolTip.Tip="Process files (F5 / Ctrl+P)">
+      <Button Command="{Binding ProcessFiles}" ToolTip.Tip="Process files (F5 / Ctrl+P)">
         <StackPanel Orientation="Horizontal">
           <Image Source="resm:DDCImprover.Avalonia.Assets.arrow32.png" Height="32"/>
           <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Process</TextBlock>
@@ -100,6 +100,7 @@
         <ContextMenu>
           <MenuItem Header="Add Files..." Command="{Binding AddFiles}"/>
           <Separator />
+          <MenuItem Header="Open Containing Folder" Command="{Binding OpenFolder}"/>
           <MenuItem Header="Close" Command="{Binding CloseFile}" />
           <MenuItem Header="Close All" Command="{Binding CloseAll}" IsEnabled="{Binding !IsProcessingFiles}" />
         </ContextMenu>

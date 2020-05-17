@@ -40,12 +40,14 @@ namespace DDCImprover.Core.ViewModels
 
         #region Reactive Commands
 
-        public ReactiveCommand<Unit, Unit> Process { get; private set; }
+        public ReactiveCommand<Unit, Unit> ProcessFiles { get; private set; }
         public ReactiveCommand<Unit, Unit> AddFiles { get; private set; }
         public ReactiveCommand<bool, Unit> OpenFiles { get; private set; }
         public ReactiveCommand<Unit, Unit> CloseFile { get; private set; }
         public ReactiveCommand<Unit, Unit> CloseAll { get; private set; }
         public ReactiveCommand<Unit, Unit> RemoveDD { get; private set; }
+        public ReactiveCommand<Unit, Unit> OpenFolder { get; private set; }
+        public ReactiveCommand<Unit, Unit> OpenGitHubPage { get; private set; }
 
         #endregion
 
@@ -105,30 +107,38 @@ namespace DDCImprover.Core.ViewModels
 
         private void CreateReactiveCommands()
         {
-            AddFiles = ReactiveCommand.CreateFromTask(_ => LoadFiles_Implementation(addingFiles: true));
+            AddFiles = ReactiveCommand.CreateFromTask(_ => LoadFilesImpl(addingFiles: true));
 
             var canOpenOrCloseAll = this.WhenAnyValue(
                 x => x.IsProcessingFiles,
                 (processingFiles) => !processingFiles);
 
-            OpenFiles = ReactiveCommand.CreateFromTask<bool>(LoadFiles_Implementation, canOpenOrCloseAll);
+            OpenFiles = ReactiveCommand.CreateFromTask<bool>(LoadFilesImpl, canOpenOrCloseAll);
 
-            CloseAll = ReactiveCommand.Create(CloseAllCommand_Implementation, canOpenOrCloseAll);
+            CloseAll = ReactiveCommand.Create(CloseAllImpl, canOpenOrCloseAll);
 
-            RemoveDD = ReactiveCommand.CreateFromTask(RemoveDD_Implementation);
+            RemoveDD = ReactiveCommand.CreateFromTask(RemoveDDImpl);
 
             var canClose = this.WhenAnyValue(
                 x => x.SelectedItems,
                 x => x.IsProcessingFiles,
                 (items, processingFiles) => items?.Count > 0 && !processingFiles);
 
-            CloseFile = ReactiveCommand.Create(CloseFile_Implementation, canClose);
+            CloseFile = ReactiveCommand.Create(CloseFileImpl, canClose);
 
             var canProcess = this.WhenAnyValue(
                 x => x.XMLProcessors.Count,
                 (count) => count > 0);
 
-            Process = ReactiveCommand.CreateFromTask(ProcessCommand_Implementation, canProcess);
+            ProcessFiles = ReactiveCommand.CreateFromTask(ProcessFilesImpl, canProcess);
+
+            var canOpen = this.WhenAnyValue(
+                x => x.SelectedItems,
+                items => items?.Count > 0);
+
+            OpenFolder = ReactiveCommand.Create(OpenFolderImpl, canOpen);
+
+            OpenGitHubPage = ReactiveCommand.Create(() => "https://github.com/iminashi/DDCImprover".StartAsProcess());
         }
 
         private void SetupObservables()
@@ -138,9 +148,9 @@ namespace DDCImprover.Core.ViewModels
                 .Where(c => c > 0)
                 .Subscribe(count => ProgressMaximum = count * XMLProcessor.ProgressSteps);
 
-            Process.IsExecuting.ToPropertyEx(this, x => x.IsProcessingFiles, false);
+            ProcessFiles.IsExecuting.ToPropertyEx(this, x => x.IsProcessingFiles, false);
 
-            ShouldDisplayProcessingMessages = Process.Where(_ => XMLProcessors.Sum(processor => processor.StatusMessages.Count) > 0);
+            ShouldDisplayProcessingMessages = ProcessFiles.Where(_ => XMLProcessors.Sum(processor => processor.StatusMessages.Count) > 0);
         }
 
         /// <summary>
@@ -174,9 +184,23 @@ namespace DDCImprover.Core.ViewModels
         }
 
         /// <summary>
-        /// Removes currently selected file(s) from the XML processor list.
+        /// Opens the containing folder for all the selected files.
         /// </summary>
-        private void CloseFile_Implementation()
+        private void OpenFolderImpl()
+        {
+            if (SelectedItems != null)
+            {
+                foreach (string path in SelectedItems.Cast<XMLProcessor>().Select(x => x.XMLFileFullPath).Distinct())
+                {
+                    Path.GetDirectoryName(path).StartAsProcess();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the currently selected file(s) from the XML processor list.
+        /// </summary>
+        private void CloseFileImpl()
         {
             if (SelectedItems == null)
                 return;
@@ -192,7 +216,7 @@ namespace DDCImprover.Core.ViewModels
         /// <summary>
         /// Removes dynamic difficulty levels from the files the user chooses.
         /// </summary>
-        private async Task RemoveDD_Implementation()
+        private async Task RemoveDDImpl()
         {
             var fileNames = await services
                 .OpenFileDialog(
@@ -235,14 +259,14 @@ namespace DDCImprover.Core.ViewModels
             }
         }
 
-        private void CloseAllCommand_Implementation()
+        private void CloseAllImpl()
         {
             XMLProcessors.Clear();
             GC.Collect(2, GCCollectionMode.Optimized);
             GC.WaitForPendingFinalizers();
         }
 
-        private async Task LoadFiles_Implementation(bool addingFiles = false)
+        private async Task LoadFilesImpl(bool addingFiles = false)
         {
             if (!addingFiles && IsProcessingFiles)
                 return;
@@ -370,7 +394,7 @@ namespace DDCImprover.Core.ViewModels
             ErrorDuringProcessing = false;
         }
 
-        private async Task ProcessCommand_Implementation()
+        private async Task ProcessFilesImpl()
         {
             if (IsProcessingFiles)
                 return;

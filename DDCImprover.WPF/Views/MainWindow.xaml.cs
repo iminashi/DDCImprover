@@ -268,14 +268,5 @@ namespace DDCImprover.WPF
 
             configWin.ShowDialog();
         }
-
-        private void GitHubMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var processInfo = new ProcessStartInfo("https://github.com/iminashi/DDCImprover")
-            {
-                UseShellExecute = true
-            };
-            Process.Start(processInfo);
-        }
     }
 }

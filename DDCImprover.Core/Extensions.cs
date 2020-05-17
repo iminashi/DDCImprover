@@ -1,6 +1,7 @@
 ﻿using Rocksmith2014Xml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace DDCImprover.Core
@@ -108,6 +109,15 @@ namespace DDCImprover.Core
         public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> enumerable)
         {
             return enumerable.SkipLast(1);
+        }
+
+        public static void StartAsProcess(this string fileName)
+        {
+            var processInfo = new ProcessStartInfo(fileName)
+            {
+                UseShellExecute = true
+            };
+            Process.Start(processInfo);
         }
     }
 }

@@ -91,7 +91,7 @@ namespace DDCImprover.Avalonia.Views
                         Observable.Return(/*addingFiles:*/ false).InvokeCommand(ViewModel.OpenFiles);
                         break;
                     case Key.P:
-                        Observable.Return(Unit.Default).InvokeCommand(ViewModel.Process);
+                        Observable.Return(Unit.Default).InvokeCommand(ViewModel.ProcessFiles);
                         break;
                     case Key.A:
                         Observable.Return(Unit.Default).InvokeCommand(ViewModel.AddFiles);
@@ -105,7 +105,7 @@ namespace DDCImprover.Avalonia.Views
             {
                 if (e.Key == Key.F5)
                 {
-                    Observable.Return(Unit.Default).InvokeCommand(ViewModel.Process);
+                    Observable.Return(Unit.Default).InvokeCommand(ViewModel.ProcessFiles);
                 }
                 else if (e.Key == Key.F1)
                 {
@@ -269,15 +269,6 @@ namespace DDCImprover.Avalonia.Views
             base.OnClosed(e);
 
             XMLProcessor.Preferences.Save();
-        }
-
-        private void GitHubMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var processInfo = new ProcessStartInfo("https://github.com/iminashi/DDCImprover")
-            {
-                UseShellExecute = true
-            };
-            Process.Start(processInfo);
         }
     }
 }

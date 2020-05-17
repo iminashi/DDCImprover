@@ -18,8 +18,8 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenFiles}" Key="O" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding AddFiles}" Key="A" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding Process}" Key="P" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding Process}" Key="F5"/>
+        <KeyBinding Command="{Binding ProcessFiles}" Key="P" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding ProcessFiles}" Key="F5"/>
         <KeyBinding Command="{Binding RemoveDD}" Key="R" Modifiers="Ctrl"/>
     </Window.InputBindings>
 
@@ -72,11 +72,11 @@
                           Icon="{StaticResource helpIcon}"
                           InputGestureText="F1"/>
                 <Separator />
-                <MenuItem Header="_GitHub Page" Click="GitHubMenuItem_Click"/>
+                <MenuItem Header="_GitHub Page" Command="{Binding OpenGitHubPage}"/>
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
-            <Button Command="{Binding Process}" Style="{StaticResource buttonStyle}" ToolTip="Process files (F5 / Ctrl+P)" ToolTipService.ShowOnDisabled="True">
+            <Button Command="{Binding ProcessFiles}" Style="{StaticResource buttonStyle}" ToolTip="Process files (F5 / Ctrl+P)" ToolTipService.ShowOnDisabled="True">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/arrow32.png" Height="32"/>
                     <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Process</TextBlock>
@@ -141,6 +141,7 @@
                 <ContextMenu>
                     <MenuItem Header="Add Files..." Command="{Binding AddFiles}"/>
                     <Separator />
+                    <MenuItem Header="Open Containing Folder" Command="{Binding OpenFolder}"/>
                     <MenuItem Header="Close" Command="{Binding CloseFile}" />
                     <MenuItem Header="Close All" Command="{Binding CloseAll}" />
                 </ContextMenu>
