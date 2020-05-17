@@ -13,6 +13,7 @@
         public static string FixOneLevel = "Adds a second difficulty level for phrases that have only one.";
         public static string FixChordNames = "Renames chords to match ODLC and processes commands in chord names.";
         public static string RemovePlaceholders = "Removes notes that come after a LinkNext slide and have zero sustain.";
+        public static string RemoveHighDensity = "Removes \"high density\" and chord notes from chords that have it.\n\nMakes the XML file match official files and results in a smaller file for files with lots of repeated chords.";
         public static string AddCrowdEvents = "Automatically adds crowd events if they are not already present.";
         public static string TimesInSeconds = "If unchecked, displays times in minutes, seconds and milliseconds.";
         public static string CheckArrIdReset = "Displays a warning for any phrases that have less levels compared to previous DD generation.";
