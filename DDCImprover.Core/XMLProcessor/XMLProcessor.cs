@@ -428,7 +428,7 @@ namespace DDCImprover.Core
             }
 
             DDCSong.XmlComments.RemoveAll(x => x.CommentType == CommentType.DDCImprover);
-            DDCSong.XmlComments.Add(new RSXmlComment($" DDC Improver {Program.Version} "));
+            DDCSong.XmlComments.Insert(0, new RSXmlComment($" DDC Improver {Program.Version} "));
 
             DDCSong.Save(path, Preferences.WriteAbridgedXmlFiles);
 
