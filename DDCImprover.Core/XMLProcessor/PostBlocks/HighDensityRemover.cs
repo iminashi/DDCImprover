@@ -37,10 +37,12 @@ namespace DDCImprover.Core.PostBlocks
                         select chord;
 
                     bool startsWithMute = false;
-                    int chordNum = 1;
+                    int chordNum = 0;
 
                     foreach (var chord in chordsInHs)
                     {
+                        chordNum++;
+
                         // If the handshape starts with a fret hand mute, we need to be careful
                         if (chordNum == 1 && chord.IsFretHandMute)
                         {
@@ -49,18 +51,22 @@ namespace DDCImprover.Core.PostBlocks
                             if (chord.ChordNotes?.All(cn => cn.Sustain == 0f) == true)
                                 chord.ChordNotes = null;
                         }
+                        else if(chordNum == 1)
+                        {
+                            // Do not remove the chord notes even if the first chord somehow has "high density"
+                            removeHighDensity(chord, false);
+                            continue;
+                        }
 
                         if (startsWithMute && !chord.IsFretHandMute)
                         {
-                            // Do not remove the chord notes
+                            // Do not remove the chord notes on the first non-muted chord after muted chord(s)
                             removeHighDensity(chord, false);
                             startsWithMute = false;
                         } else
                         {
                             removeHighDensity(chord, true);
                         }
-
-                        chordNum++;
                     }
                 }
             }

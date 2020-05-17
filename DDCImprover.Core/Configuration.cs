@@ -30,7 +30,7 @@ namespace DDCImprover.Core
         public bool RestoreNoguitarSectionAnchors { get; set; } = true;
         public bool RemoveAnchorPlaceholderNotes { get; set; } = true;
         public bool RemoveBeatsPastAudioEnd { get; set; } = true;
-        public bool RemoveHighDensityStatuses { get; set; } = true;
+        public bool RemoveHighDensityStatuses { get; set; } = false;
         public bool RemoveTimeSignatureEvents { get; set; } = false;
         public bool RemoveTranscriptionTrack { get; set; } = false;
         public bool DisplayTimesInSeconds { get; set; } = true;
