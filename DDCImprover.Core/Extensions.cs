@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,31 +9,36 @@ namespace DDCImprover.Core
 {
     public static class Extensions
     {
-        public static string TimeToString(this float num)
+        /// <summary>
+        /// Converts a time in seconds into a string according to the user preferences.
+        /// </summary>
+        /// <param name="time">The time to convert.</param>
+        /// <returns>The time as a string in seconds and milliseconds, or minutes, seconds and milliseconds.</returns>
+        public static string TimeToString(this float time)
         {
             if (XMLProcessor.Preferences.DisplayTimesInSeconds)
             {
-                return num.ToString("F3", NumberFormatInfo.InvariantInfo);
+                return time.ToString("F3", NumberFormatInfo.InvariantInfo);
             }
             else
             {
-                int minutes = (int)num / 60;
-                float secMs = num - (minutes * 60);
+                int minutes = (int)time / 60;
+                float secMs = time - (minutes * 60);
                 return $"{minutes.ToString("D2", NumberFormatInfo.InvariantInfo)}:{secMs.ToString("00.000", NumberFormatInfo.InvariantInfo)}";
             }
         }
 
         /// <summary>
-        /// Returns index of element at the time to find in a list ordered by time.
+        /// Returns the index of the element at the time to find in a list ordered by time.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type of the elements.</typeparam>
         /// <param name="elements"></param>
-        /// <param name="timeToFind"></param>
+        /// <param name="timeToFind">The time for the element to find.</param>
         /// <returns>Index of the element, -1 if not found.</returns>
         public static int FindIndexByTime<T>(this IList<T> elements, float timeToFind)
             where T : IHasTimeCode
         {
-            for(int i = 0; i < elements.Count; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
                 var element = elements[i];
                 if (Utils.TimeEqualToMilliseconds(element.Time, timeToFind))
@@ -44,6 +50,13 @@ namespace DDCImprover.Core
             return -1;
         }
 
+        /// <summary>
+        /// Finds the first element that has the given time from a list ordered by time.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements.</typeparam>
+        /// <param name="elements"></param>
+        /// <param name="timeToFind">The time for the element to find.</param>
+        /// <returns>The found element or default if not found.</returns>
         public static T FindByTime<T>(this IList<T> elements, float timeToFind)
             where T : IHasTimeCode
         {
@@ -59,6 +72,12 @@ namespace DDCImprover.Core
             return default;
         }
 
+        /// <summary>
+        /// Inserts an element into a list ordered by time.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements.</typeparam>
+        /// <param name="elements"></param>
+        /// <param name="element">The element to insert.</param>
         public static void InsertByTime<T>(this List<T> elements, T element)
             where T : IHasTimeCode
         {
@@ -72,7 +91,7 @@ namespace DDCImprover.Core
         /// <summary>
         /// Skips a specified number of elements at the end of a sequence.
         /// </summary>
-        /// <typeparam name="T">Element type.</typeparam>
+        /// <typeparam name="T">The type of the elements.</typeparam>
         /// <param name="enumerable"></param>
         /// <param name="skipCount">Number of elements to skip.</param>
         /// <remarks>https://blogs.msdn.microsoft.com/ericwhite/2008/11/14/the-skiplast-extension-method/</remarks>
@@ -104,20 +123,16 @@ namespace DDCImprover.Core
         /// <summary>
         /// Skips the last element at the end of a sequence
         /// </summary>
-        /// <typeparam name="T">Element type.</typeparam>
+        /// <typeparam name="T">The type of the elements.</typeparam>
         /// <param name="enumerable"></param>
         public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> enumerable)
-        {
-            return enumerable.SkipLast(1);
-        }
+            => enumerable.SkipLast(1);
 
+        /// <summary>
+        /// Starts a string as a file name for a shell-executed process.
+        /// </summary>
+        /// <param name="fileName">The file name for the process.</param>
         public static void StartAsProcess(this string fileName)
-        {
-            var processInfo = new ProcessStartInfo(fileName)
-            {
-                UseShellExecute = true
-            };
-            Process.Start(processInfo);
-        }
+            => Process.Start(new ProcessStartInfo(fileName) { UseShellExecute = true });
     }
 }
