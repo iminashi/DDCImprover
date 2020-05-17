@@ -29,7 +29,7 @@ namespace DDCImprover.Core
             set => preferences = value;
         }
 
-        private static readonly bool UseWine = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        private static bool UseWine { get; } = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         private ImproverStatus _status;
 

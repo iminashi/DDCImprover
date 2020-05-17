@@ -3,19 +3,13 @@ using Xunit;
 
 namespace DDCImprover.Core.Tests.XmlProcessor
 {
-    public class PreProcessorTests
+    public class PreProcessorTests : IClassFixture<ConfigurationFixture>
     {
-        private readonly Configuration testConfig = new Configuration();
         private readonly XMLPreProcessor preProcessor;
 
-        public PreProcessorTests()
+        public PreProcessorTests(ConfigurationFixture fixture)
         {
-            testConfig.DDCExecutablePath = @".\ddc\ddc.exe";
-            testConfig.EnableLogging = false;
-            testConfig.RestoreNoguitarSectionAnchors = true;
-            testConfig.RestoreFirstNoguitarSection = true;
-
-            XMLProcessor.Preferences = testConfig;
+            XMLProcessor.Preferences = fixture.Configuration;
 
             XMLProcessor processor = new XMLProcessor(@".\TestFiles\preTest_RS2.xml");
             processor.LoadXMLFile();

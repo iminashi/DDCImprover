@@ -12,14 +12,14 @@ using Xunit;
 
 namespace DDCImprover.Core.Tests.XmlProcessor
 {
-    public class PostProcessorBlocksTests
+    public class PostProcessorBlocksTests : IClassFixture<ConfigurationFixture>
     {
         private readonly RS2014Song testSong;
         private readonly Action<string> nullLog = _ => { };
 
-        public PostProcessorBlocksTests()
+        public PostProcessorBlocksTests(ConfigurationFixture fixture)
         {
-            XMLProcessor.Preferences.PreserveENDPhraseLocation = true;
+            XMLProcessor.Preferences = fixture.Configuration;
 
             testSong = RS2014Song.Load(@".\TestFiles\postTest_RS2.xml");
         }
@@ -378,9 +378,19 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void HighDensityRemover_RemovesHighDensityAndChordNotes()
         {
-            var testChord = new Chord
+            testSong.Levels[0].Chords.Add(new Chord
             {
                 Time = 10f,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 5, String = 0 },
+                    new Note { Fret = 7, String = 1 },
+                    new Note { Fret = 7, String = 2 }
+                }
+            });
+            testSong.Levels[0].Chords.Add(new Chord
+            {
+                Time = 11f,
                 IsHighDensity = true,
                 ChordNotes = new List<Note>
                 {
@@ -388,8 +398,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
                     new Note { Fret = 7, String = 1 },
                     new Note { Fret = 7, String = 2 }
                 }
-            };
-            testSong.Levels[0].Chords.Add(testChord);
+            });
             testSong.Levels[0].HandShapes.Add(new HandShape
             {
                 StartTime = 10f,
@@ -398,8 +407,8 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             new HighDensityRemover().Apply(testSong, nullLog);
 
-            testSong.Levels[0].Chords[0].IsHighDensity.Should().BeFalse();
-            testSong.Levels[0].Chords[0].ChordNotes.Should().BeNull();
+            testSong.Levels[0].Chords[1].IsHighDensity.Should().BeFalse();
+            testSong.Levels[0].Chords[1].ChordNotes.Should().BeNull();
         }
 
         [Fact]

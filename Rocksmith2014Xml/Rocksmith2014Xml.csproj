@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <AssemblyVersion>1.0.121.135</AssemblyVersion>
-    <FileVersion>1.0.121.135</FileVersion>
+    <AssemblyVersion>1.0.128.138</AssemblyVersion>
+    <FileVersion>1.0.128.138</FileVersion>
     <Company>iminashi</Company>
     <Authors>iminashi</Authors>
     <Copyright>Copyright © 2020</Copyright>

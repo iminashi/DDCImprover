@@ -7,7 +7,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 {
     public class ProcessorContextTests
     {
-        private readonly Action<string> nullLog = s => { };
+        private readonly Action<string> nullLog = _ => { };
         private readonly RS2014Song testSong = new RS2014Song();
         private readonly ProcessorContext context;
 
