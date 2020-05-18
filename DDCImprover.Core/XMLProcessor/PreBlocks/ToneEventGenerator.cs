@@ -27,7 +27,7 @@ namespace DDCImprover.Core.PreBlocks
             if (song.ToneD != null)
                 toneCodes.Add(song.ToneD, "tone_d");
 
-            var toneEvents = from tone in toneChanges
+            var toneEvents = from tone in toneChanges.Where(t => toneCodes.ContainsKey(t.Name))
                              select new Event(toneCodes[tone.Name], tone.Time);
 
             var events = song.Events;
