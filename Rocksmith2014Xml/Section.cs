@@ -8,7 +8,7 @@ namespace Rocksmith2014Xml
 {
     public sealed class Section : IXmlSerializable, IHasTimeCode//, IEquatable<Section>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Number { get; set; }
         public float Time { get; set; }
 
@@ -26,7 +26,7 @@ namespace Rocksmith2014Xml
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {

@@ -16,14 +16,14 @@ namespace Rocksmith2014Xml
     public sealed class NewLinkedDiff : IXmlSerializable
     {
         public int LevelBreak { get; set; } = -1;
-        public string Ratio { get; set; }
+        public string? Ratio { get; set; }
 
         public int PhraseCount => Phrases?.Count ?? 0;
-        public List<NLDPhrase> Phrases { get; set; }
+        public List<NLDPhrase> Phrases { get; set; } = new List<NLDPhrase>();
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
@@ -32,8 +32,6 @@ namespace Rocksmith2014Xml
 
             if(!reader.IsEmptyElement && reader.ReadToDescendant("nld_phrase"))
             {
-                Phrases = new List<NLDPhrase>();
-
                 while(reader.NodeType != XmlNodeType.EndElement)
                 {
                     Phrases.Add(new NLDPhrase(int.Parse(reader.GetAttribute("id"), NumberFormatInfo.InvariantInfo)));
@@ -51,7 +49,7 @@ namespace Rocksmith2014Xml
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString("levelBreak", LevelBreak.ToString(NumberFormatInfo.InvariantInfo));
-            if (Ratio == null)
+            if (Ratio is null)
                 writer.WriteAttributeString("ratio", "1.000");
             else
                 writer.WriteAttributeString("ratio", Ratio);

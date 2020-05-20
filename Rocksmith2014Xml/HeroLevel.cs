@@ -22,7 +22,7 @@ namespace Rocksmith2014Xml
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {

@@ -27,7 +27,7 @@ namespace Rocksmith2014Xml
 
         public PhraseMask Mask { get; set; }
         public byte MaxDifficulty { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public Phrase(string name, byte maxDifficulty, PhraseMask mask)
         {
@@ -43,7 +43,7 @@ namespace Rocksmith2014Xml
 
         #region IXmlSerializable Serializable
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {

@@ -24,12 +24,12 @@ namespace Rocksmith2014Xml
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             Time = float.Parse(reader.GetAttribute("time"), NumberFormatInfo.InvariantInfo);
-            string id = reader.GetAttribute("id");
+            string? id = reader.GetAttribute("id");
             if(!string.IsNullOrEmpty(id))
                 Id = byte.Parse(id, NumberFormatInfo.InvariantInfo);
             Name = reader.GetAttribute("name");

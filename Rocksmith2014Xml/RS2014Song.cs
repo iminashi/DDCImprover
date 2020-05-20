@@ -17,7 +17,7 @@ namespace Rocksmith2014Xml
         public List<RSXmlComment> XmlComments { get; } = new List<RSXmlComment>();
 
         public byte Version { get; set; } = 8;
-        public string Arrangement { get; set; }
+        public string? Arrangement { get; set; }
         //public string WaveFilePath { get; set; }
         public int Part { get; set; }
         //public float Offset { get; set; } // Handled automatically
@@ -27,40 +27,40 @@ namespace Rocksmith2014Xml
         public float AverageTempo { get; set; } = 120.000f;
         public Tuning Tuning { get; set; } = new Tuning();
         public int Capo { get; set; }
-        public string Title { get; set; }
-        public string TitleSort { get; set; }
-        public string ArtistName { get; set; }
-        public string ArtistNameSort { get; set; }
-        public string AlbumName { get; set; }
-        public string AlbumNameSort { get; set; }
+        public string? Title { get; set; }
+        public string? TitleSort { get; set; }
+        public string? ArtistName { get; set; }
+        public string? ArtistNameSort { get; set; }
+        public string? AlbumName { get; set; }
+        public string? AlbumNameSort { get; set; }
         public int AlbumYear { get; set; }
-        public string AlbumArt { get; set; }
+        public string? AlbumArt { get; set; }
         //public int CrowdSpeed { get; set; } = 1; // Pointless
 
-        public float StartBeat => Ebeats?[0].Time ?? 0.0f;
+        public float StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0f;
 
-        public ArrangementProperties ArrangementProperties { get; set; }
+        public ArrangementProperties ArrangementProperties { get; set; } = new ArrangementProperties();
 
-        public string LastConversionDateTime { get; set; }
+        public string? LastConversionDateTime { get; set; }
 
         public PhraseCollection Phrases { get; set; } = new PhraseCollection();
         public PhraseIterationCollection PhraseIterations { get; set; } = new PhraseIterationCollection();
-        public NewLinkedDiffCollection NewLinkedDiffs { get; set; }
-        public XmlCountList<LinkedDiff> LinkedDiffs { get; set; }
-        public XmlCountList<PhraseProperty> PhraseProperties { get; set; }
-        public ChordTemplateCollection ChordTemplates { get; set; }
+        public NewLinkedDiffCollection NewLinkedDiffs { get; set; } = new NewLinkedDiffCollection();
+        public XmlCountList<LinkedDiff>? LinkedDiffs { get; set; }
+        public XmlCountList<PhraseProperty>? PhraseProperties { get; set; }
+        public ChordTemplateCollection ChordTemplates { get; set; } = new ChordTemplateCollection();
         public EbeatCollection Ebeats { get; set; } = new EbeatCollection();
 
-        public string ToneBase { get; set; }
-        public string ToneA { get; set; }
-        public string ToneB { get; set; }
-        public string ToneC { get; set; }
-        public string ToneD { get; set; }
+        public string? ToneBase { get; set; }
+        public string? ToneA { get; set; }
+        public string? ToneB { get; set; }
+        public string? ToneC { get; set; }
+        public string? ToneD { get; set; }
 
-        public ToneCollection Tones { get; set; }
+        public ToneCollection? Tones { get; set; }
         public SectionCollection Sections { get; set; } = new SectionCollection();
-        public EventCollection Events { get; set; }
-        public Level TranscriptionTrack { get; set; }
+        public EventCollection Events { get; set; } = new EventCollection();
+        public Level? TranscriptionTrack { get; set; }
         public LevelCollection Levels { get; set; } = new LevelCollection();
 
         public void Save(string filename, bool writeAbridgedXml = true)
@@ -102,7 +102,7 @@ namespace Rocksmith2014Xml
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
@@ -190,7 +190,6 @@ namespace Rocksmith2014Xml
                         ((IXmlSerializable)PhraseIterations).ReadXml(reader);
                         break;
                     case "newLinkedDiffs":
-                        NewLinkedDiffs = new NewLinkedDiffCollection();
                         ((IXmlSerializable)NewLinkedDiffs).ReadXml(reader);
                         break;
                     case "linkedDiffs":
@@ -202,7 +201,6 @@ namespace Rocksmith2014Xml
                         ((IXmlSerializable)PhraseProperties).ReadXml(reader);
                         break;
                     case "chordTemplates":
-                        ChordTemplates = new ChordTemplateCollection();
                         ((IXmlSerializable)ChordTemplates).ReadXml(reader);
                         break;
                     case "ebeats":
@@ -233,7 +231,6 @@ namespace Rocksmith2014Xml
                         ((IXmlSerializable)Sections).ReadXml(reader);
                         break;
                     case "events":
-                        Events = new EventCollection();
                         ((IXmlSerializable)Events).ReadXml(reader);
                         break;
                     case "transcriptionTrack":
@@ -266,7 +263,7 @@ namespace Rocksmith2014Xml
             }
 
             float firstBeat = 0.0f;
-            if (Ebeats?.Count > 0)
+            if (Ebeats.Count > 0)
                 firstBeat = Ebeats[0].Time;
 
             writer.WriteElementString("title", Title);
@@ -316,35 +313,23 @@ namespace Rocksmith2014Xml
 
             writer.WriteElementString("crowdSpeed", "1");
 
-            if (ArrangementProperties != null)
-            {
-                writer.WriteStartElement("arrangementProperties");
-                ((IXmlSerializable)ArrangementProperties).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("arrangementProperties");
+            ((IXmlSerializable)ArrangementProperties).WriteXml(writer);
+            writer.WriteEndElement();
 
             writer.WriteElementString("lastConversionDateTime", LastConversionDateTime);
 
-            if (Phrases != null)
-            {
-                writer.WriteStartElement("phrases");
-                ((IXmlSerializable)Phrases).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("phrases");
+            ((IXmlSerializable)Phrases).WriteXml(writer);
+            writer.WriteEndElement();
 
-            if (PhraseIterations != null)
-            {
-                writer.WriteStartElement("phraseIterations");
-                ((IXmlSerializable)PhraseIterations).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("phraseIterations");
+            ((IXmlSerializable)PhraseIterations).WriteXml(writer);
+            writer.WriteEndElement();
 
-            if (NewLinkedDiffs != null)
-            {
-                writer.WriteStartElement("newLinkedDiffs");
-                ((IXmlSerializable)NewLinkedDiffs).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("newLinkedDiffs");
+            ((IXmlSerializable)NewLinkedDiffs).WriteXml(writer);
+            writer.WriteEndElement();
 
             if (LinkedDiffs != null)
             {
@@ -360,19 +345,13 @@ namespace Rocksmith2014Xml
                 writer.WriteEndElement();
             }
 
-            if (ChordTemplates != null)
-            {
-                writer.WriteStartElement("chordTemplates");
-                ((IXmlSerializable)ChordTemplates).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("chordTemplates");
+            ((IXmlSerializable)ChordTemplates).WriteXml(writer);
+            writer.WriteEndElement();
 
-            if (Ebeats != null)
-            {
-                writer.WriteStartElement("ebeats");
-                ((IXmlSerializable)Ebeats).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("ebeats");
+            ((IXmlSerializable)Ebeats).WriteXml(writer);
+            writer.WriteEndElement();
 
             if (ToneBase != null) writer.WriteElementString("tonebase", ToneBase);
             if (ToneA != null) writer.WriteElementString("tonea", ToneA);
@@ -387,19 +366,13 @@ namespace Rocksmith2014Xml
                 writer.WriteEndElement();
             }
 
-            if (Sections != null)
-            {
-                writer.WriteStartElement("sections");
-                ((IXmlSerializable)Sections).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("sections");
+            ((IXmlSerializable)Sections).WriteXml(writer);
+            writer.WriteEndElement();
 
-            if (Events != null)
-            {
-                writer.WriteStartElement("events");
-                ((IXmlSerializable)Events).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("events");
+            ((IXmlSerializable)Events).WriteXml(writer);
+            writer.WriteEndElement();
 
             if (TranscriptionTrack != null)
             {
@@ -408,12 +381,9 @@ namespace Rocksmith2014Xml
                 writer.WriteEndElement();
             }
 
-            if (Levels != null)
-            {
-                writer.WriteStartElement("levels");
-                ((IXmlSerializable)Levels).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("levels");
+            ((IXmlSerializable)Levels).WriteXml(writer);
+            writer.WriteEndElement();
         }
 
         #endregion

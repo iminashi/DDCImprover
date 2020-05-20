@@ -9,16 +9,16 @@ namespace Rocksmith2014Xml
     {
         public float Time { get; set; }
         public int PhraseId { get; set; }
-        public string Variation { get; set; }
+        public string? Variation { get; set; }
 
-        public HeroLevelCollection HeroLevels { get; set; }
+        public HeroLevelCollection? HeroLevels { get; set; }
 
         public override string ToString()
             => $"{Time:F3}: Phrase ID: {PhraseId}, Variation: \"{Variation}\"";
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {

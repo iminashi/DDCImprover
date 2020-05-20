@@ -8,7 +8,7 @@ namespace Rocksmith2014Xml
 {
     public sealed class Event : IXmlSerializable, IHasTimeCode, IEquatable<Event>
     {
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
         public float Time { get; set; }
 
         public Event(string code, float time)
@@ -24,7 +24,7 @@ namespace Rocksmith2014Xml
 
         #region IXmlSerializable Implementation
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {

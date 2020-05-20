@@ -263,7 +263,7 @@ namespace Rocksmith2014Xml
 
         public NoteMask Mask { get; set; }
 
-        public BendValueCollection BendValues { get; set; }
+        public BendValueCollection? BendValues { get; set; }
 
         #endregion
 
@@ -502,7 +502,7 @@ namespace Rocksmith2014Xml
             }
         }
 
-        XmlSchema IXmlSerializable.GetSchema() => null;
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         #endregion
     }
