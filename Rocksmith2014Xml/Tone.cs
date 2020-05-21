@@ -6,11 +6,13 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public struct Tone : IXmlSerializable, IEquatable<Tone>, IHasTimeCode
+    public class Tone : IXmlSerializable, IHasTimeCode
     {
-        public float Time { get; private set; }
-        public byte Id { get; private set; }
-        public string Name { get; private set; }
+        public float Time { get; set; }
+        public byte Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        public Tone() { }
 
         public Tone(string name, float time, byte id)
         {
@@ -46,7 +48,7 @@ namespace Rocksmith2014Xml
 
         #endregion
 
-        #region Equality
+        /*#region Equality
 
         public override bool Equals(object obj)
             => obj is Tone other && Equals(other);
@@ -67,6 +69,6 @@ namespace Rocksmith2014Xml
         public static bool operator !=(Tone left, Tone right)
             => !(left == right);
 
-        #endregion
+        #endregion*/
     }
 }
