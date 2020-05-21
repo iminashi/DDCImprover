@@ -11,8 +11,11 @@
     <Menu DockPanel.Dock="Top" Background="#EEEEEE">
       <MenuItem Header="_File">
         <MenuItem Header="_Open Files..."
-                  Command="{Binding OpenFiles}"/>
-        <MenuItem Header="_Add Files..." Command="{Binding AddFiles}"/>
+                  Command="{Binding OpenFiles}"
+                  HotKey="Ctrl+O"/>
+        <MenuItem Header="_Add Files..." 
+                  Command="{Binding AddFiles}"
+                  HotKey="Ctrl+A"/>
         <MenuItem Header="C_lose All"
                   Command="{Binding CloseAll}" />
         <Separator />
@@ -23,7 +26,9 @@
         <MenuItem Header="E_xit" Click="Exit_Click" />
       </MenuItem>
       <MenuItem Header="_Tools">
-        <MenuItem Header="_Quick Remove DD..." Command="{Binding RemoveDD}" />
+        <MenuItem Header="_Quick Remove DD..."
+                  Command="{Binding RemoveDD}"
+                  HotKey="Ctrl+R"/>
         <MenuItem Header="_Match Phrases with Sections"
                   ToolTip.Tip="{x:Static text:Tooltips.MatchPhrasesWithSections}">
           <MenuItem.Icon>
@@ -52,7 +57,9 @@
           <Setter Property="Margin" Value="5,3"/>
         </Style>
       </StackPanel.Styles>
-      <Button Command="{Binding ProcessFiles}" ToolTip.Tip="Process files (F5 / Ctrl+P)">
+      <Button Command="{Binding ProcessFiles}"
+              ToolTip.Tip="Process files (F5 / Ctrl+P)"
+              HotKey="Ctrl+P">
         <StackPanel Orientation="Horizontal">
           <Image Source="resm:DDCImprover.Avalonia.Assets.arrow32.png" Height="32"/>
           <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Process</TextBlock>

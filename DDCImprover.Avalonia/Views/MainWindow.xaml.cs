@@ -12,7 +12,6 @@ using DDCImprover.Core.ViewModels;
 using ReactiveUI;
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -83,25 +82,7 @@ namespace DDCImprover.Avalonia.Views
         {
             base.OnKeyDown(e);
 
-            if (e.KeyModifiers == KeyModifiers.Control)
-            {
-                switch (e.Key)
-                {
-                    case Key.O:
-                        Observable.Return(/*addingFiles:*/ false).InvokeCommand(ViewModel.OpenFiles);
-                        break;
-                    case Key.P:
-                        Observable.Return(Unit.Default).InvokeCommand(ViewModel.ProcessFiles);
-                        break;
-                    case Key.A:
-                        Observable.Return(Unit.Default).InvokeCommand(ViewModel.AddFiles);
-                        break;
-                    case Key.R:
-                        Observable.Return(Unit.Default).InvokeCommand(ViewModel.RemoveDD);
-                        break;
-                }
-            }
-            else if (e.KeyModifiers == KeyModifiers.None)
+            if (e.KeyModifiers == KeyModifiers.None)
             {
                 if (e.Key == Key.F5)
                 {
