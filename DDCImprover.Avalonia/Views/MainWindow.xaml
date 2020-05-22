@@ -1,12 +1,14 @@
 ﻿<Window x:Class="DDCImprover.Avalonia.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:services="clr-namespace:DDCImprover.Core.Services;assembly=DDCImprover.Core"
         xmlns:core="clr-namespace:DDCImprover.Core;assembly=DDCImprover.Core"
         xmlns:local="clr-namespace:DDCImprover.Avalonia"
         xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
         Icon="resm:DDCImprover.Avalonia.Assets.icon.ico"
         Title="{Binding ProgramTitle, Mode=OneTime}"
-        Height="450" Width="765" MinWidth="765" MinHeight="350">
+        Height="450" Width="765"
+        MinWidth="765" MinHeight="350">
   <DockPanel>
     <Menu DockPanel.Dock="Top" Background="#EEEEEE">
       <MenuItem Header="_File">
@@ -21,7 +23,8 @@
         <Separator />
         <MenuItem Header="_Configuration"
                   IsEnabled="{Binding !IsProcessingFiles}"
-                  Click="Configuration_Click"/>
+                  Command="{Binding ShowWindow}"
+                  CommandParameter="{x:Static services:WindowType.Configuration}"/>
         <Separator />
         <MenuItem Header="E_xit" Command="{Binding Exit}" />
       </MenuItem>
@@ -44,7 +47,10 @@
         </MenuItem>
       </MenuItem>
       <MenuItem Header="_Help">
-        <MenuItem Header="View _Help" Click="Help_Click"/>
+        <MenuItem Header="View _Help" 
+                  Command="{Binding ShowWindow}"
+                  CommandParameter="{x:Static services:WindowType.Help}"/>
+        <!-- HotKey="F1" does not send correct command parameter -->
         <Separator />
         <MenuItem Header="_GitHub Page" Command="{Binding OpenGitHubPage}"/>
       </MenuItem>
@@ -72,14 +78,17 @@
         </StackPanel>
       </Button>
       <Rectangle Width="2" Fill="#E0E0E0" Margin="0,2" />
-      <Button IsEnabled="{Binding !IsProcessingFiles}" Click="Configuration_Click">
+      <Button IsEnabled="{Binding !IsProcessingFiles}"
+              Command="{Binding ShowWindow}"
+              CommandParameter="{x:Static services:WindowType.Configuration}">
         <StackPanel Orientation="Horizontal">
           <Image Source="resm:DDCImprover.Avalonia.Assets.cogwheel32.png" Height="32"/>
           <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Configuration</TextBlock>
         </StackPanel>
       </Button>
       <Rectangle Width="2" Fill="#E0E0E0" Margin="0,2" />
-      <Button Click="Help_Click">
+      <Button Command="{Binding ShowWindow}"
+              CommandParameter="{x:Static services:WindowType.Help}">
         <StackPanel Orientation="Horizontal">
           <Image Source="resm:DDCImprover.Avalonia.Assets.information32.png" Height="32" />
           <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Help</TextBlock>

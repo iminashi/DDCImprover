@@ -1,9 +1,11 @@
 ﻿using DDCImprover.Core;
+using DDCImprover.Core.Services;
 using DDCImprover.Core.ViewModels;
+
 using ReactiveUI;
+
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -46,10 +48,10 @@ namespace DDCImprover.WPF
                 .ObserveOnDispatcher()
                 .Subscribe(processing => Cursor = processing ? Cursors.AppStarting : Cursors.Arrow);
 
-            // Display processing messages Flowdocument when needed
-            ViewModel.ShouldDisplayProcessingMessages
+            // Show child windows when needed
+            ViewModel.OpenChildWindow
                 .ObserveOnDispatcher()
-                .Subscribe(_ => ShowProcessingMessages());
+                .Subscribe(ShowChildWindow);
 
             // Check DDC executable when window is activated
             Observable.FromEventPattern<EventArgs>(this, "Activated")
@@ -78,20 +80,28 @@ namespace DDCImprover.WPF
             Focus();
         }
 
+        private void ShowChildWindow(WindowType windowType)
+        {
+            switch (windowType)
+            {
+                case WindowType.Configuration:
+                    new ConfigurationWindow(configViewModel) { Owner = this }.ShowDialog();
+                    break;
+                case WindowType.Help:
+                    new HelpWindow { Owner = this }.Show();
+                    break;
+                case WindowType.ProcessingMessages:
+                    ShowProcessingMessages();
+                    break;
+            }
+        }
+
         // Save configuration on exit.
         protected override void OnClosed(EventArgs e)
         {
             XMLProcessor.Preferences.Save();
 
             base.OnClosed(e);
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            if (e.KeyboardDevice.Modifiers == ModifierKeys.None && e.Key == Key.F1)
-                Help_Click(null, new RoutedEventArgs());
-
-            base.OnKeyDown(e);
         }
 
         // Get any status messages and show them in a new window
@@ -115,6 +125,7 @@ namespace DDCImprover.WPF
                     }
                 };
 
+                // Activate the main window when the messages window is closed
                 messagesWindow.Closing += (s, e) => Activate();
 
                 messagesWindow.Show();
@@ -208,6 +219,7 @@ namespace DDCImprover.WPF
                     }
                 };
 
+                // Activate the main window when the log window is closed
                 logWin.Closing += (s, e) => Activate();
 
                 TextOptions.SetTextFormattingMode(logWin, TextFormattingMode.Display);
@@ -216,16 +228,6 @@ namespace DDCImprover.WPF
 
                 e.Handled = true;
             }
-        }
-
-        private void Help_Click(object sender, RoutedEventArgs e)
-        {
-            HelpWindow helpWindow = new HelpWindow
-            {
-                Owner = this
-            };
-
-            helpWindow.Show();
         }
 
         #region Drag & Drop for ListView
@@ -254,16 +256,6 @@ namespace DDCImprover.WPF
         {
             // Set to null if nothing is selected
             ViewModel.SelectedItems = (filesListView.SelectedIndex == -1) ? null : filesListView.SelectedItems;
-        }
-
-        private void Configuration_Click(object sender, RoutedEventArgs e)
-        {
-            ConfigurationWindow configWin = new ConfigurationWindow(configViewModel)
-            {
-                Owner = this
-            };
-
-            configWin.ShowDialog();
         }
     }
 }

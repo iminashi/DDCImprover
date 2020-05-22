@@ -1,12 +1,12 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
 using DDCImprover.Core;
+using DDCImprover.Core.Services;
 using DDCImprover.Core.ViewModels;
 
 using ReactiveUI;
@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace DDCImprover.Avalonia.Views
 {
@@ -45,10 +46,10 @@ namespace DDCImprover.Avalonia.Views
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(processing => Cursor = processing ? new Cursor(StandardCursorType.AppStarting) : new Cursor(StandardCursorType.Arrow));
 
-            // Display processing messages when needed
-            ViewModel.ShouldDisplayProcessingMessages
+            // Show child windows when needed
+            ViewModel.OpenChildWindow
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(_ => ShowProcessingMessages());
+                .Subscribe(async type => await ShowChildWindow(type));
 
             // Check DDC executable when window is activated
             Observable.FromEventPattern<EventArgs>(this, "Activated")
@@ -69,6 +70,24 @@ namespace DDCImprover.Avalonia.Views
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
+        private async Task ShowChildWindow(WindowType windowType)
+        {
+            switch (windowType)
+            {
+                case WindowType.Configuration:
+                    ConfigurationWindow configWindow = new ConfigurationWindow(configViewModel);
+
+                    await configWindow.ShowDialog(this);
+                    break;
+                case WindowType.Help:
+                    new HelpWindow().Show();
+                    break;
+                case WindowType.ProcessingMessages:
+                    ShowProcessingMessages();
+                    break;
+            }
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
@@ -76,14 +95,23 @@ namespace DDCImprover.Avalonia.Views
             if (e.KeyModifiers == KeyModifiers.None)
             {
                 if (e.Key == Key.F5)
-                {
                     Observable.Return(Unit.Default).InvokeCommand(ViewModel.ProcessFiles);
-                }
                 else if (e.Key == Key.F1)
-                {
-                    Help_Click(this, new RoutedEventArgs());
-                }
+                    _ = ShowChildWindow(WindowType.Help);
             }
+        }
+
+        private void ShowProcessingMessages()
+        {
+            Window messagesWindow = new Window
+            {
+                Title = "Processing Messages",
+                Icon = this.Icon,
+                Height = 450,
+                Width = 700,
+                Content = GenerateStatusMessage()
+            };
+            messagesWindow.Show();
         }
 
         private ScrollViewer GenerateStatusMessage()
@@ -173,19 +201,6 @@ namespace DDCImprover.Avalonia.Views
             return viewer;
         }
 
-        private void ShowProcessingMessages()
-        {
-            Window messagesWindow = new Window
-            {
-                Title = "Processing Messages",
-                Icon = this.Icon,
-                Height = 450,
-                Width = 700,
-                Content = GenerateStatusMessage()
-            };
-            messagesWindow.Show();
-        }
-
 #pragma warning disable RCS1213 // Remove unused member declaration.
 
         private void LogLink_MouseButtonUp(object sender, PointerReleasedEventArgs e)
@@ -211,20 +226,6 @@ namespace DDCImprover.Avalonia.Views
 
                 e.Handled = true;
             }
-        }
-
-        private async void Configuration_Click(object sender, RoutedEventArgs e)
-        {
-            ConfigurationWindow configWindow = new ConfigurationWindow(configViewModel);
-
-            await configWindow.ShowDialog(this);
-        }
-
-        private void Help_Click(object sender, RoutedEventArgs e)
-        {
-            HelpWindow helpWindow = new HelpWindow();
-
-            helpWindow.Show();
         }
 
         // Save configuration on exit.

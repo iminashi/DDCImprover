@@ -1,9 +1,13 @@
 ﻿using DDCImprover.Core.Services;
+
 using DynamicData;
 using DynamicData.Binding;
+
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+
 using Rocksmith2014Xml;
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -28,7 +32,7 @@ namespace DDCImprover.Core.ViewModels
 
         public string ProgramTitle { get; }
 
-        public IObservable<Unit> ShouldDisplayProcessingMessages { get; private set; }
+        public IObservable<WindowType> OpenChildWindow { get; private set; }
 
         #region Fields
 
@@ -47,6 +51,7 @@ namespace DDCImprover.Core.ViewModels
         public ReactiveCommand<Unit, Unit> CloseAll { get; private set; }
         public ReactiveCommand<Unit, Unit> RemoveDD { get; private set; }
         public ReactiveCommand<Unit, Unit> OpenFolder { get; private set; }
+        public ReactiveCommand<WindowType, WindowType> ShowWindow { get; private set; }
         public ReactiveCommand<Unit, Unit> OpenGitHubPage { get; private set; }
         public ReactiveCommand<Unit, Unit> Exit { get; private set; }
 
@@ -142,6 +147,8 @@ namespace DDCImprover.Core.ViewModels
             OpenGitHubPage = ReactiveCommand.Create(() => "https://github.com/iminashi/DDCImprover".StartAsProcess());
 
             Exit = ReactiveCommand.Create(() => services.ExitApplication());
+
+            ShowWindow = ReactiveCommand.Create<WindowType, WindowType>(type => type);
         }
 
         private void SetupObservables()
@@ -153,7 +160,12 @@ namespace DDCImprover.Core.ViewModels
 
             ProcessFiles.IsExecuting.ToPropertyEx(this, x => x.IsProcessingFiles, false);
 
-            ShouldDisplayProcessingMessages = ProcessFiles.Where(_ => XMLProcessors.Sum(processor => processor.StatusMessages.Count) > 0);
+            OpenChildWindow = ShowWindow.
+                Merge(
+                    ProcessFiles
+                        .Where(_ => XMLProcessors.Sum(processor => processor.StatusMessages.Count) > 0)
+                        .Select(_ => WindowType.ProcessingMessages)
+                    );
         }
 
         /// <summary>
@@ -242,7 +254,8 @@ namespace DDCImprover.Core.ViewModels
                     {
                         MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 4)
                     },
-                    async fn => {
+                    async fn =>
+                    {
                         RS2014Song song = RS2014Song.Load(fn);
                         await DDRemover.RemoveDD(song, MatchPhrasesToSections, DeleteTranscriptionTrack).ConfigureAwait(false);
                         string oldFileName = Path.GetFileName(fn);

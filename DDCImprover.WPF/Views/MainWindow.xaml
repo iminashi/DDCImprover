@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDCImprover.WPF"
         xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
+        xmlns:services="clr-namespace:DDCImprover.Core.Services;assembly=DDCImprover.Core"
         mc:Ignorable="d"
         Title="{Binding ProgramTitle, Mode=OneTime}"
         Height="450" Width="765" MinWidth="765" MinHeight="350"
@@ -20,6 +21,7 @@
         <KeyBinding Command="{Binding AddFiles}" Key="A" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ProcessFiles}" Key="P" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ProcessFiles}" Key="F5"/>
+        <KeyBinding Command="{Binding ShowWindow}" CommandParameter="{x:Static services:WindowType.Help}" Key="F1"/>
         <KeyBinding Command="{Binding RemoveDD}" Key="R" Modifiers="Ctrl"/>
     </Window.InputBindings>
 
@@ -51,7 +53,8 @@
                 <MenuItem Header="C_lose All" Command="{Binding CloseAll}" />
                 <Separator />
                 <MenuItem Header="_Configuration"
-                          Click="Configuration_Click"
+                          Command="{Binding ShowWindow}"
+                          CommandParameter="{x:Static services:WindowType.Configuration}"
                           IsEnabled="{Binding IsProcessingFiles, Converter={StaticResource booleanInverter}}"
                           Icon="{StaticResource configIcon}"
                           RenderOptions.BitmapScalingMode="NearestNeighbor" />
@@ -68,7 +71,8 @@
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="View _Help"
-                          Click="Help_Click"
+                          Command="{Binding ShowWindow}"
+                          CommandParameter="{x:Static services:WindowType.Help}"
                           Icon="{StaticResource helpIcon}"
                           InputGestureText="F1"/>
                 <Separator />
@@ -90,7 +94,8 @@
             </Button>
             <Rectangle Width="2" Fill="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Margin="0,2" />
             <Button Style="{StaticResource buttonStyle}"
-                    Click="Configuration_Click"
+                    Command="{Binding ShowWindow}"
+                    CommandParameter="{x:Static services:WindowType.Configuration}"
                     IsEnabled="{Binding IsProcessingFiles, Converter={StaticResource booleanInverter}}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/cogwheel32.png" Height="32"/>
@@ -98,7 +103,9 @@
                 </StackPanel>
             </Button>
             <Rectangle Width="2" Fill="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Margin="0,2" />
-            <Button Style="{StaticResource buttonStyle}" Click="Help_Click">
+            <Button Style="{StaticResource buttonStyle}"
+                    Command="{Binding ShowWindow}"
+                    CommandParameter="{x:Static services:WindowType.Help}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/information32.png" Height="32" />
                     <TextBlock Margin="3,0,0,0" VerticalAlignment="Center">Help</TextBlock>
