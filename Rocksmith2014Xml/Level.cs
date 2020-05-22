@@ -7,19 +7,17 @@ namespace Rocksmith2014Xml
 {
     public sealed class Level : IXmlSerializable
     {
-        public sbyte Difficulty { get; set; }
-        public NoteCollection Notes { get; set; }
-        public ChordCollection Chords { get; set; }
-        public AnchorCollection Anchors { get; set; }
-        public HandShapeCollection HandShapes { get; set; }
+        public sbyte Difficulty { get; set; } = -1;
+        public NoteCollection Notes { get; set; } = new NoteCollection();
+        public ChordCollection Chords { get; set; } = new ChordCollection();
+        public AnchorCollection Anchors { get; set; } = new AnchorCollection();
+        public HandShapeCollection HandShapes { get; set; } = new HandShapeCollection();
 
-        public Level()
+        public Level() { }
+
+        public Level(sbyte difficulty)
         {
-            Difficulty = -1;
-            Notes = new NoteCollection();
-            Chords = new ChordCollection();
-            Anchors = new AnchorCollection();
-            HandShapes = new HandShapeCollection();
+            Difficulty = difficulty;
         }
 
         public override string ToString()

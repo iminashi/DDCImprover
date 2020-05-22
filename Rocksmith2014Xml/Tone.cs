@@ -1,12 +1,11 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public class Tone : IXmlSerializable, IHasTimeCode
+    public sealed class Tone : IXmlSerializable, IHasTimeCode
     {
         public float Time { get; set; }
         public byte Id { get; set; }
@@ -47,28 +46,5 @@ namespace Rocksmith2014Xml
         }
 
         #endregion
-
-        /*#region Equality
-
-        public override bool Equals(object obj)
-            => obj is Tone other && Equals(other);
-
-        public bool Equals(Tone other)
-        {
-            return Name == other.Name
-                && Id == other.Id
-                && Utils.TimeEqualToMilliseconds(Time, other.Time);
-        }
-
-        public override int GetHashCode()
-            => (Name, Id, Time).GetHashCode();
-
-        public static bool operator ==(Tone left, Tone right)
-            => left.Equals(right);
-
-        public static bool operator !=(Tone left, Tone right)
-            => !(left == right);
-
-        #endregion*/
     }
 }

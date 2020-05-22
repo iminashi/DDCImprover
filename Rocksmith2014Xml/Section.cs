@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class Section : IXmlSerializable, IHasTimeCode//, IEquatable<Section>
+    public sealed class Section : IXmlSerializable, IHasTimeCode
     {
         public string Name { get; set; } = string.Empty;
         public int Number { get; set; }
@@ -45,28 +45,5 @@ namespace Rocksmith2014Xml
         }
 
         #endregion
-
-        /*#region Equality
-
-        public override bool Equals(object obj)
-            => obj is Section other && Equals(other);
-
-        public bool Equals(Section other)
-        {
-            return Name == other.Name
-                && Number == other.Number
-                && Utils.TimeEqualToMilliseconds(StartTime, other.StartTime);
-        }
-
-        public override int GetHashCode()
-            => (Name, Number, StartTime).GetHashCode();
-
-        public static bool operator ==(Section left, Section right)
-            => left.Equals(right);
-
-        public static bool operator !=(Section left, Section right)
-            => !(left == right);
-
-        #endregion*/
     }
 }
