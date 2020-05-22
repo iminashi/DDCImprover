@@ -34,5 +34,7 @@ namespace DDCImprover.WPF
             MessageBoxImage icon = (caption == "Error") ? MessageBoxImage.Error : MessageBoxImage.None;
             MessageBox.Show(message, caption, MessageBoxButton.OK, icon);
         }
+
+        public void ExitApplication() => Application.Current.Shutdown();
     }
 }

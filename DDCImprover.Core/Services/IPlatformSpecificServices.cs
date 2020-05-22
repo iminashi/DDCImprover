@@ -8,5 +8,7 @@ namespace DDCImprover.Core.Services
         Task<string[]> OpenFileDialog(string title, FileFilter filter, bool multiSelect);
 
         void NotifyUser(string message, string caption);
+
+        void ExitApplication();
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+
 using DDCImprover.Core.Services;
+
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace DDCImprover.Avalonia
@@ -54,5 +56,8 @@ namespace DDCImprover.Avalonia
 
             return filters;
         }
+
+        public void ExitApplication()
+            => (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).Shutdown();
     }
 }

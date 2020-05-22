@@ -117,9 +117,9 @@
         <Button Content="Delete All Logs" Command="{Binding DeleteLogs}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,7,0" MinWidth="100"/>
         <TextBlock TextWrapping="Wrap" Text="{Binding LogsDeletedText}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
       </StackPanel>
-      <Button x:Name="closeButton"
-              Grid.Column="1"
+      <Button x:Name="CloseButton"
               Content="Close"
+              Grid.Column="1"
               VerticalAlignment="Center" HorizontalAlignment="Right"
               Margin="7,0,15,0"
               IsDefault="True"

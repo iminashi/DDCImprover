@@ -56,7 +56,7 @@
                           Icon="{StaticResource configIcon}"
                           RenderOptions.BitmapScalingMode="NearestNeighbor" />
                 <Separator />
-                <MenuItem Header="E_xit" InputGestureText="Alt+F4" Click="ExitMenuItem_Click" />
+                <MenuItem Header="E_xit" InputGestureText="Alt+F4" Command="{Binding Exit}" />
             </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Header="_Quick Remove DD..." Command="{Binding RemoveDD}" InputGestureText="Ctrl+R" />

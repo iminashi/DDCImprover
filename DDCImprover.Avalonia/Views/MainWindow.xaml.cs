@@ -29,19 +29,8 @@ namespace DDCImprover.Avalonia.Views
             set => ViewModel = (MainWindowViewModel)value;
         }
 
-        /// <summary>
-        /// Workaround for ShowDialog freezing on Mac.
-        /// </summary>
-        public bool ConfigWindowOpen { get; set; }
-
         private readonly ConfigurationWindowViewModel configViewModel;
         private readonly AvaloniaServices services;
-        private ConfigurationWindow configWindow;
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
 
         public MainWindow()
         {
@@ -77,6 +66,8 @@ namespace DDCImprover.Avalonia.Views
             this.AttachDevTools();
 #endif
         }
+
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -196,8 +187,6 @@ namespace DDCImprover.Avalonia.Views
         }
 
 #pragma warning disable RCS1213 // Remove unused member declaration.
-        private void Exit_Click(object sender, RoutedEventArgs e)
-            => Close();
 
         private void LogLink_MouseButtonUp(object sender, PointerReleasedEventArgs e)
         {
@@ -224,17 +213,11 @@ namespace DDCImprover.Avalonia.Views
             }
         }
 
-        private void Configuration_Click(object sender, RoutedEventArgs e)
+        private async void Configuration_Click(object sender, RoutedEventArgs e)
         {
-            if (ConfigWindowOpen)
-            {
-                configWindow.Activate();
-                return;
-            }
+            ConfigurationWindow configWindow = new ConfigurationWindow(configViewModel);
 
-            configWindow = new ConfigurationWindow(configViewModel, this);
-
-            configWindow.Show();
+            await configWindow.ShowDialog(this);
         }
 
         private void Help_Click(object sender, RoutedEventArgs e)
@@ -247,9 +230,9 @@ namespace DDCImprover.Avalonia.Views
         // Save configuration on exit.
         protected override void OnClosed(EventArgs e)
         {
-            base.OnClosed(e);
-
             XMLProcessor.Preferences.Save();
+
+            base.OnClosed(e);
         }
     }
 }

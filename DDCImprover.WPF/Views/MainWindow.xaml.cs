@@ -250,9 +250,6 @@ namespace DDCImprover.WPF
 
         #endregion
 
-        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
-            => Application.Current.Shutdown();
-
         private void FilesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Set to null if nothing is selected

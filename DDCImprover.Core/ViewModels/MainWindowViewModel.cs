@@ -48,6 +48,7 @@ namespace DDCImprover.Core.ViewModels
         public ReactiveCommand<Unit, Unit> RemoveDD { get; private set; }
         public ReactiveCommand<Unit, Unit> OpenFolder { get; private set; }
         public ReactiveCommand<Unit, Unit> OpenGitHubPage { get; private set; }
+        public ReactiveCommand<Unit, Unit> Exit { get; private set; }
 
         #endregion
 
@@ -139,6 +140,8 @@ namespace DDCImprover.Core.ViewModels
             OpenFolder = ReactiveCommand.Create(OpenFolderImpl, canOpen);
 
             OpenGitHubPage = ReactiveCommand.Create(() => "https://github.com/iminashi/DDCImprover".StartAsProcess());
+
+            Exit = ReactiveCommand.Create(() => services.ExitApplication());
         }
 
         private void SetupObservables()

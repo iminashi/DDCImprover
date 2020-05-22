@@ -13,7 +13,7 @@
         <MenuItem Header="_Open Files..."
                   Command="{Binding OpenFiles}"
                   HotKey="Ctrl+O"/>
-        <MenuItem Header="_Add Files..." 
+        <MenuItem Header="_Add Files..."
                   Command="{Binding AddFiles}"
                   HotKey="Ctrl+A"/>
         <MenuItem Header="C_lose All"
@@ -23,7 +23,7 @@
                   IsEnabled="{Binding !IsProcessingFiles}"
                   Click="Configuration_Click"/>
         <Separator />
-        <MenuItem Header="E_xit" Click="Exit_Click" />
+        <MenuItem Header="E_xit" Command="{Binding Exit}" />
       </MenuItem>
       <MenuItem Header="_Tools">
         <MenuItem Header="_Quick Remove DD..."
@@ -125,7 +125,8 @@
 
       <ListBox Items="{Binding XMLProcessors, Mode=OneTime}"
                Grid.Row="1"
-               Name="listBox">
+               Name="listBox"
+               SelectionMode="Multiple">
         <ListBox.ItemTemplate>
           <DataTemplate>
             <StackPanel Orientation="Horizontal" Margin="0,3">
@@ -139,7 +140,7 @@
                          Foreground="Blue"
                          Cursor="Hand"
                          PointerReleased="LogLink_MouseButtonUp"/>
-             </StackPanel>
+            </StackPanel>
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
