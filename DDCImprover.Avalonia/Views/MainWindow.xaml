@@ -10,7 +10,7 @@
         Height="450" Width="765"
         MinWidth="765" MinHeight="350">
   <DockPanel>
-    <Menu DockPanel.Dock="Top" Background="#EEEEEE">
+    <Menu DockPanel.Dock="Top" Background="#EEEEEE" Padding="4">
       <MenuItem Header="_File">
         <MenuItem Header="_Open Files..."
                   Command="{Binding OpenFiles}"
@@ -122,7 +122,7 @@
         </ContextMenu>
       </Grid.ContextMenu>
       <Border BorderThickness="1" BorderBrush="#DEDEDE" Background="#F0F0F0">
-        <StackPanel Margin="5,0" Orientation="Horizontal">
+        <StackPanel Margin="5, 3" Orientation="Horizontal">
           <TextBlock Text="Artist:" Width="160" />
           <TextBlock Text="Title:" Width="163" />
           <TextBlock Text="Arrangement:" Width="100" />

@@ -5,11 +5,11 @@
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>2.3.0</Version>
-    <AssemblyVersion>2.3.160.143</AssemblyVersion>
-    <FileVersion>2.3.160.143</FileVersion>
+    <AssemblyVersion>2.3.184.145</AssemblyVersion>
+    <FileVersion>2.3.184.145</FileVersion>
     <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
-
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>latest</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -31,52 +31,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ddc\ddc.exe" />
-    <None Remove="ddc\ddc_chords_protector.xml" />
-    <None Remove="ddc\ddc_chords_remover.xml" />
-    <None Remove="ddc\ddc_dd_remover.xml" />
-    <None Remove="ddc\ddc_default.cfg" />
-    <None Remove="ddc\ddc_default.xml" />
-    <None Remove="ddc\ddc_keep_all_levels.cfg" />
-    <None Remove="ddc\ddc_merge_all_levels.cfg" />
-    <None Remove="ddc\license.txt" />
-    <None Remove="ddc\readme.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="ddc\ddc.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_chords_protector.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_chords_remover.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_dd_remover.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_default.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_default.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_keep_all_levels.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\ddc_merge_all_levels.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\license.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ddc\readme.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Fody" Version="6.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -93,6 +47,12 @@
     <Reference Include="XmlUtils">
       <HintPath>..\lib\XmlUtils.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ddc\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

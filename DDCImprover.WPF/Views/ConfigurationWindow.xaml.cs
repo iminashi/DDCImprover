@@ -1,6 +1,8 @@
-﻿using System.Windows;
-
+﻿using DDCImprover.Core;
 using DDCImprover.Core.ViewModels;
+
+using System;
+using System.Windows;
 
 namespace DDCImprover.WPF
 {
@@ -14,6 +16,14 @@ namespace DDCImprover.WPF
             InitializeComponent();
 
             DataContext = viewModel;
+        }
+
+        // Save configuration when the window is closed
+        protected override void OnClosed(EventArgs e)
+        {
+            XMLProcessor.Preferences.Save();
+
+            base.OnClosed(e);
         }
     }
 }

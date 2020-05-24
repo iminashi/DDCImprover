@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <AssemblyName>DDCImprover</AssemblyName>
     <Authors>iminashi</Authors>
     <Version>2.3.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.3.85.143</AssemblyVersion>
-    <FileVersion>2.3.85.143</FileVersion>
+    <AssemblyVersion>2.3.104.145</AssemblyVersion>
+    <FileVersion>2.3.104.145</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright © 2020</Copyright>
+    <ApplicationIcon>..\DDCImprover.WPF\Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.2|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
     <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.2|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>

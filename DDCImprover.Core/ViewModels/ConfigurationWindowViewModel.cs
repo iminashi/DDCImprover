@@ -1,6 +1,8 @@
 ﻿using DDCImprover.Core.Services;
+
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +11,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 
 namespace DDCImprover.Core.ViewModels
 {
@@ -34,12 +35,7 @@ namespace DDCImprover.Core.ViewModels
 
         #endregion
 
-        #region Reactive Commands
-
         public ReactiveCommand<Unit, Unit> DeleteLogs { get; }
-        public ReactiveCommand<Unit, Unit> SelectDDCExecutable { get; }
-
-        #endregion
 
         private readonly IPlatformSpecificServices services;
 
@@ -54,16 +50,14 @@ namespace DDCImprover.Core.ViewModels
 
             DeleteLogs = ReactiveCommand.Create(DeleteLogs_Impl);
 
-            SelectDDCExecutable = ReactiveCommand.CreateFromTask(SelectDDCExecutable_Impl);
-
             EnumerateDDCSettings();
         }
 
         public void EnumerateDDCSettings()
         {
-            if (File.Exists(XMLProcessor.Preferences.DDCExecutablePath))
+            if (File.Exists(Program.DDCExecutablePath))
             {
-                DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(XMLProcessor.Preferences.DDCExecutablePath));
+                DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Program.DDCExecutablePath));
 
                 DDCConfigFiles = (from file in di.GetFiles("*.cfg")
                                   orderby file.Name
@@ -71,6 +65,7 @@ namespace DDCImprover.Core.ViewModels
                                   .ToList();
 
                 DDCRampupFiles = (from file in di.GetFiles("*.xml")
+                                  where !file.Name.Contains("dd_remover") // Exclude the dd_remover ramp-up file
                                   orderby file.Name
                                   select file.Name.Replace(".xml", ""))
                                   .ToList();
@@ -81,9 +76,9 @@ namespace DDCImprover.Core.ViewModels
         {
             int filesDeleted = 0;
 
-            if (Directory.Exists(Configuration.LogDirectory))
+            if (Directory.Exists(Program.LogDirectory))
             {
-                foreach (string filename in Directory.GetFiles(Configuration.LogDirectory, "*.log"))
+                foreach (string filename in Directory.GetFiles(Program.LogDirectory, "*.log"))
                 {
                     try
                     {
@@ -98,23 +93,6 @@ namespace DDCImprover.Core.ViewModels
 
                 logsCleared.OnNext(Unit.Default);
                 LogsDeletedText = $"{filesDeleted} file{(filesDeleted == 1 ? "" : "s")} deleted.";
-            }
-        }
-
-        private async Task SelectDDCExecutable_Impl()
-        {
-            string[] filenames = await services
-                .OpenFileDialog(
-                    "Select DDC Executable",
-                    FileFilter.DDCExecutable,
-                    multiSelect: false)
-                .ConfigureAwait(false);
-
-            if (filenames?.Length == 1 && filenames[0].EndsWith("ddc.exe", StringComparison.OrdinalIgnoreCase))
-            {
-                XMLProcessor.Preferences.DDCExecutablePath = filenames[0];
-
-                EnumerateDDCSettings();
             }
         }
     }

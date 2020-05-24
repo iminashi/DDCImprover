@@ -11,20 +11,20 @@ namespace DDCImprover.Avalonia
             InitializeComponent();
         }
 
-        public MessageBox(string message, string caption)
+        public MessageBox(string message, string caption, Window parent)
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+
+            Owner = parent;
             Title = caption;
             this.FindControl<TextBlock>("messageText").Text = message;
             this.FindControl<Button>("okButton").Click += (s, e) => Close();
+
+#if DEBUG
+            this.AttachDevTools();
+#endif
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

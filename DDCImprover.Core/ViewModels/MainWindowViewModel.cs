@@ -30,7 +30,7 @@ namespace DDCImprover.Core.ViewModels
     {
         public ObservableCollectionExtended<XMLProcessor> XMLProcessors { get; } = new ObservableCollectionExtended<XMLProcessor>();
 
-        public string ProgramTitle { get; }
+        public string ProgramTitle { get; } = Program.Title;
 
         public IObservable<WindowType> OpenChildWindow { get; private set; }
 
@@ -105,10 +105,9 @@ namespace DDCImprover.Core.ViewModels
             // Reset "view log" text if user clears log files
             configViewModel.LogsCleared.Subscribe(_ => RemoveViewLogTexts());
 
-            // Ensure that the log directory exists
-            Directory.CreateDirectory(Configuration.LogDirectory);
-
-            ProgramTitle = "DDC Improver " + Program.Version;
+            // Ensure that application data and log directories exist
+            Directory.CreateDirectory(Program.AppDataPath);
+            Directory.CreateDirectory(Program.LogDirectory);
         }
 
         private void CreateReactiveCommands()
@@ -166,36 +165,6 @@ namespace DDCImprover.Core.ViewModels
                         .Where(_ => XMLProcessors.Sum(processor => processor.StatusMessages.Count) > 0)
                         .Select(_ => WindowType.ProcessingMessages)
                     );
-        }
-
-        /// <summary>
-        /// Checks if the DDC executable exists and prompts the user for its location if not found.
-        /// </summary>
-        /// <returns>The result of the check.</returns>
-        public async Task<DDCExecutableCheckResult> CheckDDCExecutable()
-        {
-            if (!File.Exists(XMLProcessor.Preferences.DDCExecutablePath))
-            {
-                string[] filenames = await services
-                    .OpenFileDialog(
-                        "Select DDC Executable",
-                        FileFilter.DDCExecutable,
-                        multiSelect: false)
-                    .ConfigureAwait(false);
-
-                if (filenames?.Length > 0)
-                {
-                    XMLProcessor.Preferences.DDCExecutablePath = filenames[0];
-                    return DDCExecutableCheckResult.LocationChanged;
-                }
-                else
-                {
-                    ShowInStatusbar("Please set the DDC executable path in the configuration.");
-                    return DDCExecutableCheckResult.NotSet;
-                }
-            }
-
-            return DDCExecutableCheckResult.Found;
         }
 
         /// <summary>

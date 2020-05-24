@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-
+using DDCImprover.Core;
 using DDCImprover.Core.ViewModels;
 
 using System;
@@ -31,5 +31,13 @@ namespace DDCImprover.Avalonia.Views
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+        // Save configuration when the window is closed
+        protected override void OnClosed(EventArgs e)
+        {
+            XMLProcessor.Preferences.Save();
+
+            base.OnClosed(e);
+        }
     }
 }

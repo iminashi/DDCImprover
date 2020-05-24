@@ -32,7 +32,7 @@ namespace DDCImprover.Avalonia
 
         public void NotifyUser(string message, string caption)
         {
-            MessageBox messageBox = new MessageBox(message, caption);
+            MessageBox messageBox = new MessageBox(message, caption, parentWindow);
             messageBox.Show();
         }
 

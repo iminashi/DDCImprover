@@ -51,16 +51,6 @@ namespace DDCImprover.Avalonia.Views
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(async type => await ShowChildWindow(type));
 
-            // Check DDC executable when window is activated
-            Observable.FromEventPattern<EventArgs>(this, "Activated")
-                .Take(1) // Do only once
-                .Subscribe(async _ =>
-                {
-                    var result = await ViewModel.CheckDDCExecutable();
-                    if (result == DDCExecutableCheckResult.LocationChanged)
-                        configViewModel.EnumerateDDCSettings();
-                });
-
             this.FindControl<ListBox>("listBox").SelectionChanged += (s, arg) => ViewModel.SelectedItems = (s as ListBox).SelectedItems;
 
 #if DEBUG
@@ -226,14 +216,6 @@ namespace DDCImprover.Avalonia.Views
 
                 e.Handled = true;
             }
-        }
-
-        // Save configuration on exit.
-        protected override void OnClosed(EventArgs e)
-        {
-            XMLProcessor.Preferences.Save();
-
-            base.OnClosed(e);
         }
     }
 }

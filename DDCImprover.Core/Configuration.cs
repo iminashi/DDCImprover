@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Xml.Serialization;
+
 using XmlUtils;
 
 namespace DDCImprover.Core
@@ -8,11 +8,6 @@ namespace DDCImprover.Core
     [XmlRoot(Namespace = "")]
     public class Configuration
     {
-        public static readonly string LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
-
-        public static string ConfigFileName = "DDCImprover.config.xml";
-
-        public string DDCExecutablePath { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ddc", "ddc.exe");
         public int DDCPhraseLength { get; set; } = 256;
         public string DDCRampupFile { get; set; } = "ddc_default";
         public string DDCConfigFile { get; set; } = "ddc_default";
@@ -51,30 +46,21 @@ namespace DDCImprover.Core
         }
 
         /// <summary>
-        /// Deserializes configuration from an XML file.
+        /// Deserializes the configuration from an XML file.
         /// </summary>
         private static Configuration Load()
         {
-            if (string.IsNullOrEmpty(ConfigFileName))
-                throw new InvalidOperationException("Configuration filename is not set.");
-
             Configuration cfg = new Configuration();
-            ReflectionConfig.LoadFromXml(ConfigFileName, cfg);
+            ReflectionConfig.LoadFromXml(Program.ConfigFileName, cfg);
             cfg.ValidateValues();
 
             return cfg;
         }
 
         /// <summary>
-        /// Serializes configuration into an XML file.
+        /// Serializes the configuration into an XML file.
         /// </summary>
-        public void Save()
-        {
-            if (string.IsNullOrEmpty(ConfigFileName))
-                throw new InvalidOperationException("Configuration filename is not set.");
-
-            ReflectionConfig.SaveToXml(ConfigFileName, this);
-        }
+        public void Save() => ReflectionConfig.SaveToXml(Program.ConfigFileName, this);
 
         private void ValidateValues()
         {

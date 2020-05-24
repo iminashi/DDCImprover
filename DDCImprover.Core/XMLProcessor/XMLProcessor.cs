@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -28,8 +28,6 @@ namespace DDCImprover.Core
             get => preferences ?? (preferences = new Configuration());
             set => preferences = value;
         }
-
-        private static bool UseWine { get; } = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         private ImproverStatus _status;
 
@@ -206,7 +204,7 @@ namespace DDCImprover.Core
             DDCXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DDC_" + XMLFileName);
             ManualDDXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DD_" + XMLFileName);
 
-            LogFileFullPath = Path.Combine(Configuration.LogDirectory, XMLFileName + ".log");
+            LogFileFullPath = Path.Combine(Program.LogDirectory, XMLFileName + ".log");
         }
 
         private void Log(string message)
@@ -437,8 +435,8 @@ namespace DDCImprover.Core
 
         private void ExecuteDDC()
         {
-            if (!File.Exists(Preferences.DDCExecutablePath))
-                throw new FileNotFoundException("Could not find DDC executable", Preferences.DDCExecutablePath);
+            if (!File.Exists(Program.DDCExecutablePath))
+                throw new FileNotFoundException("Could not find DDC executable", Program.DDCExecutablePath);
 
             string arguments = CreateDDCArguments();
 
@@ -446,36 +444,45 @@ namespace DDCImprover.Core
 
             ddcProcess.StartInfo.UseShellExecute = false;
             ddcProcess.StartInfo.CreateNoWindow = true;
+            ddcProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(XMLFileFullPath);
 
-            if (UseWine)
+            if (Program.UseWine)
             {
-                ddcProcess.StartInfo.FileName = "wine";
-                ddcProcess.StartInfo.Arguments = $"\"{Preferences.DDCExecutablePath}\" {arguments}";
+                string wine = Program.GetWineExecutable();
+                ddcProcess.StartInfo.FileName = wine;
+                ddcProcess.StartInfo.Arguments = $"\"{Program.DDCExecutablePath}\" {arguments}";
+
+                Log("Executing command: " + wine + " " + ddcProcess.StartInfo.Arguments);
             }
             else
             {
-                ddcProcess.StartInfo.FileName = Preferences.DDCExecutablePath;
+                ddcProcess.StartInfo.FileName = Program.DDCExecutablePath;
                 ddcProcess.StartInfo.Arguments = arguments;
+
+                Log($"Executing 'ddc.exe {arguments}'");
             }
 
-            ddcProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(XMLFileFullPath);
-
-            Log($"Executing 'ddc.exe {arguments}'");
-
-            ddcProcess.Start();
-            ddcProcess.WaitForExit();
-
-            switch (ddcProcess.ExitCode)
+            try
             {
-                case 0:
-                    Log($"DDC exit code {ddcProcess.ExitCode}: Exited normally.");
-                    break;
-                case 1:
-                    throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: System Error.");
-                case 2:
-                    throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Application error.");
-                default:
-                    throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Undefined.");
+                ddcProcess.Start();
+                ddcProcess.WaitForExit();
+
+                switch (ddcProcess.ExitCode)
+                {
+                    case 0:
+                        Log($"DDC exit code {ddcProcess.ExitCode}: Exited normally.");
+                        break;
+                    case 1:
+                        throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: System Error.");
+                    case 2:
+                        throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Application error.");
+                    default:
+                        throw new DDCException($"DDC exit code {ddcProcess.ExitCode}: Undefined.");
+                }
+            }
+            catch (Exception) when (Program.UseWine)
+            {
+                StatusMessages.Add(new ImproverMessage("Executing wine failed.", MessageType.Error));
             }
         }
 
@@ -485,12 +492,12 @@ namespace DDCImprover.Core
 
             if (!string.IsNullOrEmpty(Preferences.DDCRampupFile) && Preferences.DDCRampupFile != "ddc_default")
             {
-                string rmpPath = Path.Combine(Path.GetDirectoryName(Preferences.DDCExecutablePath), $"{Preferences.DDCRampupFile}.xml");
+                string rmpPath = Path.Combine(Path.GetDirectoryName(Program.DDCExecutablePath), $"{Preferences.DDCRampupFile}.xml");
                 arguments += $" -m \"{rmpPath}\"";
             }
             if (!string.IsNullOrEmpty(Preferences.DDCConfigFile) && Preferences.DDCConfigFile != "ddc_default")
             {
-                string cfgPath = Path.Combine(Path.GetDirectoryName(Preferences.DDCExecutablePath), $"{Preferences.DDCConfigFile}.cfg");
+                string cfgPath = Path.Combine(Path.GetDirectoryName(Program.DDCExecutablePath), $"{Preferences.DDCConfigFile}.cfg");
                 arguments += $" -c \"{cfgPath}\"";
             }
 

@@ -53,16 +53,6 @@ namespace DDCImprover.WPF
                 .ObserveOnDispatcher()
                 .Subscribe(ShowChildWindow);
 
-            // Check DDC executable when window is activated
-            Observable.FromEventPattern<EventArgs>(this, "Activated")
-                .Take(1) // Do only once
-                .Subscribe(async _ =>
-                {
-                    var result = await ViewModel.CheckDDCExecutable();
-                    if (result == DDCExecutableCheckResult.LocationChanged)
-                        configViewModel.EnumerateDDCSettings();
-                });
-
             // Close file(s) when user clicks delete
             Observable.FromEventPattern<KeyEventArgs>(filesListView, "KeyUp")
                 .Where(e => e.EventArgs.Key == Key.Delete && (e.Sender as ListView)?.SelectedItem != null)
@@ -94,14 +84,6 @@ namespace DDCImprover.WPF
                     ShowProcessingMessages();
                     break;
             }
-        }
-
-        // Save configuration on exit.
-        protected override void OnClosed(EventArgs e)
-        {
-            XMLProcessor.Preferences.Save();
-
-            base.OnClosed(e);
         }
 
         // Get any status messages and show them in a new window

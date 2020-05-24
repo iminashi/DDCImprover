@@ -5,8 +5,8 @@
         xmlns:local="clr-namespace:DDCImprover.Avalonia.Views;assembly=DDCImprover"
         xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
         Title="Configuration"
-        SizeToContent="WidthAndHeight"
-        CanResize="False">
+        CanResize="False"
+        SizeToContent="WidthAndHeight">
   <Window.Styles>
     <Style Selector="HeaderedContentControl">
       <Setter Property="Template">
@@ -48,13 +48,6 @@
                        Value="{Binding Config.DDCPhraseLength}"
                        Minimum="8" Maximum="256"
                        ToolTip.Tip="{x:Static text:ConfigurationTooltips.PhraseLength}"/>
-        <Button Content="Select DDC Executable..."
-                Command="{Binding SelectDDCExecutable}"
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Margin="15,0,15,0"
-                Padding="10,2"/>
         <ComboBox Grid.Column="1" Grid.Row="1"
                   VerticalAlignment="Center" HorizontalAlignment="Left"
                   MinWidth="170" Margin="10,5,0,5"

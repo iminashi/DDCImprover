@@ -7,10 +7,12 @@
 -Fixed a null reference exception in the chord slide handshape length fix
 -Fixed an off-by-one error in the FIXOPEN chord processor
 -Fixed a false positive in the bend value mismatch check
+-Changed where the program settings and logs are stored for better cross-platform compatibility
+-Removed the select DDC executable button from the configuration window
+-Minor improvements to the Avalonia UI
 -Bring the main window to the front when closing a child window (WPF version)
--Small improvements to the Avalonia UI
--Updated Avalonia to 0.9.9
--Updated .NET Core version to 3.1 (WPF version)
+-Updated Avalonia to version 0.9.10
+-Updated .NET Core to version 3.1
 
 2.2
 -Added 'so' slideout custom event

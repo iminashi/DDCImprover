@@ -12,7 +12,7 @@ namespace DDCImprover.Core
 {
     public static class PhraseLevelRepository
     {
-        private static readonly string repositoryFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "phraselevels.zip");
+        private static readonly string repositoryFile = Path.Combine(Program.AppDataPath, "phraselevels.zip");
 
         private static readonly ConcurrentDictionary<string, string> queue = new ConcurrentDictionary<string, string>();
 
