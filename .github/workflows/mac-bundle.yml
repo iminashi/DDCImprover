@@ -19,8 +19,10 @@ jobs:
       run: dotnet restore DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -r osx-x64
     - name: Build, Publish & Bundle
       run: dotnet msbuild DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:IsMac=true -p:Configuration=Debug
+    - name: Create Bundle Directory
+      run: mkdir AppBundle
     - name: Copy Bundle
-      run: cp DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC Improver.app ./AppBundle
+      run: cp -r DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC Improver.app AppBundle
     - name: Upload App Bundle Artifact
       uses: actions/upload-artifact@v2
       with:
