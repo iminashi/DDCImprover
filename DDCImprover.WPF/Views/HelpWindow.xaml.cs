@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using DDCImprover.Core;
+
 using System.Windows;
 using System.Windows.Documents;
 
@@ -19,7 +19,7 @@ namespace DDCImprover.WPF
         {
             if (e.Source is Hyperlink hyperlink)
             {
-                Process.Start(hyperlink.NavigateUri.OriginalString);
+                hyperlink.NavigateUri.OriginalString.StartAsProcess();
                 e.Handled = true;
             }
         }

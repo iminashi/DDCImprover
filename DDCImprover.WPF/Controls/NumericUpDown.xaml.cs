@@ -29,12 +29,13 @@ namespace DDCImprover.WPF
         private static void OnFormatStringChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             string newFormatString = (string)args.NewValue;
-            NumericUpDown nud = d as NumericUpDown;
-
-            if (string.IsNullOrEmpty(newFormatString))
-                nud.txtNum.Text = nud.Value.ToString(FormatCulture);
-            else
-                nud.txtNum.Text = nud.Value.ToString(newFormatString, FormatCulture);
+            if (d is NumericUpDown nud)
+            {
+                if (string.IsNullOrEmpty(newFormatString))
+                    nud.txtNum.Text = nud.Value.ToString(FormatCulture);
+                else
+                    nud.txtNum.Text = nud.Value.ToString(newFormatString, FormatCulture);
+            }
         }
 
         #endregion
@@ -57,21 +58,20 @@ namespace DDCImprover.WPF
 
         #region Maximum
 
-        public Decimal Maximum
+        public decimal Maximum
         {
-            get => (Decimal)GetValue(MaximumProperty);
+            get => (decimal)GetValue(MaximumProperty);
             set => SetValue(MaximumProperty, value);
         }
 
         public static readonly DependencyProperty MaximumProperty =
-            DependencyProperty.Register(nameof(Maximum), typeof(Decimal), typeof(NumericUpDown), new FrameworkPropertyMetadata(100M, new PropertyChangedCallback(OnMaximumChanged), new CoerceValueCallback(CoerceMaximum)));
+            DependencyProperty.Register(nameof(Maximum), typeof(decimal), typeof(NumericUpDown), new FrameworkPropertyMetadata(100M, new PropertyChangedCallback(OnMaximumChanged), new CoerceValueCallback(CoerceMaximum)));
 
         private static object CoerceMaximum(DependencyObject d, object baseValue)
         {
-            NumericUpDown nup = d as NumericUpDown;
-            Decimal newValue = (Decimal)baseValue;
-            if (newValue < nup.Minimum)
-                return nup.Minimum;
+            decimal newValue = (decimal)baseValue;
+            if (d is NumericUpDown nud && newValue < nud.Minimum)
+                return nud.Minimum;
 
             return baseValue;
         }
@@ -83,20 +83,20 @@ namespace DDCImprover.WPF
 
         #region Minimum
 
-        public Decimal Minimum
+        public decimal Minimum
         {
-            get => (Decimal)GetValue(MinimumProperty);
+            get => (decimal)GetValue(MinimumProperty);
             set => SetValue(MinimumProperty, value);
         }
 
         public static readonly DependencyProperty MinimumProperty =
-            DependencyProperty.Register(nameof(Minimum), typeof(Decimal), typeof(NumericUpDown), new FrameworkPropertyMetadata(0M, new PropertyChangedCallback(OnMinimumChanged), new CoerceValueCallback(CoerceMinimum)));
+            DependencyProperty.Register(nameof(Minimum), typeof(decimal), typeof(NumericUpDown), new FrameworkPropertyMetadata(0M, new PropertyChangedCallback(OnMinimumChanged), new CoerceValueCallback(CoerceMinimum)));
 
         private static object CoerceMinimum(DependencyObject d, object baseValue)
         {
-            NumericUpDown nup = d as NumericUpDown;
-            Decimal newValue = (Decimal)baseValue;
-            if (newValue > nup.Maximum) return nup.Maximum;
+            decimal newValue = (decimal)baseValue;
+            if (d is NumericUpDown nup && newValue > nup.Maximum)
+                    return nup.Maximum;
 
             return baseValue;
         }
@@ -111,23 +111,23 @@ namespace DDCImprover.WPF
 
         #region Value
 
-        public Decimal Value
+        public decimal Value
         {
-            get => (Decimal)GetValue(ValueProperty);
+            get => (decimal)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register(nameof(Value), typeof(Decimal), typeof(NumericUpDown), new FrameworkPropertyMetadata(0M, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged, CoerceValue, false, UpdateSourceTrigger.Explicit));
+            DependencyProperty.Register(nameof(Value), typeof(decimal), typeof(NumericUpDown), new FrameworkPropertyMetadata(0M, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged, CoerceValue, false, UpdateSourceTrigger.Explicit));
 
         private static object CoerceValue(DependencyObject d, object baseValue)
         {
-            NumericUpDown nud = d as NumericUpDown;
-            Decimal newValue;
-            if (nud.DecimalPlaces == 0)
-                newValue = Math.Truncate((Decimal)baseValue);
+            NumericUpDown? nud = d as NumericUpDown;
+            decimal newValue;
+            if (nud!.DecimalPlaces == 0)
+                newValue = Math.Truncate((decimal)baseValue);
             else
-                newValue = Math.Round((Decimal)baseValue, nud.DecimalPlaces, MidpointRounding.AwayFromZero);
+                newValue = Math.Round((decimal)baseValue, nud.DecimalPlaces, MidpointRounding.AwayFromZero);
 
             if (newValue < nud.Minimum)
             {
@@ -143,11 +143,12 @@ namespace DDCImprover.WPF
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            NumericUpDown nud = d as NumericUpDown;
+            if (d is NumericUpDown nud)
+            {
+                nud.txtNum.Text = ((decimal)args.NewValue).ToString($"F{nud.DecimalPlaces}");
 
-            nud.txtNum.Text = ((Decimal)args.NewValue).ToString($"F{nud.DecimalPlaces}");
-
-            nud.GetBindingExpression(ValueProperty)?.UpdateSource();
+                nud.GetBindingExpression(ValueProperty)?.UpdateSource();
+            }
         }
 
         #endregion
@@ -155,11 +156,11 @@ namespace DDCImprover.WPF
         #region Increment
 
         public static readonly DependencyProperty IncrementProperty =
-            DependencyProperty.Register(nameof(Increment), typeof(Decimal), typeof(NumericUpDown), new PropertyMetadata(1M));
+            DependencyProperty.Register(nameof(Increment), typeof(decimal), typeof(NumericUpDown), new PropertyMetadata(1M));
 
-        public Decimal Increment
+        public decimal Increment
         {
-            get => (Decimal)GetValue(IncrementProperty);
+            get => (decimal)GetValue(IncrementProperty);
             set => SetValue(IncrementProperty, value);
         }
 
@@ -217,7 +218,7 @@ namespace DDCImprover.WPF
             }
         }
 
-        // Filter nonnumeric characters
+        // Filter non-numeric characters
         private void NumTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             string pattern = "[0-9";

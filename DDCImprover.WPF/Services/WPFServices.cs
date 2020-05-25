@@ -1,5 +1,7 @@
 ﻿using DDCImprover.Core.Services;
 using Microsoft.Win32;
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,7 +28,7 @@ namespace DDCImprover.WPF
 
             bool? filesSelected = await Dispatcher.CurrentDispatcher.InvokeAsync(openFileDialog.ShowDialog);
 
-            return filesSelected == true ? openFileDialog.FileNames : null;
+            return (filesSelected == true) ? openFileDialog.FileNames : Array.Empty<string>();
         }
 
         public void NotifyUser(string message, string caption)

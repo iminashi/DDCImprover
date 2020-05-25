@@ -181,7 +181,7 @@ namespace DDCImprover.WPF
 
         private void LogLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            string logFilePath = (sender as TextBlock)?.Tag as string;
+            string? logFilePath = (sender as TextBlock)?.Tag as string;
 
             if (File.Exists(logFilePath))
             {
