@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 
 using XmlUtils;
@@ -34,15 +35,9 @@ namespace DDCImprover.Core
 
         public static void LoadConfiguration()
         {
-            try
-            {
-                XMLProcessor.Preferences = Load();
-            }
-            catch
-            {
-                // Use default preferences
-                XMLProcessor.Preferences = new Configuration();
-            }
+            XMLProcessor.Preferences = File.Exists(Program.ConfigFileName) ?
+                Load() :
+                new Configuration();
         }
 
         /// <summary>
