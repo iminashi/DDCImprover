@@ -28,7 +28,7 @@ jobs:
     - name: Make the Executable Executable
       run: chmod +x AppBundle/DDC\ Improver.app/Contents/MacOS/DDCImprover
     - name: Create Zip File
-      run: zip -r DDCImprover.zip AppBundle/
+      run: zip -r DDCImprover.zip AppBundle/DDC\ Improver.app/
     - name: Upload App Bundle Artifact
       uses: actions/upload-artifact@v2
       with:
