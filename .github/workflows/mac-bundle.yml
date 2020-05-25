@@ -23,6 +23,10 @@ jobs:
       run: mkdir AppBundle
     - name: Copy Bundle
       run: cp -ar DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC\ Improver.app AppBundle
+    - name: Set Bundle Permissions
+      run: chmod 755 AppBundle/DDC\ Improver.app
+    - name: Make the Executable Executable
+      run: chmod +x AppBundle/DDC\ Improver.app/Contents/MacOS/DDCImprover
     - name: Upload App Bundle Artifact
       uses: actions/upload-artifact@v2
       with:
