@@ -18,11 +18,11 @@ jobs:
     - name: Change To Avalonia
       run: cd DDCImprover.Avalonia
     - name: Install dependencies
-      run: dotnet restore -r osx-x64
+      run: dotnet restore DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -r osx-x64
     - name: Build, Publish & Bundle
-      run: dotnet msbuild -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:IsMac=true -p:Configuration=Debug
+      run: dotnet msbuild DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:IsMac=true -p:Configuration=Debug
     - name: Upload App Bundle Artifact
       uses: actions/upload-artifact@v2
       with:
         name: DDCImprover
-        path: bin\Debug\netcoreapp3.1\osx-x64\publish\DDC Improver.app
+        path: DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC Improver.app
