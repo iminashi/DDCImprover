@@ -58,6 +58,6 @@ namespace DDCImprover.Avalonia
         }
 
         public void ExitApplication()
-            => (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).Shutdown();
+            => (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)!.Shutdown();
     }
 }

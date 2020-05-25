@@ -51,7 +51,7 @@ namespace DDCImprover.Avalonia.Views
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(async type => await ShowChildWindow(type));
 
-            this.FindControl<ListBox>("listBox").SelectionChanged += (s, arg) => ViewModel.SelectedItems = (s as ListBox).SelectedItems;
+            this.FindControl<ListBox>("listBox").SelectionChanged += (s, arg) => ViewModel.SelectedItems = (s as ListBox)!.SelectedItems;
 
 #if DEBUG
             this.AttachDevTools();
@@ -195,7 +195,7 @@ namespace DDCImprover.Avalonia.Views
 
         private void LogLink_MouseButtonUp(object sender, PointerReleasedEventArgs e)
         {
-            string logFilePath = (sender as TextBlock)?.Tag as string;
+            string? logFilePath = (sender as TextBlock)?.Tag as string;
 
             if (File.Exists(logFilePath))
             {
