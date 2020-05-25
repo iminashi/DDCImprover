@@ -34,6 +34,12 @@ namespace DDCImprover.Core.PreBlocks
 
                         foreach (var chord in chordsToFix)
                         {
+                            if(chord.ChordNotes is null)
+                            {
+                                Log("ERROR: FIXOPEN chord does not have chord notes at " + chord.Time.TimeToString());
+                                continue;
+                            }
+
                             var chordNotesToRemove = chord.ChordNotes.Where(cn => cn.Fret == 0).ToArray();
                             // Store sustain of chord
                             double initSustain = chordNotesToRemove[0].Sustain;

@@ -44,10 +44,10 @@ namespace Rocksmith2014Xml
 
         #region Equality
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is Event other && Equals(other);
 
-        public bool Equals(Event other)
+        public bool Equals(Event? other)
         {
             if (ReferenceEquals(this, other))
                 return true;
@@ -60,7 +60,7 @@ namespace Rocksmith2014Xml
         public override int GetHashCode()
             => (Time, Code).GetHashCode();
 
-        public static bool operator ==(Event left, Event right)
+        public static bool operator ==(Event? left, Event? right)
         {
             if (ReferenceEquals(left, right))
                 return true;
@@ -71,7 +71,7 @@ namespace Rocksmith2014Xml
             return left.Equals(right);
         }
 
-        public static bool operator !=(Event left, Event right)
+        public static bool operator !=(Event? left, Event? right)
             => !(left == right);
 
         #endregion

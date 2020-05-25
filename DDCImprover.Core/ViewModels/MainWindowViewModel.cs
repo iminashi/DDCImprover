@@ -72,10 +72,10 @@ namespace DDCImprover.Core.ViewModels
         public string StatusbarMessage { get; private set; }
 
         [Reactive]
-        public string StatusbarMessageTooltip { get; private set; }
+        public string? StatusbarMessageTooltip { get; private set; }
 
         [Reactive]
-        public IList SelectedItems { get; set; }
+        public IList? SelectedItems { get; set; }
 
         [Reactive]
         public bool MatchPhrasesToSections { get; set; }
@@ -186,7 +186,7 @@ namespace DDCImprover.Core.ViewModels
         /// </summary>
         private void CloseFileImpl()
         {
-            if (SelectedItems == null)
+            if (SelectedItems is null)
                 return;
 
             foreach (var processor in SelectedItems.Cast<XMLProcessor>().ToArray())
@@ -465,7 +465,7 @@ namespace DDCImprover.Core.ViewModels
         /// </summary>
         /// <param name="message">The message to show in the statusbar.</param>
         /// <param name="tooltip">The tooltip for the message.</param>
-        private void ShowInStatusbar(string message, string tooltip = null)
+        private void ShowInStatusbar(string message, string? tooltip = null)
         {
             StatusbarMessage = message;
             StatusbarMessageTooltip = tooltip;

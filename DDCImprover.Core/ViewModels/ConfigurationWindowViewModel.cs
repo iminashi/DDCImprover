@@ -25,7 +25,7 @@ namespace DDCImprover.Core.ViewModels
         public IObservable<Unit> LogsCleared { get; }
 
         [Reactive]
-        public string LogsDeletedText { get; private set; }
+        public string LogsDeletedText { get; private set; } = string.Empty;
 
         [Reactive]
         public List<string> DDCConfigFiles { get; private set; }

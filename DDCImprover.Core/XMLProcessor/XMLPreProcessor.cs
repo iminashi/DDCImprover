@@ -20,7 +20,7 @@ namespace DDCImprover.Core
         internal XMLPreProcessor(XMLProcessor parent, Action<string> logAction)
         {
             Parent = parent;
-            Song = parent.OriginalSong;
+            Song = parent.OriginalSong!;
             Log = logAction;
             LastPhraseTime = Song.PhraseIterations[Song.PhraseIterations.Count - 1].Time;
 
@@ -151,8 +151,8 @@ namespace DDCImprover.Core
             float firstBeatTime = Song.Ebeats[0].Time;
 
             // Check for anchor at the beginning of the beatmap
-            var firstBeatAnchor = Song.Levels[0].Anchors.FindByTime(firstBeatTime);
-            if (firstBeatAnchor != null)
+            Anchor? firstBeatAnchor = Song.Levels[0].Anchors.FindByTime(firstBeatTime);
+            if (firstBeatAnchor is Anchor)
             {
                 Log($"Stored the anchor found at the beginning of the beatmap at {firstBeatTime.TimeToString()}.");
 

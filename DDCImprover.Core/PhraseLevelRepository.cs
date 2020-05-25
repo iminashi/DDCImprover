@@ -23,7 +23,7 @@ namespace DDCImprover.Core
             return hash.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("x2"))).ToString();
         }
 
-        public static Dictionary<string, int> TryGetLevels(string filename)
+        public static Dictionary<string, int>? TryGetLevels(string filename)
         {
             if (!File.Exists(repositoryFile))
                 return null;

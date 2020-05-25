@@ -18,10 +18,10 @@ namespace DDCImprover.Core
         public int CompareTo(ImproverMessage other)
             => TimeCode.CompareTo(other.TimeCode);
 
-        public bool Equals(ImproverMessage other)
-            => Message.Equals(other.Message) && TimeCode.Equals(other.TimeCode);
+        public bool Equals(ImproverMessage? other)
+            => other is ImproverMessage && Message.Equals(other.Message) && TimeCode.Equals(other.TimeCode);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null)
                 return false;

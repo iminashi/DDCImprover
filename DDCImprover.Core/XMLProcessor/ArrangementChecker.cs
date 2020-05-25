@@ -214,7 +214,7 @@ namespace DDCImprover.Core
                 // Check missing bendValues
                 if (note.IsBend)
                 {
-                    int nonZeroBendValue = note.BendValues.FindIndex(bv => bv.Step != 0.0f);
+                    int nonZeroBendValue = note.BendValues?.FindIndex(bv => bv.Step != 0.0f) ?? -1;
                     if (nonZeroBendValue == -1)
                     {
                         AddIssue($"Note missing a bend value at {note.Time.TimeToString()}.", note.Time);
@@ -222,7 +222,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check tone change placement
-                if (songHasToneChanges && song.Tones.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, note.Time)))
+                if (songHasToneChanges && song.Tones!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, note.Time)))
                 {
                     AddIssue($"Tone change occurs on a note at {note.Time.TimeToString()}.", note.Time);
                 }
@@ -282,7 +282,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check tone change placement
-                if (songHasToneChanges && song.Tones.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, chord.Time)))
+                if (songHasToneChanges && song.Tones!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, chord.Time)))
                 {
                     AddIssue($"Tone change occurs on a chord at {chord.Time.TimeToString()}.", chord.Time);
                 }
@@ -312,8 +312,8 @@ namespace DDCImprover.Core
             {
                 // Check anchor position relative to handshape fingering
                 HandShape handShape = handShapes[i];
-                HandShape previous = (i == 0) ? null : handShapes[i - 1];
-                HandShape next = (i == handShapes.Count - 1) ? null : handShapes[i + 1];
+                HandShape? previous = (i == 0) ? null : handShapes[i - 1];
+                HandShape? next = (i == handShapes.Count - 1) ? null : handShapes[i + 1];
 
                 var activeAnchor = anchors.Last(a => a.Time <= handShape.StartTime);
                 var chordTemplate = chordTemplates[handShape.ChordId];
@@ -333,12 +333,12 @@ namespace DDCImprover.Core
 
                     if (!chordOK)
                     {
-                        if (previous != null && IsSameAnchorWith1stFinger(previous, activeAnchor))
+                        if (previous is HandShape && IsSameAnchorWith1stFinger(previous, activeAnchor))
                         {
                             continue;
                         }
 
-                        if (next != null && IsSameAnchorWith1stFinger(next, activeAnchor))
+                        if (next is HandShape && IsSameAnchorWith1stFinger(next, activeAnchor))
                         {
                             continue;
                         }

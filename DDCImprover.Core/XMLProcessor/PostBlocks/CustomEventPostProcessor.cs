@@ -25,7 +25,7 @@ namespace DDCImprover.Core.PostBlocks
             var events = song.Events;
 
             var removeBeatsEvent = events.FirstOrDefault(ev => ev.Code.Equals("removebeats", StringComparison.OrdinalIgnoreCase));
-            if (removeBeatsEvent != null)
+            if (!(removeBeatsEvent is null))
             {
                 song.Ebeats.RemoveAll(b => b.Time >= removeBeatsEvent.Time);
 
@@ -74,7 +74,8 @@ namespace DDCImprover.Core.PostBlocks
                     originalChordTemplate = song.ChordTemplates[linkNextChord.ChordId];
 
                     // Shorten handshapes that EOF has set to include the slide out
-                    if (linkNextChordHs != null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain)
+                    // If chord notes is null here, there is an error in the XML file
+                    if (linkNextChordHs != null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes![0].Sustain)
                     {
                         linkNextChordHs.EndTime = (float)Math.Round(
                             linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain,

@@ -103,7 +103,7 @@ namespace DDCImprover.Core.PostBlocks
                                 }
 
                                 // If note has more than two bendValues, remove the rest
-                                if (note.IsBend && note.BendValues.Count > 2)
+                                if (note.IsBend && note.BendValues?.Count > 2)
                                 {
                                     // Remove bendValues
                                     var secondBendValue = note.BendValues[1];

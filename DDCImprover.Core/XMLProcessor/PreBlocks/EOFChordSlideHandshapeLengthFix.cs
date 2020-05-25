@@ -18,7 +18,8 @@ namespace DDCImprover.Core.PreBlocks
                     if (chord.ChordNotes.Any(cn => cn.IsSlide))
                     {
                         var handshape = level.HandShapes.FirstOrDefault(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, chord.Time));
-                        if (handshape != null && (handshape.EndTime > handshape.StartTime + chord.ChordNotes[0].Sustain))
+                        if (!(handshape is null) && !(chord.ChordNotes is null)
+                            && (handshape.EndTime > handshape.StartTime + chord.ChordNotes[0].Sustain))
                         {
                             handshape.EndTime = (float)Math.Round(handshape.StartTime + chord.ChordNotes[0].Sustain, 3, MidpointRounding.AwayFromZero);
                             Log($"Adjusted handshape length for chord slide at {chord.Time.TimeToString()}");

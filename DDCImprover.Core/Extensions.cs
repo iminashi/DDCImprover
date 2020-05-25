@@ -56,9 +56,9 @@ namespace DDCImprover.Core
         /// <typeparam name="T">The type of the elements.</typeparam>
         /// <param name="elements"></param>
         /// <param name="timeToFind">The time for the element to find.</param>
-        /// <returns>The found element or default if not found.</returns>
-        public static T FindByTime<T>(this IList<T> elements, float timeToFind)
-            where T : IHasTimeCode
+        /// <returns>The found element or null if not found.</returns>
+        public static T? FindByTime<T>(this IList<T> elements, float timeToFind)
+            where T : class, IHasTimeCode
         {
             for (int i = 0; i < elements.Count; i++)
             {

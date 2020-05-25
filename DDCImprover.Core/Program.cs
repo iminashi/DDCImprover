@@ -8,13 +8,13 @@ namespace DDCImprover.Core
 {
     public sealed class Program
     {
-        private static string version;
+        private static string? version;
 
         public static string Version
         {
             get
             {
-                if (version != null)
+                if (version is string)
                     return version;
 
                 var thisAsm = Assembly.GetExecutingAssembly();
@@ -34,10 +34,10 @@ namespace DDCImprover.Core
 
         public static bool UseWine { get; } = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-        private static string _wineExecutable;
+        private static string? _wineExecutable;
         public static string GetWineExecutable()
         {
-            if (!string.IsNullOrEmpty(_wineExecutable))
+            if (_wineExecutable is string)
                 return _wineExecutable;
 
             try

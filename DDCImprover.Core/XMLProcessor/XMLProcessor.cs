@@ -21,11 +21,11 @@ namespace DDCImprover.Core
         public const int ProgressSteps = 3;
         internal const int TempMeasureNumber = 65535;
 
-        private static Configuration preferences;
+        private static Configuration? preferences;
 
         public static Configuration Preferences
         {
-            get => preferences ?? (preferences = new Configuration());
+            get => preferences ??= new Configuration();
             set => preferences = value;
         }
 
@@ -73,7 +73,7 @@ namespace DDCImprover.Core
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -90,8 +90,8 @@ namespace DDCImprover.Core
         public string ArrangementType { get; private set; }
         public string LogFileFullPath { get; private set; }
 
-        public RS2014Song OriginalSong { get; private set; }
-        public RS2014Song DDCSong { get; private set; }
+        public RS2014Song? OriginalSong { get; private set; }
+        public RS2014Song? DDCSong { get; private set; }
 
         public string XMLFileFullPath { get; private set; }
         private string TempXMLFileFullPath { get; set; }
@@ -101,9 +101,9 @@ namespace DDCImprover.Core
         internal List<Anchor> NGAnchors { get; } = new List<Anchor>();
         internal List<Ebeat> AddedBeats { get; } = new List<Ebeat>();
 
-        private XMLPreProcessor preProcessor;
-        private XMLPostProcessor postProcessor;
-        private StreamWriter logStreamWriter;
+        private XMLPreProcessor? preProcessor;
+        private XMLPostProcessor? postProcessor;
+        private StreamWriter? logStreamWriter;
 
         private bool isNonDDFile = true;
 
@@ -162,7 +162,7 @@ namespace DDCImprover.Core
                     else if (reader.Name == "arrangementProperties")
                     {
                         var arrProp = XNode.ReadFrom(reader) as XElement;
-                        ArrangementType = arrProp.Attribute("pathLead").Value == "1" ? "Lead" :
+                        ArrangementType = arrProp!.Attribute("pathLead").Value == "1" ? "Lead" :
                                           arrProp.Attribute("pathRhythm").Value == "1" ? "Rhythm" :
                                           arrProp.Attribute("pathBass").Value == "1" ? "Bass" : "N/A";
 
@@ -354,7 +354,7 @@ namespace DDCImprover.Core
         private void Postprocess()
         {
             Status = ImproverStatus.PostProcessing;
-            postProcessor = new XMLPostProcessor(this, preProcessor, Log);
+            postProcessor = new XMLPostProcessor(this, preProcessor!, Log);
             postProcessor.Process();
             SavePostprocessedFile();
         }
@@ -410,7 +410,7 @@ namespace DDCImprover.Core
             }
 
             // Save processed file using original filename
-            OriginalSong.Save(XMLFileFullPath);
+            OriginalSong!.Save(XMLFileFullPath);
         }
 
         private void SavePostprocessedFile()
@@ -425,7 +425,7 @@ namespace DDCImprover.Core
                 File.Delete(DDCXMLFileFullPath);
             }
 
-            DDCSong.XmlComments.RemoveAll(x => x.CommentType == CommentType.DDCImprover);
+            DDCSong!.XmlComments.RemoveAll(x => x.CommentType == CommentType.DDCImprover);
             DDCSong.XmlComments.Insert(0, new RSXmlComment($" DDC Improver {Program.Version} "));
 
             DDCSong.Save(path, Preferences.WriteAbridgedXmlFiles);

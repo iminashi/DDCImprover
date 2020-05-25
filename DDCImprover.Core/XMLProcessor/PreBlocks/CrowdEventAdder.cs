@@ -16,11 +16,11 @@ namespace DDCImprover.Core.PreBlocks
         private const float OutroApplauseLength = 4.0f;
         private const float VenueFadeOutLength = 5.0f;
 
-        private static float GetMinTime(IHasTimeCode first, IHasTimeCode second)
+        private static float GetMinTime(IHasTimeCode? first, IHasTimeCode? second)
         {
             if (first is null)
             {
-                return second.Time;
+                return second?.Time ?? throw new InvalidOperationException("Trying to compare two null values");
             }
             else if (second is null)
             {
@@ -50,11 +50,11 @@ namespace DDCImprover.Core.PreBlocks
                 firstPhraseLevel = song.Levels[firstPhrase.MaxDifficulty];
             }
 
-            Note firstNote = null;
+            Note? firstNote = null;
             if (firstPhraseLevel.Notes.Count > 0)
                 firstNote = firstPhraseLevel.Notes[0];
 
-            Chord firstChord = null;
+            Chord? firstChord = null;
             if (firstPhraseLevel.Chords.Count > 0)
                 firstChord = firstPhraseLevel.Chords[0];
 

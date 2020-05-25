@@ -20,10 +20,10 @@ namespace DDCImprover.Core
         internal XMLPostProcessor(XMLProcessor parent, XMLPreProcessor preProcessor, Action<string> logAction)
         {
             Parent = parent;
-            DDCSong = Parent.DDCSong;
+            DDCSong = Parent.DDCSong!;
             Log = logAction;
 
-            WasNonDDFile = Parent.OriginalSong.Levels.Count == 1;
+            WasNonDDFile = Parent.OriginalSong!.Levels.Count == 1;
 
             OldLastPhraseTime = preProcessor.LastPhraseTime;
             OldPhraseIterationCount = Parent.OriginalSong.PhraseIterations.Count;
@@ -158,7 +158,7 @@ namespace DDCImprover.Core
 
                 foreach (var note in mutedNotesWithSustain)
                 {
-                    bool originallyHadMutedNote = Parent.OriginalSong.Levels
+                    bool originallyHadMutedNote = Parent.OriginalSong!.Levels
                         .SelectMany(lev => lev.Notes)
                         .Any(n => Utils.TimeEqualToMilliseconds(n.Time, note.Time) && n.IsMute);
 

@@ -16,7 +16,7 @@ namespace DDCImprover.Core
             song.Levels.Add(trTrack);
 
             song.NewLinkedDiffs.Clear();
-            song.LinkedDiffs.Clear();
+            song.LinkedDiffs?.Clear();
 
             if (matchPhrasesToSections)
             {
