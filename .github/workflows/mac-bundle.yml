@@ -19,16 +19,14 @@ jobs:
       run: dotnet restore DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -r osx-x64
     - name: Build, Publish & Bundle
       run: dotnet msbuild DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:IsMac=true -p:Configuration=Debug
-    - name: Create Bundle Directory
-      run: mkdir AppBundle
     - name: Copy Bundle
-      run: cp -ar DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC\ Improver.app AppBundle
+      run: cp -ar DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC\ Improver.app .
     - name: Set Bundle Permissions
-      run: chmod 755 AppBundle/DDC\ Improver.app
+      run: chmod 755 DDC\ Improver.app
     - name: Make the Executable Executable
-      run: chmod +x AppBundle/DDC\ Improver.app/Contents/MacOS/DDCImprover
+      run: chmod +x DDC\ Improver.app/Contents/MacOS/DDCImprover
     - name: Create Zip File
-      run: zip -r DDCImprover.zip AppBundle/DDC\ Improver.app/
+      run: zip -r DDCImprover.zip DDC\ Improver.app/
     - name: Upload App Bundle Artifact
       uses: actions/upload-artifact@v2
       with:
