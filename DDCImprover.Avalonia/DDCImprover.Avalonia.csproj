@@ -1,24 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeIdentifiers>win-x64;osx-x64</RuntimeIdentifiers>
     <AssemblyName>DDCImprover</AssemblyName>
     <Authors>iminashi</Authors>
     <Version>2.3.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.3.104.145</AssemblyVersion>
-    <FileVersion>2.3.104.145</FileVersion>
+    <AssemblyVersion>2.3.105.145</AssemblyVersion>
+    <FileVersion>2.3.105.145</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright © 2020</Copyright>
     <ApplicationIcon>..\DDCImprover.WPF\Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <DefineConstants>TRACE</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(IsMac)' == 'true' ">$(DefineConstants);MACOS</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
@@ -28,35 +38,64 @@
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\customevent_so.png" Link="Assets\Help\customevent_so.png" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\icon.ico" Link="Assets\icon.ico" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\arrow32.png" Link="Assets\arrow32.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\cogwheel32.png" Link="Assets\cogwheel32.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\folder32.png" Link="Assets\folder32.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\information32.png" Link="Assets\information32.png" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\fixopen.png" Link="Assets\Help\fixopen.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\moveto.png" Link="Assets\Help\moveto.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\OF.png" Link="Assets\Help\OF.png" />
   </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.10" />
     <PackageReference Include="Avalonia.Desktop" Version="0.9.10" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.10" />
+    <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
     <PackageReference Include="System.Reactive.Core" Version="4.4.1" />
     <PackageReference Include="System.Reactive.Interfaces" Version="4.4.1" />
     <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <Folder Include="Assets\Help\" />
   </ItemGroup>
+  
+  <Target Name="Copy Mac Icon" BeforeTargets="BundleApp" Condition=" '$(IsMac)' == 'true' ">
+    <ItemGroup>
+      <MacIcon Include="$(ProjectDir)\icon.icns" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(MacIcon)" DestinationFolder="$(TargetDir)" />
+  </Target>
+  
+  <PropertyGroup>
+    <CFBundleName>DDCImprover</CFBundleName>
+    <CFBundleDisplayName>DDC Improver</CFBundleDisplayName>
+    <CFBundleIdentifier>iminashi.ddcimprover</CFBundleIdentifier>
+    <CFBundleVersion>2.3</CFBundleVersion>
+    <CFBundleShortVersionString>2.3</CFBundleShortVersionString>
+    <CFBundlePackageType>APPL</CFBundlePackageType>
+    <CFBundleExecutable>DDCImprover</CFBundleExecutable>
+    <CFBundleIconFile>icon.icns</CFBundleIconFile>
+    <NSPrincipalClass>NSApplication</NSPrincipalClass>
+    <NSHighResolutionCapable>true</NSHighResolutionCapable>
+  </PropertyGroup>
 </Project>
