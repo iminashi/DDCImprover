@@ -12,7 +12,7 @@ namespace DDCImprover.Core.PreBlocks
     {
         public void Apply(RS2014Song song, Action<string> Log)
         {
-            var toneChanges = song.Tones;
+            var toneChanges = song.ToneChanges;
 
             if (toneChanges is null || toneChanges.Count == 0 || song.Events.Any(ev => ev.Code.StartsWith("tone_")))
                 return;

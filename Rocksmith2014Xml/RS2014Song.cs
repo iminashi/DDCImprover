@@ -57,7 +57,7 @@ namespace Rocksmith2014Xml
         public string? ToneC { get; set; }
         public string? ToneD { get; set; }
 
-        public ToneCollection? Tones { get; set; }
+        public ToneCollection? ToneChanges { get; set; }
         public SectionCollection Sections { get; set; } = new SectionCollection();
         public EventCollection Events { get; set; } = new EventCollection();
         public Level? TranscriptionTrack { get; set; }
@@ -223,8 +223,8 @@ namespace Rocksmith2014Xml
                         ToneD = reader.ReadElementContentAsString();
                         break;
                     case "tones":
-                        Tones = new ToneCollection();
-                        ((IXmlSerializable)Tones).ReadXml(reader);
+                        ToneChanges = new ToneCollection();
+                        ((IXmlSerializable)ToneChanges).ReadXml(reader);
                         break;
 
                     case "sections":
@@ -359,10 +359,10 @@ namespace Rocksmith2014Xml
             if (ToneC != null) writer.WriteElementString("tonec", ToneC);
             if (ToneD != null) writer.WriteElementString("toned", ToneD);
 
-            if (Tones != null)
+            if (ToneChanges != null)
             {
                 writer.WriteStartElement("tones");
-                ((IXmlSerializable)Tones).WriteXml(writer);
+                ((IXmlSerializable)ToneChanges).WriteXml(writer);
                 writer.WriteEndElement();
             }
 

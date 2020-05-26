@@ -6,20 +6,13 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public readonly struct NLDPhrase
-    {
-        public readonly int Id;
-
-        public NLDPhrase(int id) => Id = id;
-    }
-
     public sealed class NewLinkedDiff : IXmlSerializable
     {
         public int LevelBreak { get; set; } = -1;
         public string? Ratio { get; set; }
 
-        public int PhraseCount => Phrases?.Count ?? 0;
-        public List<NLDPhrase> Phrases { get; set; } = new List<NLDPhrase>();
+        public int PhraseCount => PhraseIds.Count;
+        public List<int> PhraseIds { get; set; } = new List<int>();
 
         #region IXmlSerializable Implementation
 
@@ -34,7 +27,7 @@ namespace Rocksmith2014Xml
             {
                 while(reader.NodeType != XmlNodeType.EndElement)
                 {
-                    Phrases.Add(new NLDPhrase(int.Parse(reader.GetAttribute("id"), NumberFormatInfo.InvariantInfo)));
+                    PhraseIds.Add(int.Parse(reader.GetAttribute("id"), NumberFormatInfo.InvariantInfo));
                     reader.Read();
                 }
 
@@ -57,10 +50,10 @@ namespace Rocksmith2014Xml
 
             if (PhraseCount > 0)
             {
-                foreach (var nld in Phrases)
+                foreach (var id in PhraseIds)
                 {
                     writer.WriteStartElement("nld_phrase");
-                    writer.WriteAttributeString("id", nld.Id.ToString(NumberFormatInfo.InvariantInfo));
+                    writer.WriteAttributeString("id", id.ToString(NumberFormatInfo.InvariantInfo));
                     writer.WriteEndElement();
                 }
             }

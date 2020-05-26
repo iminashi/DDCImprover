@@ -40,9 +40,9 @@ namespace DDCImprover.Core.PostBlocks
                 {
                     for (int i = 0; i < nld.PhraseCount; i++)
                     {
-                        if (nld.Phrases[i].Id > ngPhraseId)
+                        if (nld.PhraseIds[i] > ngPhraseId)
                         {
-                            nld.Phrases[i] = new NLDPhrase(nld.Phrases[i].Id - 1);
+                            nld.PhraseIds[i]--;
                         }
                     }
                 }

@@ -31,7 +31,7 @@ namespace DDCImprover.Core
             this.statusMessages = statusMessages;
             Log = logAction;
 
-            songHasToneChanges = song.Tones?.Count > 0;
+            songHasToneChanges = song.ToneChanges?.Count > 0;
 
             noguitarSections = song.Sections.SkipLast().Where(s => s.Name == "noguitar").ToArray();
             songHasNoguitarSections = noguitarSections.Length != 0;
@@ -222,7 +222,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check tone change placement
-                if (songHasToneChanges && song.Tones!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, note.Time)))
+                if (songHasToneChanges && song.ToneChanges!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, note.Time)))
                 {
                     AddIssue($"Tone change occurs on a note at {note.Time.TimeToString()}.", note.Time);
                 }
@@ -282,7 +282,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check tone change placement
-                if (songHasToneChanges && song.Tones!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, chord.Time)))
+                if (songHasToneChanges && song.ToneChanges!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, chord.Time)))
                 {
                     AddIssue($"Tone change occurs on a chord at {chord.Time.TimeToString()}.", chord.Time);
                 }
