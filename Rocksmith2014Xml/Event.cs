@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class Event : IXmlSerializable, IHasTimeCode, IEquatable<Event>
+    public sealed class Event : IXmlSerializable, IHasTimeCode
     {
         public string Code { get; set; } = string.Empty;
         public float Time { get; set; }
@@ -39,40 +39,6 @@ namespace Rocksmith2014Xml
             writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("code", Code);
         }
-
-        #endregion
-
-        #region Equality
-
-        public override bool Equals(object? obj)
-            => obj is Event other && Equals(other);
-
-        public bool Equals(Event? other)
-        {
-            if (ReferenceEquals(this, other))
-                return true;
-
-            return !(other is null)
-                && Utils.TimeEqualToMilliseconds(Time, other.Time)
-                && Code == other.Code;
-        }
-
-        public override int GetHashCode()
-            => (Time, Code).GetHashCode();
-
-        public static bool operator ==(Event? left, Event? right)
-        {
-            if (ReferenceEquals(left, right))
-                return true;
-
-            if (left is null)
-                return false;
-
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Event? left, Event? right)
-            => !(left == right);
 
         #endregion
     }
