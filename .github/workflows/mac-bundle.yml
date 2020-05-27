@@ -18,7 +18,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -r osx-x64
     - name: Build, Publish & Bundle
-      run: dotnet msbuild DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:IsMac=true -p:Configuration=Debug
+      run: dotnet msbuild DDCImprover.Avalonia/DDCImprover.Avalonia.csproj -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:IsMac=true -p:Configuration=Debug -p:PublishTrimmed=true
     - name: Copy Bundle
       run: cp -ar DDCImprover.Avalonia/bin/Debug/netcoreapp3.1/osx-x64/publish/DDC\ Improver.app .
     - name: Set Bundle Permissions
