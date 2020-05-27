@@ -50,7 +50,9 @@
             </Viewbox>
           </MenuItem.Icon>
         </MenuItem>
-        <CheckBox Content="Match Phrases with Sections" IsChecked="{Binding MatchPhrasesToSections}"/>
+        <CheckBox Content="Match Phrases with Sections"
+                  IsChecked="{Binding MatchPhrasesToSections}"
+                  ToolTip.Tip="{x:Static text:Tooltips.MatchPhrasesWithSections}"/>
         <CheckBox Content="Delete the Transcription Track" IsChecked="{Binding DeleteTranscriptionTrack}"/>
       </MenuItem>
       <MenuItem Header="_Help">
