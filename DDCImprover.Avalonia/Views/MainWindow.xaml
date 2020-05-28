@@ -9,6 +9,15 @@
         Title="{Binding ProgramTitle, Mode=OneTime}"
         Height="450" Width="765"
         MinWidth="765" MinHeight="350">
+  <Window.Styles>
+    <Style Selector="TextBlock.link">
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Foreground" Value="Blue"/>
+    </Style>
+    <Style Selector="TextBlock.link:pointerover">
+      <Setter Property="Foreground" Value="Violet"/>
+    </Style>
+  </Window.Styles>
   <DockPanel>
     <Menu DockPanel.Dock="Top" Background="#EEEEEE" Padding="4">
       <MenuItem Header="_File">
@@ -159,7 +168,7 @@
                    HorizontalAlignment="Right"/>
     </Grid>
 
-    <DockPanel Background="White">    
+    <DockPanel Background="White">
       <Border DockPanel.Dock="Top" BorderThickness="1, 1, 1, 0" BorderBrush="#DEDEDE" Background="#FCFCFC">
         <StackPanel Margin="5, 3" Orientation="Horizontal">
           <TextBlock Text="Artist:" Width="160" />
@@ -190,12 +199,11 @@
               <TextBlock Text="{Binding ArtistName}" Width="160" />
               <TextBlock Text="{Binding SongTitle}" Width="163" />
               <TextBlock Text="{Binding ArrangementType}" Width="100" />
-              <TextBlock Text="{Binding XMLFileName}" Width="153" />
+              <TextBlock Text="{Binding XMLFileName}" ToolTip.Tip="{Binding XMLFileFullPath}" Width="153" />
               <TextBlock Text="{Binding StatusHumanized}" Width="100" />
               <TextBlock Text="{Binding LogViewText}"
                          Tag="{Binding LogFileFullPath}"
-                         Foreground="Blue"
-                         Cursor="Hand"
+                         Classes="link"
                          PointerReleased="LogLink_MouseButtonUp"/>
             </StackPanel>
           </DataTemplate>
