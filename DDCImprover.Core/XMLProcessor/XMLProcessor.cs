@@ -83,20 +83,20 @@ namespace DDCImprover.Core
         /// <summary>
         /// XML filename without path, with extension.
         /// </summary>
-        public string XMLFileName { get; private set; }
+        public string XMLFileName { get; private set; } = string.Empty;
 
-        public string ArtistName { get; private set; }
-        public string SongTitle { get; private set; }
-        public string ArrangementType { get; private set; }
-        public string LogFileFullPath { get; private set; }
+        public string ArtistName { get; private set; } = string.Empty;
+        public string SongTitle { get; private set; } = string.Empty;
+        public string ArrangementType { get; private set; } = string.Empty;
+        public string LogFileFullPath { get; private set; } = string.Empty;
 
         public RS2014Song? OriginalSong { get; private set; }
         public RS2014Song? DDCSong { get; private set; }
 
-        public string XMLFileFullPath { get; private set; }
-        private string TempXMLFileFullPath { get; set; }
-        private string DDCXMLFileFullPath { get; set; }
-        private string ManualDDXMLFileFullPath { get; set; }
+        public string XMLFileFullPath { get; private set; } = string.Empty;
+        private string TempXMLFileFullPath { get; set; } = string.Empty;
+        private string DDCXMLFileFullPath { get; set; } = string.Empty;
+        private string ManualDDXMLFileFullPath { get; set; } = string.Empty;
 
         internal List<Anchor> NGAnchors { get; } = new List<Anchor>();
         internal List<Ebeat> AddedBeats { get; } = new List<Ebeat>();

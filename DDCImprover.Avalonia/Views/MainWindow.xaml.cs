@@ -38,7 +38,7 @@ namespace DDCImprover.Avalonia.Views
             InitializeComponent();
 
             services = new AvaloniaServices(this);
-            configViewModel = new ConfigurationWindowViewModel(services);
+            configViewModel = new ConfigurationWindowViewModel();
             DataContext = ViewModel = new MainWindowViewModel(services, configViewModel);
 
             // Change mouse cursor when processing files

@@ -18,8 +18,6 @@ namespace DDCImprover.Core.ViewModels
     {
         public Configuration Config { get; set; }
 
-        #region Reactive Properties
-
         private readonly Subject<Unit> logsCleared = new Subject<Unit>();
 
         public IObservable<Unit> LogsCleared { get; }
@@ -27,22 +25,14 @@ namespace DDCImprover.Core.ViewModels
         [Reactive]
         public string LogsDeletedText { get; private set; } = string.Empty;
 
-        [Reactive]
-        public List<string> DDCConfigFiles { get; private set; }
+        public List<string> DDCConfigFiles { get; }
 
-        [Reactive]
-        public List<string> DDCRampupFiles { get; private set; }
-
-        #endregion
+        public List<string> DDCRampupFiles { get; }
 
         public ReactiveCommand<Unit, Unit> DeleteLogs { get; }
 
-        private readonly IPlatformSpecificServices services;
-
-        public ConfigurationWindowViewModel(IPlatformSpecificServices services)
+        public ConfigurationWindowViewModel()
         {
-            this.services = services;
-
             Configuration.LoadConfiguration();
             Config = XMLProcessor.Preferences;
 
@@ -50,11 +40,6 @@ namespace DDCImprover.Core.ViewModels
 
             DeleteLogs = ReactiveCommand.Create(DeleteLogs_Impl);
 
-            EnumerateDDCSettings();
-        }
-
-        public void EnumerateDDCSettings()
-        {
             if (File.Exists(Program.DDCExecutablePath))
             {
                 DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Program.DDCExecutablePath));
@@ -69,6 +54,11 @@ namespace DDCImprover.Core.ViewModels
                                   orderby file.Name
                                   select file.Name.Replace(".xml", ""))
                                   .ToList();
+            }
+            else
+            {
+                DDCConfigFiles = new List<string>();
+                DDCRampupFiles = new List<string>();
             }
         }
 

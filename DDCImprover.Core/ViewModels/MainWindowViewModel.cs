@@ -24,6 +24,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable RCS1090 // Call 'ConfigureAwait(false)'.
+
 namespace DDCImprover.Core.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject

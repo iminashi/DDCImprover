@@ -40,7 +40,7 @@ namespace DDCImprover.WPF
             InitializeComponent();
 
             services = new WPFServices();
-            configViewModel = new ConfigurationWindowViewModel(services);
+            configViewModel = new ConfigurationWindowViewModel();
             DataContext = ViewModel = new MainWindowViewModel(services, configViewModel);
 
             // Change mouse cursor when processing files
@@ -224,9 +224,9 @@ namespace DDCImprover.WPF
 
         private async void FilesList_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Data.GetData(DataFormats.FileDrop) is string[] fileNames)
             {
-                await ViewModel.AddFilesAsync(e.Data.GetData(DataFormats.FileDrop) as string[]);
+                await ViewModel.AddFilesAsync(fileNames);
 
                 e.Effects = DragDropEffects.Copy;
             }
