@@ -18,8 +18,14 @@ namespace DDCImprover.Core.PostBlocks
                 if(chord.IsHighDensity)
                 {
                     chord.IsHighDensity = false;
-                    if(removeChordNotes)
+                    if (removeChordNotes)
+                    {
+                        // Set the chord as ignored if it has any harmonics in it
+                        if (chord.ChordNotes?.Count > 0 && chord.ChordNotes.Any(cn => cn.IsHarmonic))
+                            chord.IsIgnore = true;
+
                         chord.ChordNotes = null;
+                    }
                     hiDensRemoved++;
                 }
             }

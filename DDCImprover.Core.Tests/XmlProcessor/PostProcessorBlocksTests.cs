@@ -464,5 +464,58 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testSong.Levels[0].Chords[1].ChordNotes.Should().BeNull();
             testSong.Levels[0].Chords[2].ChordNotes.Should().NotBeNull();
         }
+
+        [Fact]
+        public void HighDensityRemover_SetsIgnoreForHarmonicChords()
+        {
+            var firstLevel = testSong.Levels[0];
+
+            firstLevel.Chords.Add(new Chord
+            {
+                Time = 10f,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 7, String = 0, IsHarmonic = true },
+                    new Note { Fret = 7, String = 1, IsHarmonic = true },
+                    new Note { Fret = 7, String = 2, IsHarmonic = true }
+                }
+            });
+            firstLevel.Chords.Add(new Chord
+            {
+                Time = 11f,
+                IsHighDensity = true,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 7, String = 0, IsHarmonic = true },
+                    new Note { Fret = 7, String = 1, IsHarmonic = true },
+                    new Note { Fret = 7, String = 2, IsHarmonic = true }
+                }
+            });
+            firstLevel.Chords.Add(new Chord
+            {
+                Time = 11f,
+                IsHighDensity = true,
+                ChordNotes = new List<Note>
+                {
+                    new Note { Fret = 7, String = 0, IsHarmonic = true },
+                    new Note { Fret = 7, String = 1, IsHarmonic = true },
+                    new Note { Fret = 7, String = 2, IsHarmonic = true }
+                }
+            });
+            firstLevel.HandShapes.Add(new HandShape
+            {
+                StartTime = 10f,
+                EndTime = 15f
+            });
+
+            new HighDensityRemover().Apply(testSong, nullLog);
+
+            firstLevel.Chords[1].IsHighDensity.Should().BeFalse();
+            firstLevel.Chords[2].IsHighDensity.Should().BeFalse();
+            firstLevel.Chords[1].ChordNotes.Should().BeNull();
+            firstLevel.Chords[2].ChordNotes.Should().BeNull();
+            firstLevel.Chords[1].IsIgnore.Should().BeTrue();
+            firstLevel.Chords[2].IsIgnore.Should().BeTrue();
+        }
     }
 }
