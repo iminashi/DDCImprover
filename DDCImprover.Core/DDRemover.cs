@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,9 +68,23 @@ namespace DDCImprover.Core
                 }
             }
 
-            //TODO: Remove unused chord templates?
+            // Remove any unused chord templates
+            if (song.ChordTemplates.Count > 0)
+            {
+                int highestChordId = 0;
+                if (song.Levels[0].Chords.Count > 0)
+                    highestChordId = song.Levels[0].Chords.Max(c => c.ChordId);
 
-            if(deleteTranscriptionTrack)
+                int highestHandShapeId = 0;
+                if (song.Levels[0].HandShapes.Count > 0)
+                    highestHandShapeId = song.Levels[0].HandShapes.Max(hs => hs.ChordId);
+
+                int highestId = Math.Max(highestChordId, highestHandShapeId);
+                if (highestId < song.ChordTemplates.Count - 1)
+                    song.ChordTemplates.RemoveRange(highestId + 1, song.ChordTemplates.Count - 1 - highestId);
+            }
+
+            if (deleteTranscriptionTrack)
             {
                 song.TranscriptionTrack = new Level();
             }
