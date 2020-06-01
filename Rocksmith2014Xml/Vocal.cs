@@ -56,7 +56,7 @@ namespace Rocksmith2014Xml
         {
             writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("note", Note.ToString(NumberFormatInfo.InvariantInfo));
-            writer.WriteAttributeString("length", Length.ToString(NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("length", Length.ToString("F3", NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("lyric", Lyric);
         }
 
