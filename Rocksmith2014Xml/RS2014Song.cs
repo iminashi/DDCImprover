@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +10,43 @@ using XmlUtils;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a Rocksmith 2014 instrumental arrangement.
+    /// </summary>
     [XmlRoot("song")]
     public class RS2014Song : IXmlSerializable
     {
         internal static bool UseAbridgedXml { get; set; }
 
+        /// <summary>
+        /// A list of comments found after the root node of the XML file.
+        /// </summary>
         public List<RSXmlComment> XmlComments { get; } = new List<RSXmlComment>();
 
+        /// <summary>
+        /// The version of the file. Default: 8
+        /// </summary>
         public byte Version { get; set; } = 8;
+
+        /// <summary>
+        /// The name of the arrangement: Lead, Rhythm, Combo or Bass.
+        /// </summary>
         public string? Arrangement { get; set; }
-        //public string WaveFilePath { get; set; }
+
         public int Part { get; set; }
-        //public float Offset { get; set; } // Handled automatically
+
         public int CentOffset { get; set; }
+
+        /// <summary>
+        /// The length of the arrangement in seconds.
+        /// </summary>
         public float SongLength { get; set; }
-        //public string InternalName { get; set; }
+
+        /// <summary>
+        /// The average tempo of the arrangement in beats per minute.
+        /// </summary>
         public float AverageTempo { get; set; } = 120.000f;
+
         public Tuning Tuning { get; set; } = new Tuning();
         public int Capo { get; set; }
         public string? Title { get; set; }
@@ -35,10 +57,20 @@ namespace Rocksmith2014Xml
         public string? AlbumNameSort { get; set; }
         public int AlbumYear { get; set; }
         public string? AlbumArt { get; set; }
-        //public int CrowdSpeed { get; set; } = 1; // Pointless
+
+        // Other metadata:
+        //
+        // Offset - Handled automatically.
+        // WaveFilePath - Used only in official files.
+        // InternalName - Used only in official files.
+        // CrowdSpeed - Completely purposeless since it does not have an equivalent in the SNG files or manifest files.
+        //              The crowd speed is controlled with events e0, e1 and e2.
 
         public float StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0f;
 
+        /// <summary>
+        /// Contains various metadata about the arrangement.
+        /// </summary>
         public ArrangementProperties ArrangementProperties { get; set; } = new ArrangementProperties();
 
         public string? LastConversionDateTime { get; set; }
@@ -51,6 +83,9 @@ namespace Rocksmith2014Xml
         public ChordTemplateCollection ChordTemplates { get; set; } = new ChordTemplateCollection();
         public EbeatCollection Ebeats { get; set; } = new EbeatCollection();
 
+        /// <summary>
+        /// The name of the tone that the arrangement starts with.
+        /// </summary>
         public string? ToneBase { get; set; }
         public string? ToneA { get; set; }
         public string? ToneB { get; set; }
@@ -58,12 +93,26 @@ namespace Rocksmith2014Xml
         public string? ToneD { get; set; }
 
         public ToneCollection? ToneChanges { get; set; }
+
         public SectionCollection Sections { get; set; } = new SectionCollection();
         public EventCollection Events { get; set; } = new EventCollection();
+
+        /// <summary>
+        /// Contains the transcription of the arrangement (i.e. only the highest difficulty level of all the phrases).
+        /// </summary>
         public Level? TranscriptionTrack { get; set; }
+
+        /// <summary>
+        /// The difficulty levels for the arrangement.
+        /// </summary>
         public LevelCollection Levels { get; set; } = new LevelCollection();
 
-        public void Save(string filename, bool writeAbridgedXml = true)
+        /// <summary>
+        /// Saves this Rocksmith 2014 arrangement into the given file.
+        /// </summary>
+        /// <param name="fileName">The target file name.</param>
+        /// <param name="writeAbridgedXml">Controls whether to write an abridged XML file or not. Default: true.</param>
+        public void Save(string fileName, bool writeAbridgedXml = true)
         {
             UseAbridgedXml = writeAbridgedXml;
 
@@ -73,7 +122,7 @@ namespace Rocksmith2014Xml
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
             };
 
-            using XmlWriter writer = XmlWriter.Create(filename, settings);
+            using XmlWriter writer = XmlWriter.Create(fileName, settings);
 
             writer.WriteStartDocument();
             writer.WriteStartElement("song");
@@ -81,7 +130,12 @@ namespace Rocksmith2014Xml
             writer.WriteEndElement();
         }
 
-        public static RS2014Song Load(string filename)
+        /// <summary>
+        /// Loads a Rocksmith 2014 arrangement from the given file name.
+        /// </summary>
+        /// <param name="fileName">The file name of a Rocksmith 2014 instrumental arrangement.</param>
+        /// <returns>A Rocksmith 2014 song parsed from the XML file.</returns>
+        public static RS2014Song Load(string fileName)
         {
             var settings = new XmlReaderSettings
             {
@@ -89,7 +143,7 @@ namespace Rocksmith2014Xml
                 IgnoreWhitespace = true
             };
 
-            using XmlReader reader = XmlReader.Create(filename, settings);
+            using XmlReader reader = XmlReader.Create(fileName, settings);
 
             reader.MoveToContent();
             RS2014Song song = new RS2014Song();
@@ -97,8 +151,61 @@ namespace Rocksmith2014Xml
             return song;
         }
 
-        public static Task<RS2014Song> LoadAsync(string filename)
-            => Task.Run(() => Load(filename));
+        /// <summary>
+        /// Loads a Rocksmith 2014 arrangement from the given file name on a background thread.
+        /// </summary>
+        /// <param name="fileName">The file name of a Rocksmith 2014 instrumental arrangement.</param>
+        /// <returns>A Rocksmith 2014 song parsed from the XML file.</returns>
+        public static Task<RS2014Song> LoadAsync(string fileName)
+            => Task.Run(() => Load(fileName));
+
+        /// <summary>
+        /// Reads the tone names from the given file using an XmlReader.
+        /// </summary>
+        /// <param name="fileName">The file name of a Rocksmith 2014 instrumental arrangement.</param>
+        /// <returns>An array of five tone names, the first being the base tone. Null represents the absence of a tone name.</returns>
+        public static string?[] ReadToneNames(string fileName)
+        {
+            using XmlReader reader = XmlReader.Create(fileName);
+
+            reader.MoveToContent();
+
+            if (reader.LocalName != "song")
+                throw new InvalidOperationException("Expected root node of the XML file to be \"song\", instead found: " + reader.LocalName);
+
+            var toneNames = new string?[5];
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    switch (reader.Name)
+                    {
+                        case "tonebase":
+                            toneNames[0] = reader.ReadElementContentAsString();
+                            break;
+                        case "tonea":
+                            toneNames[1] = reader.ReadElementContentAsString();
+                            break;
+                        case "toneb":
+                            toneNames[2] = reader.ReadElementContentAsString();
+                            break;
+                        case "tonec":
+                            toneNames[3] = reader.ReadElementContentAsString();
+                            break;
+                        case "toned":
+                            toneNames[4] = reader.ReadElementContentAsString();
+                            break;
+                        // The tone names should come before the sections.
+                        case "sections":
+                        case "levels":
+                            return toneNames;
+                    }
+                }
+            }
+
+            return toneNames;
+        }
 
         #region IXmlSerializable Implementation
 
@@ -127,9 +234,6 @@ namespace Rocksmith2014Xml
                     case "arrangement":
                         Arrangement = reader.ReadElementContentAsString();
                         break;
-                    //case "wavefilepath":
-                    //  WaveFilePath = reader.Value;
-                    //    break;
                     case "part":
                         Part = int.Parse(reader.ReadElementContentAsString(), NumberFormatInfo.InvariantInfo);
                         break;
@@ -146,7 +250,6 @@ namespace Rocksmith2014Xml
                         AverageTempo = float.Parse(reader.ReadElementContentAsString(), NumberFormatInfo.InvariantInfo);
                         break;
                     case "tuning":
-                        Tuning = new Tuning();
                         ((IXmlSerializable)Tuning).ReadXml(reader);
                         break;
                     case "capo":
@@ -268,12 +371,10 @@ namespace Rocksmith2014Xml
 
             writer.WriteElementString("title", Title);
             writer.WriteElementString("arrangement", Arrangement);
-            //writer.WriteElementString("wavefilepath", WaveFilePath);
             writer.WriteElementString("part", Part.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteElementString("offset", (-firstBeat).ToString("F3", NumberFormatInfo.InvariantInfo));
             writer.WriteElementString("centOffset", CentOffset.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteElementString("songLength", SongLength.ToString("F3", NumberFormatInfo.InvariantInfo));
-            //writer.WriteElementString("internalName", InternalName);
 
             if (TitleSort != null)
             {
