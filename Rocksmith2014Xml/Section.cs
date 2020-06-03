@@ -9,9 +9,9 @@ namespace Rocksmith2014Xml
     {
         public string Name { get; set; } = string.Empty;
         public int Number { get; set; }
-        public uint Time { get; set; }
+        public int Time { get; set; }
 
-        public Section(string name, uint startTime, int number)
+        public Section(string name, int startTime, int number)
         {
             Name = name;
             Number = number;

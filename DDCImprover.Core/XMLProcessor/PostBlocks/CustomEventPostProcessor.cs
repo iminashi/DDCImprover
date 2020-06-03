@@ -39,8 +39,8 @@ namespace DDCImprover.Core.PostBlocks
             var slideoutEvents = events.Where(ev => ev.Code.StartsWith("so", StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var slideEvent in slideoutEvents)
             {
-                uint? parsedTime = TimeParser.Parse(slideEvent.Code);
-                uint slideTime = parsedTime ?? slideEvent.Time;
+                int? parsedTime = TimeParser.Parse(slideEvent.Code);
+                int slideTime = parsedTime ?? slideEvent.Time;
 
                 // Find the max level for the phrase the slide is in
                 var phraseIter = arrangement.PhraseIterations.Last(pi => pi.Time <= slideTime);
@@ -103,8 +103,8 @@ namespace DDCImprover.Core.PostBlocks
                 }
 
                 // Create a new handshape at the slide end
-                uint endTime = notes[0].Time + notes[0].Sustain;
-                uint startTime = endTime - (notes[0].Sustain / 3);
+                int endTime = notes[0].Time + notes[0].Sustain;
+                int startTime = endTime - (notes[0].Sustain / 3);
                 int chordId = arrangement.ChordTemplates.Count;
                 level.HandShapes.InsertByTime(new HandShape(chordId, startTime, endTime));
 

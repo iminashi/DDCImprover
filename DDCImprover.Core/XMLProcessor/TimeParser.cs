@@ -16,16 +16,16 @@ namespace DDCImprover.Core
         /// </summary>
         /// <param name="inputStr">Input string.</param>
         /// <returns>The parsed time value in milliseconds, null if unsuccessful.</returns>
-        public static uint? Parse(string inputStr)
+        public static int? Parse(string inputStr)
         {
-            uint? time;
+            int? time;
             try
             {
                 Match match = Regex.Match(inputStr, RegPatternMinSecMs);
                 if (match.Success)
                 {
                     // Minutes
-                    if (uint.TryParse(match.Groups[1].Value, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out uint minutes))
+                    if (int.TryParse(match.Groups[1].Value, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int minutes))
                     {
                         time = 60 * minutes * 1000;
                     }
@@ -35,7 +35,7 @@ namespace DDCImprover.Core
                     }
 
                     // Seconds and milliseconds
-                    uint milliseconds = Utils.TimeCodeFromFloatString(match.Groups[2].Value.Replace('s', '.'));
+                    int milliseconds = Utils.TimeCodeFromFloatString(match.Groups[2].Value.Replace('s', '.'));
                     time += milliseconds;
                 }
                 else
@@ -53,7 +53,7 @@ namespace DDCImprover.Core
                             return null;
                         }
 
-                        time = uint.Parse(match.Value) * 1000;
+                        time = int.Parse(match.Value) * 1000;
                     }
                 }
 

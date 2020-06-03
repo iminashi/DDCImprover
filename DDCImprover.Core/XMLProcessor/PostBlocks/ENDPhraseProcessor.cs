@@ -10,9 +10,9 @@ namespace DDCImprover.Core.PostBlocks
     /// </summary>
     internal sealed class ENDPhraseProcessor : IProcessorBlock
     {
-        private readonly uint _oldLastPhraseTime;
+        private readonly int _oldLastPhraseTime;
 
-        public ENDPhraseProcessor(uint oldLastPhraseTime)
+        public ENDPhraseProcessor(int oldLastPhraseTime)
         {
             _oldLastPhraseTime = oldLastPhraseTime;
         }
@@ -21,7 +21,7 @@ namespace DDCImprover.Core.PostBlocks
         {
             int endPhraseId = arrangement.Phrases.FindIndex(p => p.Name.Equals("END", StringComparison.OrdinalIgnoreCase));
             var endPhraseIter = arrangement.PhraseIterations.First(pi => pi.PhraseId == endPhraseId);
-            uint newEndPhraseTime = endPhraseIter.Time;
+            int newEndPhraseTime = endPhraseIter.Time;
 
             if (newEndPhraseTime != _oldLastPhraseTime)
             {

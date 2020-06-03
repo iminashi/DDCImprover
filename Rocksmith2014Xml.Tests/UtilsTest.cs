@@ -15,7 +15,7 @@ namespace Rocksmith2014Xml.Tests
         [InlineData(20500, "20.500")]
         [InlineData(989999, "989.999")]
         [InlineData(987456123, "987456.123")]
-        public void TimeCodeToString_ConvertsCorrectly(uint input, string expected)
+        public void TimeCodeToString_ConvertsCorrectly(int input, string expected)
         {
             Utils.TimeCodeToString(input).Should().Be(expected);
         }
@@ -34,7 +34,7 @@ namespace Rocksmith2014Xml.Tests
         [InlineData("18.00599", 18005)]
         [InlineData("254.112", 254112)]
         [InlineData("9504.11299999", 9504112)]
-        public void TimeCodeFromFloatString_ParsesCorrectly(string input, uint expected)
+        public void TimeCodeFromFloatString_ParsesCorrectly(string input, int expected)
         {
             Utils.TimeCodeFromFloatString(input).Should().Be(expected);
         }

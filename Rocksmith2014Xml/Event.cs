@@ -9,9 +9,9 @@ namespace Rocksmith2014Xml
     public sealed class Event : IXmlSerializable, IHasTimeCode
     {
         public string Code { get; set; } = string.Empty;
-        public uint Time { get; set; }
+        public int Time { get; set; }
 
-        public Event(string code, uint time)
+        public Event(string code, int time)
         {
             Code = code;
             Time = time;

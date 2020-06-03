@@ -125,7 +125,7 @@ namespace Rocksmith2014Xml
 
         public ChordMask Mask { get; set; }
 
-        public uint Time { get; set; }
+        public int Time { get; set; }
 
         public int ChordId { get; set; }
 

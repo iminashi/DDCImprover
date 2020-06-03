@@ -40,7 +40,7 @@ namespace Rocksmith2014Xml
         /// <summary>
         /// The length of the arrangement in milliseconds.
         /// </summary>
-        public uint SongLength { get; set; }
+        public int SongLength { get; set; }
 
         /// <summary>
         /// The average tempo of the arrangement in beats per minute.
@@ -66,7 +66,7 @@ namespace Rocksmith2014Xml
         // CrowdSpeed - Completely purposeless since it does not have an equivalent in the SNG files or manifest files.
         //              The crowd speed is controlled with events e0, e1 and e2.
 
-        public uint StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0;
+        public int StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0;
 
         /// <summary>
         /// Contains various metadata about the arrangement.
@@ -365,7 +365,7 @@ namespace Rocksmith2014Xml
                 }
             }
 
-            uint firstBeat = 0;
+            int firstBeat = 0;
             if (Ebeats.Count > 0)
                 firstBeat = Ebeats[0].Time;
 

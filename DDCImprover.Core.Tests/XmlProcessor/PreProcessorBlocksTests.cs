@@ -101,7 +101,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             testHandshape.EndTime.Should().BeLessThan(11999);
         }
 
-        private PhraseIteration AddTestPhrase(string name, uint time)
+        private PhraseIteration AddTestPhrase(string name, int time)
         {
             testArrangement.Phrases.Add(new Phrase(name, 0, PhraseMask.None));
             var phraseIter = new PhraseIteration(time, testArrangement.Phrases.Count - 1);
@@ -123,7 +123,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMover_MoveRelative_Test()
         {
-            const uint noteTime = 16666;
+            const int noteTime = 16666;
 
             var testPhraseIter = AddTestPhrase("moveR1", 15000);
             testArrangement.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
@@ -136,8 +136,8 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMoverMovesSectionAlso()
         {
-            const uint noteTime = 16666;
-            const uint phraseTime = 15000;
+            const int noteTime = 16666;
+            const int phraseTime = 15000;
 
             AddTestPhrase("moveR1", phraseTime);
             var testSection = new Section("riff", phraseTime, 1);
@@ -152,8 +152,8 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMoverMovesAnchorAlso()
         {
-            const uint noteTime = 16666;
-            const uint phraseTime = 15000;
+            const int noteTime = 16666;
+            const int phraseTime = 15000;
 
             AddTestPhrase("mover1", phraseTime);
             testArrangement.Levels[0].Anchors.Add(new Anchor(1, phraseTime, 4));

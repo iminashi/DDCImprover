@@ -8,12 +8,12 @@ namespace Rocksmith2014Xml
     public sealed class HandShape : IXmlSerializable, IHasTimeCode
     {
         public int ChordId { get; set; }
-        public uint EndTime { get; set; }
-        public uint StartTime { get; set; }
+        public int EndTime { get; set; }
+        public int StartTime { get; set; }
 
-        public uint Time => StartTime;
+        public int Time => StartTime;
 
-        public HandShape(int chordId, uint startTime, uint endTime)
+        public HandShape(int chordId, int startTime, int endTime)
         {
             ChordId = chordId;
             EndTime = endTime;

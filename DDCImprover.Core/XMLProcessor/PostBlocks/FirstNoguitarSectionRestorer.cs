@@ -7,9 +7,9 @@ namespace DDCImprover.Core.PostBlocks
 {
     internal sealed class FirstNoguitarSectionRestorer : IProcessorBlock
     {
-        private readonly uint _firstNGSectionTime;
+        private readonly int _firstNGSectionTime;
 
-        public FirstNoguitarSectionRestorer(uint firstNGSectionTime)
+        public FirstNoguitarSectionRestorer(int firstNGSectionTime)
         {
             _firstNGSectionTime = firstNGSectionTime;
         }

@@ -10,9 +10,9 @@ namespace DDCImprover.Core
     {
         private XMLProcessor Parent { get; }
         private InstrumentalArrangement DDCArrangement { get; }
-        private uint OldLastPhraseTime { get; }
+        private int OldLastPhraseTime { get; }
         private int OldPhraseIterationCount { get; }
-        private uint? FirstNGSectionTime { get; }
+        private int? FirstNGSectionTime { get; }
         private bool WasNonDDFile { get; }
 
         private readonly Action<string> Log;

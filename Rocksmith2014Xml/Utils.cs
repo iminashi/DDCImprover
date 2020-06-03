@@ -31,7 +31,7 @@ namespace Rocksmith2014Xml
         /// </summary>
         /// <param name="timeCode">The time in milliseconds.</param>
         /// <returns>A string containing the time in seconds.</returns>
-        public static string TimeCodeToString(uint timeCode)
+        public static string TimeCodeToString(int timeCode)
         {
             string str = timeCode.ToString();
             if (str.Length == 1)
@@ -66,13 +66,13 @@ namespace Rocksmith2014Xml
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>The parsed time in milliseconds.</returns>
-        public static uint TimeCodeFromFloatString(string input)
+        public static int TimeCodeFromFloatString(string input)
         {
             int separatorIndex = input.IndexOf('.');
 
             // No separator, just convert from seconds to milliseconds
             if (separatorIndex == -1)
-                return uint.Parse(input) * 1000;
+                return int.Parse(input) * 1000;
 
             // Copy the numbers before the decimal separator
             Span<char> temp = stackalloc char[separatorIndex + 3];
@@ -87,7 +87,7 @@ namespace Rocksmith2014Xml
             while (temp[i] == '\0')
                 temp[i--] = '0';
 
-            return uint.Parse(temp);
+            return int.Parse(temp);
         }
 
         internal static int ShiftAndWrap(int value, int positions)

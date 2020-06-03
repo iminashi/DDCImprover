@@ -220,9 +220,9 @@ namespace Rocksmith2014Xml
 
         #region Properties
 
-        public uint Time { get; set; }
+        public int Time { get; set; }
 
-        public uint Sustain { get; set; }
+        public int Sustain { get; set; }
 
         public float Bend { get; set; }
         public sbyte Fret { get; set; }

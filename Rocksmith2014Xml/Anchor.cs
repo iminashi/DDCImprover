@@ -9,12 +9,12 @@ namespace Rocksmith2014Xml
     public sealed class Anchor : IXmlSerializable, IHasTimeCode, IEquatable<Anchor>
     {
         public byte Fret { get; set; }
-        public uint Time { get; set; }
+        public int Time { get; set; }
         public byte Width { get; set; }
 
         public Anchor() { }
 
-        public Anchor(byte fret, uint time, byte width = 4)
+        public Anchor(byte fret, int time, byte width = 4)
         {
             Fret = fret;
             Time = time;

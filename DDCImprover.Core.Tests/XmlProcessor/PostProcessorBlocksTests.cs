@@ -27,7 +27,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void ExtraneousBeatsRemoverTest()
         {
-            uint audioEnd = testArrangement.SongLength;
+            int audioEnd = testArrangement.SongLength;
             testArrangement.Ebeats.Should().Contain(b => b.Time > audioEnd);
 
             new ExtraneousBeatsRemover().Apply(testArrangement, nullLog);
@@ -172,7 +172,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void FirstNoguitarSectionRestorerTest()
         {
-            const uint firstNGSectionTime = 4500;
+            const int firstNGSectionTime = 4500;
 
             new FirstNoguitarSectionRestorer(firstNGSectionTime).Apply(testArrangement, nullLog);
 
@@ -186,7 +186,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             int endPhraseId = testArrangement.Phrases.FindIndex(p => p.Name.Equals("END", StringComparison.OrdinalIgnoreCase));
             var endPhraseIter = testArrangement.PhraseIterations.First(pi => pi.PhraseId == endPhraseId);
-            uint oldTime = endPhraseIter.Time + 2000;
+            int oldTime = endPhraseIter.Time + 2000;
 
             new ENDPhraseProcessor(oldTime).Apply(testArrangement, nullLog);
 
@@ -221,8 +221,8 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void CustomEvent_SlideOut_Test()
         {
-            const uint chordTime = 20222;
-            const uint sustainTime = 3000;
+            const int chordTime = 20222;
+            const int sustainTime = 3000;
 
             var phrase = new Phrase("test", (byte)(testArrangement.Levels.Count - 1), PhraseMask.None);
             testArrangement.Phrases.Add(phrase);

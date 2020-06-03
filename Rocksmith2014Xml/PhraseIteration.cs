@@ -7,7 +7,7 @@ namespace Rocksmith2014Xml
 {
     public sealed class PhraseIteration : IXmlSerializable, IHasTimeCode
     {
-        public uint Time { get; set; }
+        public int Time { get; set; }
         public int PhraseId { get; set; }
         public string? Variation { get; set; }
 
@@ -15,7 +15,7 @@ namespace Rocksmith2014Xml
 
         public PhraseIteration() { }
 
-        public PhraseIteration(uint time, int phraseId)
+        public PhraseIteration(int time, int phraseId)
         {
             Time = time;
             PhraseId = phraseId;

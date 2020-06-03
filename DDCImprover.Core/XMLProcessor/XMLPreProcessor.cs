@@ -12,8 +12,8 @@ namespace DDCImprover.Core
     {
         private XMLProcessor Parent { get; }
         private InstrumentalArrangement Arrangement { get; }
-        public uint LastPhraseTime { get; }
-        public uint? FirstNGSectionTime { get; }
+        public int LastPhraseTime { get; }
+        public int? FirstNGSectionTime { get; }
 
         private bool IsNonDDFile => Arrangement.Levels.Count == 1;
 
@@ -150,7 +150,7 @@ namespace DDCImprover.Core
         /// </summary>
         private void StoreNGSectionAnchors()
         {
-            uint firstBeatTime = Arrangement.Ebeats[0].Time;
+            int firstBeatTime = Arrangement.Ebeats[0].Time;
 
             // Check for anchor at the beginning of the beatmap
             Anchor? firstBeatAnchor = Arrangement.Levels[0].Anchors.FindByTime(firstBeatTime);

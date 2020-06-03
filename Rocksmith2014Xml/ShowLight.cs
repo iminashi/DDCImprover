@@ -7,12 +7,12 @@ namespace Rocksmith2014Xml
 {
     public sealed class ShowLight : IHasTimeCode, IXmlSerializable
     {
-        public uint Time { get; set; }
+        public int Time { get; set; }
         public byte Note { get; set; }
 
         public ShowLight() { }
 
-        public ShowLight(uint time, byte note)
+        public ShowLight(int time, byte note)
         {
             Time = time;
             Note = note;

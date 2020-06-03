@@ -15,7 +15,7 @@ namespace Rocksmith2014Xml.Extensions
         /// <param name="elements"></param>
         /// <param name="timeToFind">The time for the element to find.</param>
         /// <returns>Index of the element, -1 if not found.</returns>
-        public static int FindIndexByTime<T>(this IList<T> elements, uint timeToFind)
+        public static int FindIndexByTime<T>(this IList<T> elements, int timeToFind)
             where T : IHasTimeCode
         {
             for (int i = 0; i < elements.Count; i++)
@@ -37,7 +37,7 @@ namespace Rocksmith2014Xml.Extensions
         /// <param name="elements"></param>
         /// <param name="timeToFind">The time for the element to find.</param>
         /// <returns>The found element or null if not found.</returns>
-        public static T? FindByTime<T>(this IList<T> elements, uint timeToFind)
+        public static T? FindByTime<T>(this IList<T> elements, int timeToFind)
             where T : class, IHasTimeCode
         {
             for (int i = 0; i < elements.Count; i++)

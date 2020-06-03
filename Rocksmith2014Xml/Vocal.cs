@@ -7,14 +7,14 @@ namespace Rocksmith2014Xml
 {
     public sealed class Vocal : IHasTimeCode, IXmlSerializable
     {
-        public uint Time { get; set; }
+        public int Time { get; set; }
         public byte Note { get; set; }
-        public uint Length { get; set; }
+        public int Length { get; set; }
         public string Lyric { get; set; } = string.Empty;
 
         public Vocal() { }
 
-        public Vocal(uint time, uint length, string lyric, byte note = 60)
+        public Vocal(int time, int length, string lyric, byte note = 60)
         {
             Time = time;
             Note = note;

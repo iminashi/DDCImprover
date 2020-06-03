@@ -43,11 +43,11 @@ namespace DDCImprover.Core.PreBlocks
 
                             var chordNotesToRemove = chord.ChordNotes.Where(cn => cn.Fret == 0).ToArray();
                             // Store sustain of chord
-                            uint initSustain = chordNotesToRemove[0].Sustain;
+                            int initSustain = chordNotesToRemove[0].Sustain;
 
                             foreach (var chordNote in chordNotesToRemove)
                             {
-                                uint sustain = initSustain;
+                                int sustain = initSustain;
 
                                 var noteToRemove =
                                     (from note in level.Notes
@@ -97,7 +97,7 @@ namespace DDCImprover.Core.PreBlocks
                             }
 
                             // Move chord and handshape forward 20 ms (hack for DDC)
-                            const uint amountToMove = 20;
+                            const int amountToMove = 20;
                             var handShape = level.HandShapes.First(hs => hs.StartTime == chord.Time);
                             handShape.StartTime += amountToMove;
                             chord.Time += amountToMove;

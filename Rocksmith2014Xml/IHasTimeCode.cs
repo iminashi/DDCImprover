@@ -8,6 +8,6 @@
         /// <summary>
         /// Time in milliseconds.
         /// </summary>
-        uint Time { get; }
+        int Time { get; }
     }
 }

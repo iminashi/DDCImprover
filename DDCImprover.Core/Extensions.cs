@@ -13,7 +13,7 @@ namespace DDCImprover.Core
         /// </summary>
         /// <param name="time">The time to convert.</param>
         /// <returns>The time as a string in seconds and milliseconds, or minutes, seconds and milliseconds.</returns>
-        public static string TimeToString(this uint time)
+        public static string TimeToString(this int time)
         {
             if (XMLProcessor.Preferences.DisplayTimesInSeconds)
             {
@@ -21,9 +21,9 @@ namespace DDCImprover.Core
             }
             else
             {
-                uint minutes = time / 1000 / 60;
-                uint seconds = (time / 1000) - (minutes * 60);
-                uint milliSeconds = time - (minutes * 60 * 1000) - (seconds * 1000);
+                int minutes = time / 1000 / 60;
+                int seconds = (time / 1000) - (minutes * 60);
+                int milliSeconds = time - (minutes * 60 * 1000) - (seconds * 1000);
                 return $"{minutes:D2}:{seconds:D2}.{milliSeconds:D3}";
             }
         }

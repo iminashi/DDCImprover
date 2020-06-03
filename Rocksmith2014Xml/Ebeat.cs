@@ -8,10 +8,10 @@ namespace Rocksmith2014Xml
 {
     public sealed class Ebeat : IXmlSerializable, IEquatable<Ebeat>, IHasTimeCode
     {
-        public uint Time { get; set; }
+        public int Time { get; set; }
         public int Measure { get; set; } = -1;
 
-        public Ebeat(uint time, int measure)
+        public Ebeat(int time, int measure)
         {
             Time = time;
             Measure = measure;

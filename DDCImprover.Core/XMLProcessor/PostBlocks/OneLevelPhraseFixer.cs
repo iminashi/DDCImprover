@@ -27,14 +27,14 @@ namespace DDCImprover.Core.PostBlocks
 
                     foreach (var pi in phraseIterations)
                     {
-                        uint startTime = pi.Time;
+                        int startTime = pi.Time;
                         int piIndex = arrangement.PhraseIterations.IndexOf(pi);
                         if (piIndex == 0 || piIndex == arrangement.PhraseIterations.Count - 1)
                         {
                             // Skip first phrase (COUNT) and last phrase (END)
                             continue;
                         }
-                        uint endTime = arrangement.PhraseIterations[piIndex + 1].Time;
+                        int endTime = arrangement.PhraseIterations[piIndex + 1].Time;
 
                         var firstLevel = arrangement.Levels[0];
                         var secondLevel = arrangement.Levels[1];
@@ -142,7 +142,7 @@ namespace DDCImprover.Core.PostBlocks
                         };
 
                         // Find correct place where to insert the notes in the second difficulty level
-                        uint lastNoteTime = harderLevelNotes.Last().Time;
+                        int lastNoteTime = harderLevelNotes.Last().Time;
                         int noteAfterIndex = secondLevel.Notes.FindIndex(n => n.Time > lastNoteTime);
 
                         if (noteAfterIndex == -1) // Add to the end

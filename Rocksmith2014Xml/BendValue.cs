@@ -8,10 +8,10 @@ namespace Rocksmith2014Xml
 {
     public struct BendValue: IXmlSerializable, IEquatable<BendValue>, IHasTimeCode
     {
-        public uint Time { get; private set; }
+        public int Time { get; private set; }
         public float Step { get; private set; }
 
-        public BendValue(uint time, float step)
+        public BendValue(int time, float step)
         {
             Time = time;
             Step = step;

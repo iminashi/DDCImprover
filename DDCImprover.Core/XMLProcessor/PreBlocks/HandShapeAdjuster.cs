@@ -19,12 +19,12 @@ namespace DDCImprover.Core.PreBlocks
 
                 for (int i = 1; i < handShapes.Count; i++)
                 {
-                    uint followingStartTime = handShapes[i].StartTime;
-                    uint followingEndTime = handShapes[i].EndTime;
+                    int followingStartTime = handShapes[i].StartTime;
+                    int followingEndTime = handShapes[i].EndTime;
 
                     var precedingHandshape = handShapes[i - 1];
-                    uint precedingStartTime = precedingHandshape.StartTime;
-                    uint precedingEndTime = precedingHandshape.EndTime;
+                    int precedingStartTime = precedingHandshape.StartTime;
+                    int precedingEndTime = precedingHandshape.EndTime;
 
                     // Ignore nested handshapes
                     if (precedingEndTime >= followingEndTime)
@@ -37,7 +37,7 @@ namespace DDCImprover.Core.PreBlocks
                     var beat1 = arrangement.Ebeats[beat1Index - 1];
                     var beat2 = arrangement.Ebeats[beat1Index];
 
-                    uint note32nd = (beat2.Time - beat1.Time) / 8;
+                    int note32nd = (beat2.Time - beat1.Time) / 8;
                     bool shortenBy16thNote = false;
 
                     // Check if the chord that starts the handshape is a LinkNext slide
@@ -51,18 +51,18 @@ namespace DDCImprover.Core.PreBlocks
                         }
                     }
 
-                    uint minDistance = shortenBy16thNote ? note32nd * 2 : note32nd;
+                    int minDistance = shortenBy16thNote ? note32nd * 2 : note32nd;
 
                     // Shorten the min. distance required for 32nd notes or smaller
                     if (precedingEndTime - precedingStartTime <= note32nd)
                         minDistance = (beat2.Time - beat1.Time) / 12;
 
-                    // The following handshape might begin before the preceding one ends (floating point rounding errors?)
-                    uint currentDistance = (followingStartTime < precedingEndTime) ? 0 : followingStartTime - precedingEndTime;
+                    // Sometimes the following handshape may begin before the preceding one ends (floating point rounding error?)
+                    int currentDistance = followingStartTime - precedingEndTime;
 
                     if (currentDistance < minDistance)
                     {
-                        uint newEndTime = followingStartTime - minDistance;
+                        int newEndTime = followingStartTime - minDistance;
                         int safetyCount = 0;
 
                         // Shorten the distance for very small note values

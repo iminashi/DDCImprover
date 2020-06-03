@@ -13,12 +13,12 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class CrowdEventAdder : IProcessorBlock
     {
-        private const uint IntroCrowdReactionDelay = 600; // 0.6 s
-        private const uint IntroApplauseLength = 2500; // 2.5 s
-        private const uint OutroApplauseLength = 4000; // 4 s
-        private const uint VenueFadeOutLength = 5000; // 5 s
+        private const int IntroCrowdReactionDelay = 600; // 0.6 s
+        private const int IntroApplauseLength = 2500; // 2.5 s
+        private const int OutroApplauseLength = 4000; // 4 s
+        private const int VenueFadeOutLength = 5000; // 5 s
 
-        private static uint GetMinTime(IHasTimeCode? first, IHasTimeCode? second)
+        private static int GetMinTime(IHasTimeCode? first, IHasTimeCode? second)
         {
             if (first is null)
             {
@@ -60,8 +60,8 @@ namespace DDCImprover.Core.PreBlocks
             if (firstPhraseLevel.Chords.Count > 0)
                 firstChord = firstPhraseLevel.Chords[0];
 
-            uint applauseStartTime = GetMinTime(firstNote, firstChord) + IntroCrowdReactionDelay;
-            uint applauseEndTime = applauseStartTime + IntroApplauseLength;
+            int applauseStartTime = GetMinTime(firstNote, firstChord) + IntroCrowdReactionDelay;
+            int applauseEndTime = applauseStartTime + IntroApplauseLength;
 
             var startEvent = new Event("E3", applauseStartTime);
             var stopEvent = new Event("E13", applauseEndTime);
@@ -74,9 +74,9 @@ namespace DDCImprover.Core.PreBlocks
 
         private void AddOutroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            uint audioEnd = arrangement.SongLength;
+            int audioEnd = arrangement.SongLength;
 
-            uint applauseStartTime = audioEnd - VenueFadeOutLength - OutroApplauseLength;
+            int applauseStartTime = audioEnd - VenueFadeOutLength - OutroApplauseLength;
 
             var startEvent = new Event("D3", applauseStartTime);
             var stopEvent = new Event("E13", audioEnd);
@@ -98,7 +98,7 @@ namespace DDCImprover.Core.PreBlocks
             if (!events.Any(ev => Regex.IsMatch(ev.Code, "e[0-2]$")))
             {
                 float averageTempo = arrangement.AverageTempo;
-                uint startBeat = arrangement.StartBeat;
+                int startBeat = arrangement.StartBeat;
 
                 string crowdSpeed = (averageTempo < 90f) ? "e0" :
                                     (averageTempo < 170f) ? "e1" : "e2";

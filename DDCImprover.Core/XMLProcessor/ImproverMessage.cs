@@ -6,9 +6,9 @@ namespace DDCImprover.Core
     {
         public string Message { get; }
         public MessageType Type { get; }
-        public uint TimeCode { get; }
+        public int TimeCode { get; }
 
-        public ImproverMessage(string message, MessageType messageType, uint timeCode = 0)
+        public ImproverMessage(string message, MessageType messageType, int timeCode = 0)
         {
             Message = message;
             Type = messageType;
@@ -19,7 +19,7 @@ namespace DDCImprover.Core
             => TimeCode.CompareTo(other.TimeCode);
 
         public bool Equals(ImproverMessage? other)
-            => other is ImproverMessage && Message.Equals(other.Message) && TimeCode.Equals(other.TimeCode);
+            => other is ImproverMessage && Message == other.Message && TimeCode == other.TimeCode;
 
         public override bool Equals(object? obj)
         {

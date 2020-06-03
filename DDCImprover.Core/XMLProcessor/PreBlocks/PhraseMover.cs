@@ -22,7 +22,7 @@ namespace DDCImprover.Core.PreBlocks
             _addedBeats = addedBeats;
         }
 
-        private void MoveToParseFailure(uint phraseTime, Action<string> Log)
+        private void MoveToParseFailure(int phraseTime, Action<string> Log)
         {
             string errorMessage = $"Unable to read time for 'moveto' phrase at {phraseTime.TimeToString()}. (Usage examples: moveto5m10s200, moveto10s520)";
             _statusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
@@ -47,8 +47,8 @@ namespace DDCImprover.Core.PreBlocks
                 int phraseId = arrangement.Phrases.IndexOf(phraseToMove);
                 foreach (var phraseIterationToMove in arrangement.PhraseIterations.Where(pi => pi.PhraseId == phraseId))
                 {
-                    uint phraseTime = phraseIterationToMove.Time;
-                    uint movetoTime;
+                    int phraseTime = phraseIterationToMove.Time;
+                    int movetoTime;
                     string phraseToMoveName = phraseToMove.Name;
 
                     // Relative phrase moving right
@@ -84,7 +84,7 @@ namespace DDCImprover.Core.PreBlocks
                     }
                     else // Parse the absolute time to move to from the phrase name
                     {
-                        uint? parsedTime = TimeParser.Parse(phraseToMoveName);
+                        int? parsedTime = TimeParser.Parse(phraseToMoveName);
                         if (parsedTime.HasValue)
                         {
                             movetoTime = parsedTime.Value;

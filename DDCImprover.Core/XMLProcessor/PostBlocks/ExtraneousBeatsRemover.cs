@@ -13,8 +13,8 @@ namespace DDCImprover.Core.PostBlocks
         {
             var lastBeat = arrangement.Ebeats[^1];
             var penultimateBeat = arrangement.Ebeats[^2];
-            uint audioEnd = arrangement.SongLength;
-            uint lastBeatTime = lastBeat.Time;
+            int audioEnd = arrangement.SongLength;
+            int lastBeatTime = lastBeat.Time;
             bool first = true;
 
             if (lastBeatTime < audioEnd)

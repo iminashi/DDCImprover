@@ -100,8 +100,8 @@ namespace DDCImprover.Core
                 int phraseId = phraseIteration.PhraseId;
                 int maxDifficulty = arrangement.Phrases[phraseId].MaxDifficulty;
 
-                uint phraseStartTime = phraseIteration.Time;
-                uint phraseEndTime = arrangement.PhraseIterations[i + 1].Time;
+                int phraseStartTime = phraseIteration.Time;
+                int phraseEndTime = arrangement.PhraseIterations[i + 1].Time;
                 var highestLevelForPhrase = arrangement.Levels[maxDifficulty];
 
                 var notesInPhraseIteration = highestLevelForPhrase.Notes

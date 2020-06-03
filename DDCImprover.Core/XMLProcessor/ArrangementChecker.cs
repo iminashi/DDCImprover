@@ -53,7 +53,7 @@ namespace DDCImprover.Core
             }
         }
 
-        private void AddIssue(string message, uint timeCode)
+        private void AddIssue(string message, int timeCode)
         {
             statusMessages.Add(new ImproverMessage(message, MessageType.Issue, timeCode));
             Log("Issue found: " + message);
@@ -63,8 +63,8 @@ namespace DDCImprover.Core
         {
             var events = arrangement.Events;
 
-            uint? introApplauseStart = events.FirstOrDefault(e => e.Code == "E3")?.Time;
-            uint? applauseEnd = events.FirstOrDefault(e => e.Code == "E13")?.Time;
+            int? introApplauseStart = events.FirstOrDefault(e => e.Code == "E3")?.Time;
+            int? applauseEnd = events.FirstOrDefault(e => e.Code == "E13")?.Time;
             Regex crowdSpeedRegex = new Regex("e[0-2]$");
 
             if (introApplauseStart != null && applauseEnd != null)
@@ -139,7 +139,7 @@ namespace DDCImprover.Core
 
                     if (slideTo != nextNote.Fret)
                     {
-                        uint noteEndTime = note.Time + note.Sustain;
+                        int noteEndTime = note.Time + note.Sustain;
                         if (nextNote.Time - noteEndTime > 1) // EOF can add linknext to notes that shouldn't have it
                         {
                             AddIssue($"Incorrect LinkNext status on note at {note.Time.TimeToString()}, {StringNames[note.String]} string.", note.Time);
@@ -166,7 +166,7 @@ namespace DDCImprover.Core
             }
         }
 
-        private bool IsInsideNoguitarSection(uint noteTime)
+        private bool IsInsideNoguitarSection(int noteTime)
         {
             foreach (var ngSection in noguitarSections)
             {
@@ -174,8 +174,8 @@ namespace DDCImprover.Core
                 if (nextIndex >= arrangement.Sections.Count)
                     break;
 
-                uint startTime = ngSection.Time;
-                uint endTime = arrangement.Sections[nextIndex].Time;
+                int startTime = ngSection.Time;
+                int endTime = arrangement.Sections[nextIndex].Time;
 
                 if (noteTime >= startTime && noteTime < endTime)
                     return true;
@@ -372,14 +372,14 @@ namespace DDCImprover.Core
 
             foreach (var anchor in level.Anchors)
             {
-                uint closeNoteTime = 0;
+                int closeNoteTime = 0;
                 bool closeNoteFound = false;
 
                 if (notes.Count > 0 && noteIndex < notes.Count)
                 {
                     while (noteIndex < notes.Count)
                     {
-                        if (Math.Abs((long)notes[noteIndex].Time - anchor.Time) <= 5)
+                        if (Math.Abs(notes[noteIndex].Time - anchor.Time) <= 5)
                         {
                             closeNoteFound = true;
                             closeNoteTime = notes[noteIndex].Time;
@@ -401,7 +401,7 @@ namespace DDCImprover.Core
                 {
                     while (chordIndex < chords.Count)
                     {
-                        if (Math.Abs((long)chords[chordIndex].Time - anchor.Time) <= 5)
+                        if (Math.Abs(chords[chordIndex].Time - anchor.Time) <= 5)
                         {
                             closeNoteFound = true;
                             closeNoteTime = chords[chordIndex].Time;
@@ -421,7 +421,7 @@ namespace DDCImprover.Core
 
                 if (closeNoteFound)
                 {
-                    long distanceMs = (long)anchor.Time - closeNoteTime;
+                    int distanceMs = anchor.Time - closeNoteTime;
                     string message = $"Anchor not on a note at {anchor.Time.TimeToString()}. Distance to closest note: {distanceMs} ms.";
                     AddIssue(message, anchor.Time);
                 }
