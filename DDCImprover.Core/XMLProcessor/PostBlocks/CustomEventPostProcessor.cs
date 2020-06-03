@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 
 using Rocksmith2014Xml;
+using Rocksmith2014Xml.Extensions;
 
 using System;
 using System.Collections.Generic;

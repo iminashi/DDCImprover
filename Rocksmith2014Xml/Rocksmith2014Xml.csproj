@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyVersion>2.0.0.155</AssemblyVersion>
-    <FileVersion>2.0.0.155</FileVersion>
+    <AssemblyVersion>2.0.2.155</AssemblyVersion>
+    <FileVersion>2.0.2.155</FileVersion>
     <Company>iminashi</Company>
     <Authors>iminashi</Authors>
     <Copyright>Copyright © 2020</Copyright>
