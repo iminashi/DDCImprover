@@ -9,90 +9,83 @@ namespace DDCImprover.Core
 {
     internal static class DDRemover
     {
-        public static async Task RemoveDD(RS2014Song song, bool matchPhrasesToSections, bool deleteTranscriptionTrack)
+        public static async Task RemoveDD(InstrumentalArrangement arrangement, bool matchPhrasesToSections, bool deleteTranscriptionTrack)
         {
-            var trTrack = await GenerateTranscriptionTrack(song).ConfigureAwait(false);
+            var trTrack = await GenerateTranscriptionTrack(arrangement).ConfigureAwait(false);
 
-            song.Levels.Clear();
-            song.Levels.Add(trTrack);
+            arrangement.Levels.Clear();
+            arrangement.Levels.Add(trTrack);
 
-            song.NewLinkedDiffs.Clear();
-            song.LinkedDiffs?.Clear();
+            arrangement.NewLinkedDiffs.Clear();
+            arrangement.LinkedDiffs?.Clear();
 
             if (matchPhrasesToSections)
             {
-                song.Phrases.Clear();
+                arrangement.Phrases.Clear();
 
-                song.Phrases.Add(new Phrase { Name = "COUNT" });
-                foreach (string sectionName in song.Sections.SkipLast().Select(s => s.Name).Distinct())
+                arrangement.Phrases.Add(new Phrase { Name = "COUNT" });
+                foreach (string sectionName in arrangement.Sections.SkipLast().Select(s => s.Name).Distinct())
                 {
-                    song.Phrases.Add(new Phrase
+                    arrangement.Phrases.Add(new Phrase
                     {
                         Name = sectionName
                     });
                 }
-                song.Phrases.Add(new Phrase { Name = "END" });
+                arrangement.Phrases.Add(new Phrase { Name = "END" });
 
-                song.PhraseIterations.Clear();
+                arrangement.PhraseIterations.Clear();
 
                 // Add COUNT phrase iteration
-                song.PhraseIterations.Add(new PhraseIteration { Time = song.StartBeat, PhraseId = 0 });
+                arrangement.PhraseIterations.Add(new PhraseIteration(arrangement.StartBeat, 0));
 
                 // Add phrase iterations
-                foreach (Section section in song.Sections.SkipLast())
+                foreach (Section section in arrangement.Sections.SkipLast())
                 {
-                    song.PhraseIterations.Add(new PhraseIteration
-                    {
-                        Time = section.Time,
-                        PhraseId = song.Phrases.FindIndex(p => p.Name == section.Name)
-                    });
+                    int phraseId = arrangement.Phrases.FindIndex(p => p.Name == section.Name);
+                    arrangement.PhraseIterations.Add(new PhraseIteration(section.Time, phraseId));
                 }
 
                 // Add END phrase iteration
-                song.PhraseIterations.Add(new PhraseIteration
-                {
-                    Time = song.Sections.Last().Time,
-                    PhraseId = song.Phrases.Count - 1
-                });
+                arrangement.PhraseIterations.Add(new PhraseIteration(arrangement.Sections.Last().Time, arrangement.Phrases.Count - 1));
             }
             else
             {
-                foreach (var p in song.Phrases)
+                foreach (var p in arrangement.Phrases)
                 {
                     p.MaxDifficulty = 0;
                 }
 
-                foreach (var pi in song.PhraseIterations)
+                foreach (var pi in arrangement.PhraseIterations)
                 {
                     pi.HeroLevels = null;
                 }
             }
 
             // Remove any unused chord templates
-            if (song.ChordTemplates.Count > 0)
+            if (arrangement.ChordTemplates.Count > 0)
             {
                 int highestChordId = 0;
-                if (song.Levels[0].Chords.Count > 0)
-                    highestChordId = song.Levels[0].Chords.Max(c => c.ChordId);
+                if (arrangement.Levels[0].Chords.Count > 0)
+                    highestChordId = arrangement.Levels[0].Chords.Max(c => c.ChordId);
 
                 int highestHandShapeId = 0;
-                if (song.Levels[0].HandShapes.Count > 0)
-                    highestHandShapeId = song.Levels[0].HandShapes.Max(hs => hs.ChordId);
+                if (arrangement.Levels[0].HandShapes.Count > 0)
+                    highestHandShapeId = arrangement.Levels[0].HandShapes.Max(hs => hs.ChordId);
 
                 int highestId = Math.Max(highestChordId, highestHandShapeId);
-                if (highestId < song.ChordTemplates.Count - 1)
-                    song.ChordTemplates.RemoveRange(highestId + 1, song.ChordTemplates.Count - 1 - highestId);
+                if (highestId < arrangement.ChordTemplates.Count - 1)
+                    arrangement.ChordTemplates.RemoveRange(highestId + 1, arrangement.ChordTemplates.Count - 1 - highestId);
             }
 
             if (deleteTranscriptionTrack)
             {
-                song.TranscriptionTrack = new Level();
+                arrangement.TranscriptionTrack = new Level();
             }
 
-            AddComment(song);
+            AddComment(arrangement);
         }
 
-        private static async Task<Level> GenerateTranscriptionTrack(RS2014Song song)
+        private static async Task<Level> GenerateTranscriptionTrack(InstrumentalArrangement arrangement)
         {
             var notes = new List<Note>();
             var chords = new List<Chord>();
@@ -101,15 +94,15 @@ namespace DDCImprover.Core
             var tasks = Enumerable.Repeat(Task.CompletedTask, 4).ToArray();
 
             // Ignore the last phrase iteration (END)
-            for (int i = 0; i < song.PhraseIterations.Count - 1; i++)
+            for (int i = 0; i < arrangement.PhraseIterations.Count - 1; i++)
             {
-                var phraseIteration = song.PhraseIterations[i];
+                var phraseIteration = arrangement.PhraseIterations[i];
                 int phraseId = phraseIteration.PhraseId;
-                int maxDifficulty = song.Phrases[phraseId].MaxDifficulty;
+                int maxDifficulty = arrangement.Phrases[phraseId].MaxDifficulty;
 
-                float phraseStartTime = phraseIteration.Time;
-                float phraseEndTime = song.PhraseIterations[i + 1].Time;
-                var highestLevelForPhrase = song.Levels[maxDifficulty];
+                uint phraseStartTime = phraseIteration.Time;
+                uint phraseEndTime = arrangement.PhraseIterations[i + 1].Time;
+                var highestLevelForPhrase = arrangement.Levels[maxDifficulty];
 
                 var notesInPhraseIteration = highestLevelForPhrase.Notes
                     .Where(n => n.Time >= phraseStartTime && n.Time < phraseEndTime);
@@ -131,28 +124,28 @@ namespace DDCImprover.Core
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            var arr = new Level { Difficulty = 0 };
-            arr.Notes.AddRange(notes);
-            arr.Chords.AddRange(chords);
-            arr.Anchors.AddRange(anchors);
-            arr.HandShapes.AddRange(handshapes);
+            var level = new Level { Difficulty = 0 };
+            level.Notes.AddRange(notes);
+            level.Chords.AddRange(chords);
+            level.Anchors.AddRange(anchors);
+            level.HandShapes.AddRange(handshapes);
 
-            return arr;
+            return level;
         }
 
-        private static void AddComment(RS2014Song song)
+        private static void AddComment(InstrumentalArrangement arrangement)
         {
-            song.XmlComments.RemoveAll(c => c.CommentType == CommentType.DDCImprover);
-            var ddcComment = song.XmlComments.Find(c => c.CommentType == CommentType.DDC);
+            arrangement.XmlComments.RemoveAll(c => c.CommentType == CommentType.DDCImprover);
+            var ddcComment = arrangement.XmlComments.Find(c => c.CommentType == CommentType.DDC);
             if (ddcComment != null)
             {
-                song.XmlComments.RemoveAll(c => c.CommentType == CommentType.DDC);
+                arrangement.XmlComments.RemoveAll(c => c.CommentType == CommentType.DDC);
                 string ddcVer = ddcComment.Value.Substring(0, ddcComment.Value.IndexOf('-') - 1);
-                song.XmlComments.Add(new RSXmlComment($" DDC Improver {Program.Version} removed DD generated by{ddcVer} "));
+                arrangement.XmlComments.Add(new RSXmlComment($" DDC Improver {Program.Version} removed DD generated by{ddcVer} "));
             }
             else
             {
-                song.XmlComments.Add(new RSXmlComment($" DDC Improver {Program.Version} removed DD "));
+                arrangement.XmlComments.Add(new RSXmlComment($" DDC Improver {Program.Version} removed DD "));
             }
         }
     }

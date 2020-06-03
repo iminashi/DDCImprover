@@ -9,10 +9,10 @@ namespace DDCImprover.Core
     internal sealed class XMLPostProcessor
     {
         private XMLProcessor Parent { get; }
-        private RS2014Song DDCSong { get; }
-        private float OldLastPhraseTime { get; }
+        private InstrumentalArrangement DDCArrangement { get; }
+        private uint OldLastPhraseTime { get; }
         private int OldPhraseIterationCount { get; }
-        private float? FirstNGSectionTime { get; }
+        private uint? FirstNGSectionTime { get; }
         private bool WasNonDDFile { get; }
 
         private readonly Action<string> Log;
@@ -20,13 +20,13 @@ namespace DDCImprover.Core
         internal XMLPostProcessor(XMLProcessor parent, XMLPreProcessor preProcessor, Action<string> logAction)
         {
             Parent = parent;
-            DDCSong = Parent.DDCSong!;
+            DDCArrangement = Parent.DDCArrangement!;
             Log = logAction;
 
-            WasNonDDFile = Parent.OriginalSong!.Levels.Count == 1;
+            WasNonDDFile = Parent.OriginalArrangement!.Levels.Count == 1;
 
             OldLastPhraseTime = preProcessor.LastPhraseTime;
-            OldPhraseIterationCount = Parent.OriginalSong.PhraseIterations.Count;
+            OldPhraseIterationCount = Parent.OriginalArrangement.PhraseIterations.Count;
 
             FirstNGSectionTime = preProcessor.FirstNGSectionTime;
         }
@@ -37,7 +37,7 @@ namespace DDCImprover.Core
 
             CheckPhraseIterationCount();
 
-            var context = new ProcessorContext(DDCSong, Log);
+            var context = new ProcessorContext(DDCArrangement, Log);
 
             context
                 // Remove temporary beats
@@ -53,7 +53,7 @@ namespace DDCImprover.Core
                 .ApplyFixIf(WasNonDDFile, new UnnecessaryNGPhraseRemover())
 
                 // Process chord names
-                .ApplyFixIf(Preferences.FixChordNames && DDCSong.ChordTemplates.Any(), new ChordNameProcessor(Parent.StatusMessages))
+                .ApplyFixIf(Preferences.FixChordNames && DDCArrangement.ChordTemplates.Any(), new ChordNameProcessor(Parent.StatusMessages))
 
                 // Remove beats that come after the audio has ended
                 .ApplyFixIf(Preferences.RemoveBeatsPastAudioEnd, new ExtraneousBeatsRemover())
@@ -85,12 +85,12 @@ namespace DDCImprover.Core
                 {
                     CheckNeedToResetArrangementId();
 
-                    PhraseLevelRepository.QueueForSave(Parent.XMLFileFullPath, DDCSong.Phrases);
+                    PhraseLevelRepository.QueueForSave(Parent.XMLFileFullPath, DDCArrangement.Phrases);
                 }
             }
 
             if(Preferences.RemoveTranscriptionTrack)
-                DDCSong.TranscriptionTrack = new Level();
+                DDCArrangement.TranscriptionTrack = new Level();
 
             ValidateDDCXML();
 
@@ -102,7 +102,7 @@ namespace DDCImprover.Core
         /// </summary>
         private void RemoveTemporaryMeasures()
         {
-            foreach (var beat in DDCSong.Ebeats)
+            foreach (var beat in DDCArrangement.Ebeats)
             {
                 if (beat.Measure == TempMeasureNumber)
                 {
@@ -113,7 +113,7 @@ namespace DDCImprover.Core
 
         private void CheckPhraseIterationCount()
         {
-            int newPhraseIterationCount = DDCSong.PhraseIterations.Count;
+            int newPhraseIterationCount = DDCArrangement.PhraseIterations.Count;
 
             if (newPhraseIterationCount != OldPhraseIterationCount)
             {
@@ -127,7 +127,7 @@ namespace DDCImprover.Core
 
             if (phraseLevels != null)
             {
-                foreach (var phrase in DDCSong.Phrases)
+                foreach (var phrase in DDCArrangement.Phrases)
                 {
                     if (phraseLevels.ContainsKey(phrase.Name)
                        && phraseLevels[phrase.Name] > phrase.MaxDifficulty)
@@ -144,28 +144,28 @@ namespace DDCImprover.Core
 
         private void ValidateDDCXML()
         {
-            if (DDCSong.Levels.SelectMany(lev => lev.HandShapes).Any(hs => hs.ChordId == -1))
+            if (DDCArrangement.Levels.SelectMany(lev => lev.HandShapes).Any(hs => hs.ChordId == -1))
                 throw new DDCException("DDC has created a handshape with an invalid chordId (-1).");
 
             // Check for DDC bug where muted notes with sustain are generated
             if (WasNonDDFile)
             {
-                var notes = DDCSong.Levels.SelectMany(lev => lev.Notes);
+                var notes = DDCArrangement.Levels.SelectMany(lev => lev.Notes);
                 var mutedNotesWithSustain =
                     from note in notes
-                    where note.IsMute && note.Sustain > 0.0f
+                    where note.IsMute && note.Sustain > 0
                     select note;
 
                 foreach (var note in mutedNotesWithSustain)
                 {
-                    bool originallyHadMutedNote = Parent.OriginalSong!.Levels
+                    bool originallyHadMutedNote = Parent.OriginalArrangement!.Levels
                         .SelectMany(lev => lev.Notes)
-                        .Any(n => Utils.TimeEqualToMilliseconds(n.Time, note.Time) && n.IsMute);
+                        .Any(n => (n.Time == note.Time) && n.IsMute);
 
-                    bool originallyHadMutedChord = Parent.OriginalSong.Levels
+                    bool originallyHadMutedChord = Parent.OriginalArrangement.Levels
                         .SelectMany(lev => lev.Chords)
                         .SelectMany(c => c.ChordNotes)
-                        .Any(cn => Utils.TimeEqualToMilliseconds(cn.Time, note.Time) && cn.IsMute && cn.Sustain != 0.0f);
+                        .Any(cn => (cn.Time == note.Time) && cn.IsMute && cn.Sustain != 0);
 
                     if (!originallyHadMutedNote && !originallyHadMutedChord)
                     {

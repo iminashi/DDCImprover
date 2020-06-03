@@ -18,39 +18,40 @@ namespace DDCImprover.Core
             "High E"
         };
 
-        private readonly bool songHasNoguitarSections;
-        private readonly bool songHasToneChanges;
+        private bool HasNoguitarSections { get; }
+        private bool HasToneChanges { get; }
+
         private readonly Section[] noguitarSections;
-        private readonly RS2014Song song;
+        private readonly InstrumentalArrangement arrangement;
         private readonly IList<ImproverMessage> statusMessages;
         private readonly Action<string> Log;
 
-        internal ArrangementChecker(RS2014Song song, IList<ImproverMessage> statusMessages, Action<string> logAction)
+        internal ArrangementChecker(InstrumentalArrangement arrangement, IList<ImproverMessage> statusMessages, Action<string> logAction)
         {
-            this.song = song;
+            this.arrangement = arrangement;
             this.statusMessages = statusMessages;
             Log = logAction;
 
-            songHasToneChanges = song.ToneChanges?.Count > 0;
+            HasToneChanges = arrangement.ToneChanges?.Count > 0;
 
-            noguitarSections = song.Sections.SkipLast().Where(s => s.Name == "noguitar").ToArray();
-            songHasNoguitarSections = noguitarSections.Length != 0;
+            noguitarSections = arrangement.Sections.SkipLast().Where(s => s.Name == "noguitar").ToArray();
+            HasNoguitarSections = noguitarSections.Length != 0;
         }
 
         public void RunAllChecks()
         {
             CheckCrowdEventPlacement();
 
-            foreach (var level in song.Levels)
+            foreach (var level in arrangement.Levels)
             {
                 CheckNotes(level);
                 CheckChords(level);
-                CheckHandshapes(level, song.ChordTemplates);
+                CheckHandshapes(level, arrangement.ChordTemplates);
                 CheckAnchors(level);
             }
         }
 
-        private void AddIssue(string message, float timeCode)
+        private void AddIssue(string message, uint timeCode)
         {
             statusMessages.Add(new ImproverMessage(message, MessageType.Issue, timeCode));
             Log("Issue found: " + message);
@@ -58,10 +59,10 @@ namespace DDCImprover.Core
 
         internal void CheckCrowdEventPlacement()
         {
-            var events = song.Events;
+            var events = arrangement.Events;
 
-            float? introApplauseStart = events.FirstOrDefault(e => e.Code == "E3")?.Time;
-            float? applauseEnd = events.FirstOrDefault(e => e.Code == "E13")?.Time;
+            uint? introApplauseStart = events.FirstOrDefault(e => e.Code == "E3")?.Time;
+            uint? applauseEnd = events.FirstOrDefault(e => e.Code == "E13")?.Time;
             Regex crowdSpeedRegex = new Regex("e[0-2]$");
 
             if (introApplauseStart != null && applauseEnd != null)
@@ -90,7 +91,7 @@ namespace DDCImprover.Core
                     for (int i = startIndex + 1; i < events.Count; i++)
                     {
                         var @event = events[i];
-                        if ((@event.Code == "E3" || @event.Code == "D3") && !Utils.TimeEqualToMilliseconds(@event.Time, introApplauseStart.Value))
+                        if ((@event.Code == "E3" || @event.Code == "D3") && @event.Time != introApplauseStart.Value)
                         {
                             AddIssue($"Expected an end applause event (E13) after intro applause event (E3), instead found {@event.Code}.", @event.Time);
                         }
@@ -108,14 +109,14 @@ namespace DDCImprover.Core
             var notes = level.Notes;
 
             // Check if the note is linked to a chord
-            if (level.Chords.Exists(c => Utils.TimeEqualToMilliseconds(c.Time, note.Time + note.Sustain)
+            if (level.Chords.Exists(c => c.Time == (note.Time + note.Sustain)
                 && c.ChordNotes?.Exists(cn => cn.String == note.String) == true))
             {
                 AddIssue($"Note incorrectly linked to a chord at {note.Time.TimeToString()}.", note.Time);
                 return;
             }
 
-            int nextNoteIndex = currentIndex == -1 ?
+            int nextNoteIndex = (currentIndex == -1) ?
                 notes.FindIndex(n => n.Time > note.Time && n.String == note.String) :
                 notes.FindIndex(currentIndex + 1, n => n.String == note.String);
 
@@ -136,8 +137,8 @@ namespace DDCImprover.Core
 
                     if (slideTo != nextNote.Fret)
                     {
-                        float noteEndTime = note.Time + note.Sustain;
-                        if (nextNote.Time - noteEndTime > 0.001f) // EOF can add linknext to notes that shouldn't have it
+                        uint noteEndTime = note.Time + note.Sustain;
+                        if (nextNote.Time - noteEndTime > 1) // EOF can add linknext to notes that shouldn't have it
                         {
                             AddIssue($"Incorrect LinkNext status on note at {note.Time.TimeToString()}, {StringNames[note.String]} string.", note.Time);
                         }
@@ -152,7 +153,7 @@ namespace DDCImprover.Core
                     float thisNoteLastBendValue = note.BendValues.Last().Step;
                     float nextNoteFirstBendValue = 0f;
                     // If the next note has bend values and the first one is at the same timecode as the note, compare to that bend value
-                    if (nextNote.BendValues?.Count > 0 && Utils.TimeEqualToMilliseconds(nextNote.Time, nextNote.BendValues[0].Time))
+                    if (nextNote.BendValues?.Count > 0 && nextNote.Time == nextNote.BendValues[0].Time)
                         nextNoteFirstBendValue = nextNote.BendValues[0].Step;
 
                     if (thisNoteLastBendValue != nextNoteFirstBendValue)
@@ -163,16 +164,16 @@ namespace DDCImprover.Core
             }
         }
 
-        private bool IsInsideNoguitarSection(float noteTime)
+        private bool IsInsideNoguitarSection(uint noteTime)
         {
             foreach (var ngSection in noguitarSections)
             {
-                int nextIndex = song.Sections.IndexOf(ngSection) + 1;
-                if (nextIndex >= song.Sections.Count)
+                int nextIndex = arrangement.Sections.IndexOf(ngSection) + 1;
+                if (nextIndex >= arrangement.Sections.Count)
                     break;
 
-                float startTime = ngSection.Time;
-                float endTime = song.Sections[nextIndex].Time;
+                uint startTime = ngSection.Time;
+                uint endTime = arrangement.Sections[nextIndex].Time;
 
                 if (noteTime >= startTime && noteTime < endTime)
                     return true;
@@ -206,7 +207,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check 7th fret harmonic notes with sustain (that are not set as ignore)
-                if (note.Fret == 7 && note.IsHarmonic && note.Sustain > 0.0f && !note.IsIgnore)
+                if (note.Fret == 7 && note.IsHarmonic && note.Sustain > 0 && !note.IsIgnore)
                 {
                     AddIssue($"7th fret harmonic note with sustain at {note.Time.TimeToString()}.", note.Time);
                 }
@@ -222,7 +223,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check tone change placement
-                if (songHasToneChanges && song.ToneChanges!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, note.Time)))
+                if (HasToneChanges && arrangement.ToneChanges!.Exists(t => t.Time == note.Time))
                 {
                     AddIssue($"Tone change occurs on a note at {note.Time.TimeToString()}.", note.Time);
                 }
@@ -234,7 +235,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check for notes inside noguitar sections
-                if (songHasNoguitarSections && IsInsideNoguitarSection(note.Time))
+                if (HasNoguitarSections && IsInsideNoguitarSection(note.Time))
                 {
                     AddIssue($"Note inside noguitar section at {note.Time.TimeToString()}.", note.Time);
                 }
@@ -251,7 +252,7 @@ namespace DDCImprover.Core
                 if (chordNotes != null)
                 {
                     // Check 7th fret harmonic notes with sustain (and without ignore)
-                    if (!chord.IsIgnore && chordNotes.Any(cn => cn.Sustain > 0f && cn.Fret == 7 && cn.IsHarmonic))
+                    if (!chord.IsIgnore && chordNotes.Any(cn => cn.Sustain > 0 && cn.Fret == 7 && cn.IsHarmonic))
                     {
                         AddIssue($"7th fret harmonic note with sustain at {chord.Time.TimeToString()}.", chord.Time);
                     }
@@ -282,7 +283,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check tone change placement
-                if (songHasToneChanges && song.ToneChanges!.Exists(t => Utils.TimeEqualToMilliseconds(t.Time, chord.Time)))
+                if (HasToneChanges && arrangement.ToneChanges!.Exists(t => t.Time == chord.Time))
                 {
                     AddIssue($"Tone change occurs on a chord at {chord.Time.TimeToString()}.", chord.Time);
                 }
@@ -290,13 +291,13 @@ namespace DDCImprover.Core
                 // Check chords at the end of handshape (no handshape sustain)
                 var handShape = level.HandShapes.Find(hs => hs.ChordId == chord.ChordId && chord.Time >= hs.StartTime && chord.Time <= hs.EndTime);
 
-                if (handShape?.EndTime - chord.Time <= 0.005f)
+                if (handShape?.EndTime - chord.Time <= 5)
                 {
                     AddIssue($"Chord without handshape sustain at {chord.Time.TimeToString()}.", chord.Time);
                 }
 
                 // Check for chords inside noguitar sections
-                if (songHasNoguitarSections && IsInsideNoguitarSection(chord.Time))
+                if (HasNoguitarSections && IsInsideNoguitarSection(chord.Time))
                 {
                     AddIssue($"Chord inside noguitar section at {chord.Time.TimeToString()}.", chord.Time);
                 }
@@ -369,14 +370,14 @@ namespace DDCImprover.Core
 
             foreach (var anchor in level.Anchors)
             {
-                float closeNoteTime = -1f;
+                uint closeNoteTime = 0;
                 bool closeNoteFound = false;
 
                 if (notes.Count > 0 && noteIndex < notes.Count)
                 {
                     while (noteIndex < notes.Count)
                     {
-                        if (Math.Abs(notes[noteIndex].Time - anchor.Time) <= 0.005)
+                        if (Math.Abs((long)notes[noteIndex].Time - anchor.Time) <= 5)
                         {
                             closeNoteFound = true;
                             closeNoteTime = notes[noteIndex].Time;
@@ -390,7 +391,7 @@ namespace DDCImprover.Core
                     }
 
                     // Check if it is an exact match
-                    if (closeNoteFound && Utils.TimeEqualToMilliseconds(closeNoteTime, anchor.Time))
+                    if (closeNoteFound && closeNoteTime == anchor.Time)
                         continue;
                 }
 
@@ -398,7 +399,7 @@ namespace DDCImprover.Core
                 {
                     while (chordIndex < chords.Count)
                     {
-                        if (Math.Abs(chords[chordIndex].Time - anchor.Time) <= 0.005)
+                        if (Math.Abs((long)chords[chordIndex].Time - anchor.Time) <= 5)
                         {
                             closeNoteFound = true;
                             closeNoteTime = chords[chordIndex].Time;
@@ -412,13 +413,13 @@ namespace DDCImprover.Core
                     }
 
                     // Check if it is an exact match
-                    if (closeNoteFound && Utils.TimeEqualToMilliseconds(closeNoteTime, anchor.Time))
+                    if (closeNoteFound && closeNoteTime == anchor.Time)
                         continue;
                 }
 
                 if (closeNoteFound)
                 {
-                    int distanceMs = (int)(Math.Round(anchor.Time - closeNoteTime, 3) * 1000);
+                    long distanceMs = (long)anchor.Time - closeNoteTime;
                     string message = $"Anchor not on a note at {anchor.Time.TimeToString()}. Distance to closest note: {distanceMs} ms.";
                     AddIssue(message, anchor.Time);
                 }

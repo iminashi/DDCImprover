@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using Rocksmith2014Xml;
+
+using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace DDCImprover.Core
@@ -11,55 +14,55 @@ namespace DDCImprover.Core
         /// <summary>
         /// Tries to parse a time value from the end of the input string either in the format "0m0s0" or "0s0".
         /// </summary>
-        /// <param name="inputStr">Input string</param>
-        /// <returns>The parsed time value in seconds, null if unsuccessful</returns>
-        public static float? Parse(string inputStr)
+        /// <param name="inputStr">Input string.</param>
+        /// <returns>The parsed time value in milliseconds, null if unsuccessful.</returns>
+        public static uint? Parse(string inputStr)
         {
-            float? time;
-
-            Match match = Regex.Match(inputStr, RegPatternMinSecMs);
-            if (match.Success)
+            uint? time;
+            try
             {
-                // Minutes
-                if (int.TryParse(match.Groups[1].Value, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int minutes))
-                {
-                    time = 60 * minutes;
-                }
-                else
-                {
-                    return null;
-                }
-
-                // Seconds and milliseconds
-                if (float.TryParse(match.Groups[2].Value.Replace('s', '.'), NumberStyles.Float, NumberFormatInfo.InvariantInfo, out float seconds))
-                {
-                    time += seconds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                match = Regex.Match(inputStr, RegPatternSecMs);
+                Match match = Regex.Match(inputStr, RegPatternMinSecMs);
                 if (match.Success)
                 {
-                    time = float.Parse(match.Value.Replace('s', '.'), NumberFormatInfo.InvariantInfo);
-                }
-                else
-                {
-                    match = Regex.Match(inputStr, @"\d+$");
-                    if (!match.Success)
+                    // Minutes
+                    if (uint.TryParse(match.Groups[1].Value, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out uint minutes))
+                    {
+                        time = 60 * minutes * 1000;
+                    }
+                    else
                     {
                         return null;
                     }
 
-                    time = float.Parse(match.Value, NumberFormatInfo.InvariantInfo);
+                    // Seconds and milliseconds
+                    uint milliseconds = Utils.TimeCodeFromFloatString(match.Groups[2].Value.Replace('s', '.'));
+                    time += milliseconds;
                 }
-            }
+                else
+                {
+                    match = Regex.Match(inputStr, RegPatternSecMs);
+                    if (match.Success)
+                    {
+                        time = Utils.TimeCodeFromFloatString(match.Value.Replace('s', '.'));
+                    }
+                    else
+                    {
+                        match = Regex.Match(inputStr, @"\d+$");
+                        if (!match.Success)
+                        {
+                            return null;
+                        }
 
-            return time;
+                        time = uint.Parse(match.Value) * 1000;
+                    }
+                }
+
+                return time;
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
         }
     }
 }

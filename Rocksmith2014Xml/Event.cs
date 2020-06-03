@@ -9,9 +9,9 @@ namespace Rocksmith2014Xml
     public sealed class Event : IXmlSerializable, IHasTimeCode
     {
         public string Code { get; set; } = string.Empty;
-        public float Time { get; set; }
+        public uint Time { get; set; }
 
-        public Event(string code, float time)
+        public Event(string code, uint time)
         {
             Code = code;
             Time = time;
@@ -20,7 +20,7 @@ namespace Rocksmith2014Xml
         public Event() { }
 
         public override string ToString()
-            => $"{Time:F3}: {Code}";
+            => $"{Utils.TimeCodeToString(Time)}: {Code}";
 
         #region IXmlSerializable Implementation
 
@@ -28,7 +28,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            Time = float.Parse(reader.GetAttribute("time"), NumberFormatInfo.InvariantInfo);
+            Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("time"));
             Code = reader.GetAttribute("code");
 
             reader.ReadStartElement();
@@ -36,7 +36,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("code", Code);
         }
 

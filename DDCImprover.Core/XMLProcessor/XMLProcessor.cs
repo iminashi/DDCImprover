@@ -90,8 +90,8 @@ namespace DDCImprover.Core
         public string ArrangementType { get; private set; } = string.Empty;
         public string LogFileFullPath { get; private set; } = string.Empty;
 
-        public RS2014Song? OriginalSong { get; private set; }
-        public RS2014Song? DDCSong { get; private set; }
+        public InstrumentalArrangement? OriginalArrangement { get; private set; }
+        public InstrumentalArrangement? DDCArrangement { get; private set; }
 
         public string XMLFileFullPath { get; private set; } = string.Empty;
         private string TempXMLFileFullPath { get; set; } = string.Empty;
@@ -219,8 +219,8 @@ namespace DDCImprover.Core
         {
             try
             {
-                OriginalSong = RS2014Song.Load(XMLFileFullPath);
-                isNonDDFile = OriginalSong.Levels.Count == 1;
+                OriginalArrangement = InstrumentalArrangement.Load(XMLFileFullPath);
+                isNonDDFile = OriginalArrangement.Levels.Count == 1;
                 Status = ImproverStatus.Idle;
             }
             catch (Exception ex)
@@ -382,8 +382,8 @@ namespace DDCImprover.Core
             preProcessor = null;
             postProcessor = null;
 
-            OriginalSong = null;
-            DDCSong = null;
+            OriginalArrangement = null;
+            DDCArrangement = null;
         }
 
         private void LoadDDCXMLFile()
@@ -391,13 +391,13 @@ namespace DDCImprover.Core
             if (isNonDDFile)
             {
                 if (Preferences.OverwriteOriginalFile)
-                    DDCSong = RS2014Song.Load(XMLFileFullPath);
+                    DDCArrangement = InstrumentalArrangement.Load(XMLFileFullPath);
                 else
-                    DDCSong = RS2014Song.Load(DDCXMLFileFullPath);
+                    DDCArrangement = InstrumentalArrangement.Load(DDCXMLFileFullPath);
             }
             else
             {
-                DDCSong = OriginalSong;
+                DDCArrangement = OriginalArrangement;
             }
         }
 
@@ -410,7 +410,7 @@ namespace DDCImprover.Core
             }
 
             // Save processed file using original filename
-            OriginalSong!.Save(XMLFileFullPath);
+            OriginalArrangement!.Save(XMLFileFullPath);
         }
 
         private void SavePostprocessedFile()
@@ -425,10 +425,10 @@ namespace DDCImprover.Core
                 File.Delete(DDCXMLFileFullPath);
             }
 
-            DDCSong!.XmlComments.RemoveAll(x => x.CommentType == CommentType.DDCImprover);
-            DDCSong.XmlComments.Insert(0, new RSXmlComment($" DDC Improver {Program.Version} "));
+            DDCArrangement!.XmlComments.RemoveAll(x => x.CommentType == CommentType.DDCImprover);
+            DDCArrangement.XmlComments.Insert(0, new RSXmlComment($" DDC Improver {Program.Version} "));
 
-            DDCSong.Save(path, Preferences.WriteAbridgedXmlFiles);
+            DDCArrangement.Save(path, Preferences.WriteAbridgedXmlFiles);
 
             Log($"Processed DD file saved as {path}");
         }

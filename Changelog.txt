@@ -1,4 +1,4 @@
-2.3
+3.0
 -Added "Quick Remove DD" feature
 -Added "Remove High Density Statuses" option
 -Added "Open Containing Folder" context menu item
@@ -7,6 +7,7 @@
 -Fixed a null reference exception in the chord slide handshape length fix
 -Fixed an off-by-one error in the FIXOPEN chord processor
 -Fixed a false positive in the bend value mismatch check
+-Change the internal representation of time codes to use integers instead of floating point numbers
 -Changed where the program settings and logs are stored for better cross-platform compatibility
 -Removed the select DDC executable button from the configuration window
 -Minor improvements to the Avalonia UI

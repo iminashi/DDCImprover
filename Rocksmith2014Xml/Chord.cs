@@ -125,26 +125,14 @@ namespace Rocksmith2014Xml
 
         public ChordMask Mask { get; set; }
 
-        private float _time;
-
-        public float Time
-        {
-            get => _time;
-            set
-            {
-                if (value < 0.0f)
-                    throw new InvalidOperationException("Time cannot be less than zero");
-
-                _time = value;
-            }
-        }
+        public uint Time { get; set; }
 
         public int ChordId { get; set; }
 
         public List<Note>? ChordNotes { get; set; }
 
         public override string ToString()
-            => $"{Time:F3}: Id: {ChordId}";
+            => $"{Utils.TimeCodeToString(Time)}: Id: {ChordId}";
 
         public int CompareTo(Chord other)
             => Time.CompareTo(other.Time);
@@ -164,7 +152,7 @@ namespace Rocksmith2014Xml
                     switch (reader.Name)
                     {
                         case "time":
-                            Time = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                            Time = Utils.TimeCodeFromFloatString(reader.Value);
                             break;
                         case "chordId":
                             ChordId = int.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -223,47 +211,47 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("chordId", ChordId.ToString(NumberFormatInfo.InvariantInfo));
 
             if (IsLinkNext)
                 writer.WriteAttributeString("linkNext", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("linkNext", "0");
 
             if (IsAccent)
                 writer.WriteAttributeString("accent", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("accent", "0");
 
             if (IsFretHandMute)
                 writer.WriteAttributeString("fretHandMute", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fretHandMute", "0");
 
             if (IsHighDensity)
                 writer.WriteAttributeString("highDensity", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("highDensity", "0");
 
             if (IsIgnore)
                 writer.WriteAttributeString("ignore", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("ignore", "0");
 
             if (IsPalmMute)
                 writer.WriteAttributeString("palmMute", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("palmMute", "0");
 
             if (IsHopo)
                 writer.WriteAttributeString("hopo", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("hopo", "0");
 
             if (IsUpStrum)
                 writer.WriteAttributeString("strum", "up");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("strum", "down");
 
             if (ChordNotes?.Count > 0)

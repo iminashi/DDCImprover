@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 
@@ -16,12 +17,12 @@ namespace DDCImprover.Core.PostBlocks
             _addedBeats = addedBeats;
         }
 
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             foreach (var addedBeat in _addedBeats)
             {
-                var beatToRemove = song.Ebeats.Find(beat => beat == addedBeat);
-                song.Ebeats.Remove(beatToRemove);
+                var beatToRemove = arrangement.Ebeats.Find(beat => beat == addedBeat);
+                arrangement.Ebeats.Remove(beatToRemove);
             }
         }
     }

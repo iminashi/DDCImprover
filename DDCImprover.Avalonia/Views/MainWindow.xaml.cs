@@ -18,6 +18,8 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
+#pragma warning disable RCS1090 // Call 'ConfigureAwait(false)'.
+
 namespace DDCImprover.Avalonia.Views
 {
     public class MainWindow : Window, IViewFor<MainWindowViewModel>

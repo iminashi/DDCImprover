@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,16 +21,16 @@ namespace DDCImprover.Core.PreBlocks
             _addedBeats = addedBeats;
         }
 
-        private void MoveToParseFailure(float phraseTime, Action<string> Log)
+        private void MoveToParseFailure(uint phraseTime, Action<string> Log)
         {
             string errorMessage = $"Unable to read time for 'moveto' phrase at {phraseTime.TimeToString()}. (Usage examples: moveto5m10s200, moveto10s520)";
             _statusMessages.Add(new ImproverMessage(errorMessage, MessageType.Warning));
             Log(errorMessage);
         }
 
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            var phrasesToMove = song.Phrases
+            var phrasesToMove = arrangement.Phrases
                  .Where(p => p.Name.StartsWith("moveto", StringComparison.OrdinalIgnoreCase)
                           || p.Name.StartsWith("moveR", StringComparison.OrdinalIgnoreCase))
                  .ToList();
@@ -42,11 +43,11 @@ namespace DDCImprover.Core.PreBlocks
             foreach (var phraseToMove in phrasesToMove)
             {
                 // Find phrase iterations by matching phrase index
-                int phraseId = song.Phrases.IndexOf(phraseToMove);
-                foreach (var phraseIterationToMove in song.PhraseIterations.Where(pi => pi.PhraseId == phraseId))
+                int phraseId = arrangement.Phrases.IndexOf(phraseToMove);
+                foreach (var phraseIterationToMove in arrangement.PhraseIterations.Where(pi => pi.PhraseId == phraseId))
                 {
-                    float phraseTime = phraseIterationToMove.Time;
-                    float movetoTime;
+                    uint phraseTime = phraseIterationToMove.Time;
+                    uint movetoTime;
                     string phraseToMoveName = phraseToMove.Name;
 
                     // Relative phrase moving right
@@ -54,7 +55,7 @@ namespace DDCImprover.Core.PreBlocks
                     {
                         if (int.TryParse(phraseToMoveName.Substring("moveR".Length), NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int moveRightBy))
                         {
-                            var level = song.Levels[phraseToMove.MaxDifficulty];
+                            var level = arrangement.Levels[phraseToMove.MaxDifficulty];
                             var noteTimes = level.Notes
                                 .Where(n => n.Time >= phraseTime)
                                 .Select(n => n.Time)
@@ -67,7 +68,7 @@ namespace DDCImprover.Core.PreBlocks
                                 .Distinct()
                                 .Take(moveRightBy);
 
-                            var noteAndChordTimes = noteTimes.Concat(chordTimes).OrderBy(x => x);
+                            var noteAndChordTimes = noteTimes.Concat(chordTimes).OrderBy(time => time);
 
                             movetoTime = noteAndChordTimes.Skip(moveRightBy - 1).First();
                         }
@@ -82,7 +83,7 @@ namespace DDCImprover.Core.PreBlocks
                     }
                     else // Parse the absolute time to move to from the phrase name
                     {
-                        float? parsedTime = TimeParser.Parse(phraseToMoveName);
+                        uint? parsedTime = TimeParser.Parse(phraseToMoveName);
                         if (parsedTime.HasValue)
                         {
                             movetoTime = parsedTime.Value;
@@ -95,7 +96,7 @@ namespace DDCImprover.Core.PreBlocks
                     }
 
                     // Check if anchor(s) should be moved
-                    foreach (var level in song.Levels)
+                    foreach (var level in arrangement.Levels)
                     {
                         if (level.Difficulty > phraseToMove.MaxDifficulty)
                             break;
@@ -128,7 +129,7 @@ namespace DDCImprover.Core.PreBlocks
                     phraseIterationToMove.Time = movetoTime;
 
                     // Move section (if present)
-                    var sectionToMove = song.Sections.FindByTime(phraseTime);
+                    var sectionToMove = arrangement.Sections.FindByTime(phraseTime);
                     if (sectionToMove != null)
                     {
                         sectionToMove.Time = movetoTime;
@@ -142,8 +143,8 @@ namespace DDCImprover.Core.PreBlocks
                     // Add new temporary beat
                     var beatToAdd = new Ebeat(movetoTime, XMLProcessor.TempMeasureNumber);
 
-                    var insertIndex = song.Ebeats.FindIndex(b => b.Time > movetoTime);
-                    song.Ebeats.Insert(insertIndex, beatToAdd);
+                    var insertIndex = arrangement.Ebeats.FindIndex(b => b.Time > movetoTime);
+                    arrangement.Ebeats.Insert(insertIndex, beatToAdd);
 
                     // Set the beat for later removal
                     _addedBeats.Add(beatToAdd);

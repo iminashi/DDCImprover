@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Rocksmith2014Xml;
+﻿using Rocksmith2014Xml;
+
+using System;
 
 namespace DDCImprover.Core.PostBlocks
 {
@@ -10,9 +9,9 @@ namespace DDCImprover.Core.PostBlocks
     /// </summary>
     internal sealed class TimeSignatureEventRemover : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            int eventsRemoved = song.Events.RemoveAll(ev => ev.Code.StartsWith("TS"));
+            int eventsRemoved = arrangement.Events.RemoveAll(ev => ev.Code.StartsWith("TS"));
 
             if (eventsRemoved > 0)
             {

@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using System;
+
 using Xunit;
 
 namespace Rocksmith2014Xml.Tests
@@ -207,32 +207,6 @@ namespace Rocksmith2014Xml.Tests
         }
 
         [Fact]
-        public static void TimeCannotBeAssignedNegativeValues()
-        {
-            Note note = new Note
-            {
-                Time = 10f
-            };
-
-            Action action = () => note.Time = -10f;
-
-            action.Should().Throw<InvalidOperationException>();
-        }
-
-        [Fact]
-        public static void SustainCannotBeAssignedNegativeValues()
-        {
-            Note note = new Note
-            {
-                Sustain = 5f
-            };
-
-            Action action = () => note.Sustain = -1f;
-
-            action.Should().Throw<InvalidOperationException>();
-        }
-
-        [Fact]
         public static void CopyConstructorCopiesAllValues()
         {
             Note note1 = new Note
@@ -244,14 +218,14 @@ namespace Rocksmith2014Xml.Tests
                 SlideTo = 7,
                 SlideUnpitchTo = 9,
                 String = 4,
-                Sustain = 99f,
+                Sustain = 99000,
                 Tap = 2,
-                Time = 33f,
+                Time = 33000,
                 Vibrato = 80,
                 BendValues = new BendValueCollection
                 {
-                    new BendValue(34f, 3f),
-                    new BendValue(35f, 4f)
+                    new BendValue(34000, 3f),
+                    new BendValue(35000, 4f)
                 }
             };
 

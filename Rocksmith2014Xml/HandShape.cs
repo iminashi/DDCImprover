@@ -1,20 +1,19 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class HandShape : IXmlSerializable, IHasTimeCode//, IEquatable<HandShape>
+    public sealed class HandShape : IXmlSerializable, IHasTimeCode
     {
         public int ChordId { get; set; }
-        public float EndTime { get; set; }
-        public float StartTime { get; set; }
+        public uint EndTime { get; set; }
+        public uint StartTime { get; set; }
 
-        public float Time => StartTime;
+        public uint Time => StartTime;
 
-        public HandShape(int chordId, float startTime, float endTime)
+        public HandShape(int chordId, uint startTime, uint endTime)
         {
             ChordId = chordId;
             EndTime = endTime;
@@ -24,7 +23,7 @@ namespace Rocksmith2014Xml
         public HandShape() { }
 
         public override string ToString()
-            => $"{StartTime:F3} - {EndTime:F3}: Chord ID {ChordId}";
+            => $"{Utils.TimeCodeToString(StartTime)} - {Utils.TimeCodeToString(EndTime)}: Chord ID {ChordId}";
 
         #region IXmlSerializable Implementation
 
@@ -33,8 +32,8 @@ namespace Rocksmith2014Xml
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             ChordId = int.Parse(reader.GetAttribute("chordId"), NumberFormatInfo.InvariantInfo);
-            StartTime = float.Parse(reader.GetAttribute("startTime"), NumberFormatInfo.InvariantInfo);
-            EndTime = float.Parse(reader.GetAttribute("endTime"), NumberFormatInfo.InvariantInfo);
+            StartTime = Utils.TimeCodeFromFloatString(reader.GetAttribute("startTime"));
+            EndTime = Utils.TimeCodeFromFloatString(reader.GetAttribute("endTime"));
 
             reader.ReadStartElement();
         }
@@ -42,33 +41,10 @@ namespace Rocksmith2014Xml
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString("chordId", ChordId.ToString(NumberFormatInfo.InvariantInfo));
-            writer.WriteAttributeString("startTime", StartTime.ToString("F3", NumberFormatInfo.InvariantInfo));
-            writer.WriteAttributeString("endTime", EndTime.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("startTime", Utils.TimeCodeToString(StartTime));
+            writer.WriteAttributeString("endTime", Utils.TimeCodeToString(EndTime));
         }
 
         #endregion
-
-        /*#region Equality
-
-        public override bool Equals(object obj)
-            => obj is HandShape other && Equals(other);
-
-        public bool Equals(HandShape other)
-        {
-            return ChordId == other.ChordId
-                && Utils.TimeEqualToMilliseconds(StartTime, other.StartTime)
-                && Utils.TimeEqualToMilliseconds(EndTime, other.EndTime);
-        }
-
-        public override int GetHashCode()
-            => (ChordId, EndTime, StartTime).GetHashCode();
-
-        public static bool operator ==(HandShape left, HandShape right)
-            => left.Equals(right);
-
-        public static bool operator !=(HandShape left, HandShape right)
-            => !(left == right);
-
-        #endregion*/
     }
 }

@@ -8,45 +8,45 @@ namespace DDCImprover.Core.Tests.XmlProcessor
     public class ProcessorContextTests
     {
         private readonly Action<string> nullLog = _ => { };
-        private readonly RS2014Song testSong = new RS2014Song();
+        private readonly InstrumentalArrangement testArrangement = new InstrumentalArrangement();
         private readonly ProcessorContext context;
 
         public ProcessorContextTests()
         {
-            context = new ProcessorContext(testSong, nullLog);
+            context = new ProcessorContext(testArrangement, nullLog);
         }
 
         [Fact]
         public void ApplyFix_CallsCorrectInterfaceMethod()
         {
             var mock = new Mock<IProcessorBlock>();
-            mock.Setup(block => block.Apply(testSong, nullLog));
+            mock.Setup(block => block.Apply(testArrangement, nullLog));
 
             context.ApplyFix(mock.Object);
 
-            mock.Verify(block => block.Apply(testSong, nullLog), Times.Once);
+            mock.Verify(block => block.Apply(testArrangement, nullLog), Times.Once);
         }
 
         [Fact]
         public void ApplyFixIf_CallsInterfaceMethodIfConditionTrue()
         {
             var mock = new Mock<IProcessorBlock>();
-            mock.Setup(block => block.Apply(testSong, nullLog));
+            mock.Setup(block => block.Apply(testArrangement, nullLog));
 
             context.ApplyFixIf(true, mock.Object);
 
-            mock.Verify(block => block.Apply(testSong, nullLog), Times.Once);
+            mock.Verify(block => block.Apply(testArrangement, nullLog), Times.Once);
         }
 
         [Fact]
         public void ApplyFixIf_DoesNotCallInterfaceMethodIfConditionFalse()
         {
             var mock = new Mock<IProcessorBlock>();
-            mock.Setup(block => block.Apply(testSong, nullLog));
+            mock.Setup(block => block.Apply(testArrangement, nullLog));
 
             context.ApplyFixIf(false, mock.Object);
 
-            mock.Verify(block => block.Apply(testSong, nullLog), Times.Never);
+            mock.Verify(block => block.Apply(testArrangement, nullLog), Times.Never);
         }
     }
 }

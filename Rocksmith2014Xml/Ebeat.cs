@@ -8,10 +8,10 @@ namespace Rocksmith2014Xml
 {
     public sealed class Ebeat : IXmlSerializable, IEquatable<Ebeat>, IHasTimeCode
     {
-        public float Time { get; set; }
+        public uint Time { get; set; }
         public int Measure { get; set; } = -1;
 
-        public Ebeat(float time, int measure)
+        public Ebeat(uint time, int measure)
         {
             Time = time;
             Measure = measure;
@@ -21,7 +21,7 @@ namespace Rocksmith2014Xml
 
         public override string ToString()
         {
-            string result = Time.ToString("F3");
+            string result = Utils.TimeCodeToString(Time);
 
             if (Measure != -1)
                 result += $": Measure: {Measure}";
@@ -42,7 +42,7 @@ namespace Rocksmith2014Xml
                 switch (reader.Name)
                 {
                     case "time":
-                        Time = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                        Time = Utils.TimeCodeFromFloatString(reader.Value);
                         break;
                     case "measure":
                         Measure = int.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -57,11 +57,11 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
 
             if (Measure != -1)
                 writer.WriteAttributeString("measure", Measure.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("measure", "-1");
         }
 
@@ -77,7 +77,7 @@ namespace Rocksmith2014Xml
             if (ReferenceEquals(this, other))
                 return true;
 
-            return !(other is null) && Utils.TimeEqualToMilliseconds(Time, other.Time) && Measure == other.Measure;
+            return !(other is null) && Time == other.Time && Measure == other.Measure;
         }
 
         public override int GetHashCode()

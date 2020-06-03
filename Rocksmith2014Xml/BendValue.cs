@@ -8,17 +8,17 @@ namespace Rocksmith2014Xml
 {
     public struct BendValue: IXmlSerializable, IEquatable<BendValue>, IHasTimeCode
     {
-        public float Time { get; private set; }
+        public uint Time { get; private set; }
         public float Step { get; private set; }
 
-        public BendValue(float time, float step)
+        public BendValue(uint time, float step)
         {
             Time = time;
             Step = step;
         }
 
         public override string ToString()
-            => $"{Time:F3}: {Step:F2}";
+            => $"{Utils.TimeCodeToString(Time)}: {Step:F2}";
 
         #region IXmlSerializable Implementation
 
@@ -33,7 +33,7 @@ namespace Rocksmith2014Xml
                 switch (reader.Name)
                 {
                     case "time":
-                        Time = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                        Time = Utils.TimeCodeFromFloatString(reader.Value);
                         break;
                     case "step":
                         Step = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -48,8 +48,8 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
-            if(Step != 0f || !RS2014Song.UseAbridgedXml)
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
+            if(Step != 0f || !InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("step", Step.ToString("F3", NumberFormatInfo.InvariantInfo));
         }
 
@@ -61,7 +61,7 @@ namespace Rocksmith2014Xml
             => obj is BendValue other && Equals(other);
 
         public bool Equals(BendValue other)
-            => Utils.TimeEqualToMilliseconds(Time, other.Time) && Step == other.Step;
+            => Time == other.Time && Step == other.Step;
 
         public override int GetHashCode()
             => Utils.ShiftAndWrap(Time.GetHashCode(), 2) ^ Step.GetHashCode();

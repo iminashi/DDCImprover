@@ -86,43 +86,20 @@ namespace Rocksmith2014Xml
 
             if (IsDisparity)
                 writer.WriteAttributeString("disparity", "1");
-            else if(!RS2014Song.UseAbridgedXml)
+            else if(!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("disparity", "0");
 
             if (IsIgnore)
                 writer.WriteAttributeString("ignore", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("ignore", "0");
 
             if (IsSolo)
                 writer.WriteAttributeString("solo", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("solo", "0");
         }
 
         #endregion
-
-        /*#region Equality
-
-        public override bool Equals(object obj)
-            => obj is Phrase other && Equals(other);
-
-        public bool Equals(Phrase other)
-        {
-            return Mask == other.Mask
-                && MaxDifficulty == other.MaxDifficulty
-                && Name == other.Name;
-        }
-
-        public override int GetHashCode()
-            => (Mask, MaxDifficulty, Name).GetHashCode();
-
-        public static bool operator ==(Phrase left, Phrase right)
-            => left.Equals(right);
-
-        public static bool operator !=(Phrase left, Phrase right)
-            => !(left == right);
-
-        #endregion*/
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+
 using Xunit;
 
 namespace Rocksmith2014Xml.Tests
@@ -6,47 +7,46 @@ namespace Rocksmith2014Xml.Tests
     public class UtilsTest
     {
         [Theory]
-        [InlineData(0.000f, 0.000f)]
-        [InlineData(0.001f, 0.001f)]
-        [InlineData(0.004f, 0.004f)]
-        [InlineData(12.345f, 12.345f)]
-        [InlineData(44.873f, 44.873f)]
-        [InlineData(87.999f, 87.999f)]
-        [InlineData(526.820f, 526.820f)]
-        [InlineData(700.021f, 700.021f)]
-        [InlineData(1234.505f, 1234.505f)]
-        public void SameTimesAreEqual(float time1, float time2)
+        [InlineData(0, "0.000")]
+        [InlineData(18, "0.018")]
+        [InlineData(235, "0.235")]
+        [InlineData(1000, "1.000")]
+        [InlineData(1234, "1.234")]
+        [InlineData(20500, "20.500")]
+        [InlineData(989999, "989.999")]
+        [InlineData(987456123, "987456.123")]
+        public void TimeCodeToString_ConvertsCorrectly(uint input, string expected)
         {
-            Utils.TimeEqualToMilliseconds(time1, time2).Should().BeTrue();
+            Utils.TimeCodeToString(input).Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(0.00001f, 0.000f)]
-        [InlineData(0.0012f, 0.001f)]
-        [InlineData(0.00209f, 0.002f)]
-        [InlineData(0.004f, 0.00439f)]
-        [InlineData(526.820005f, 526.820f)]
-        [InlineData(700.0217f, 700.021f)]
-        [InlineData(1234.505f, 1234.5051f)]
-        public void SameTimesAreEqualUpToMilliseconds(float time1, float time2)
+        [InlineData("0.000", 0)]
+        [InlineData("0.018", 18)]
+        [InlineData("0.235", 235)]
+        [InlineData("1.000", 1000)]
+        [InlineData("1.234", 1234)]
+        [InlineData("20.500", 20500)]
+        [InlineData("989.999", 989999)]
+        [InlineData("1", 1000)]
+        [InlineData("8.7", 8700)]
+        [InlineData("6.66", 6660)]
+        [InlineData("18.00599", 18005)]
+        [InlineData("254.112", 254112)]
+        [InlineData("9504.11299999", 9504112)]
+        public void TimeCodeFromFloatString_ParsesCorrectly(string input, uint expected)
         {
-            Utils.TimeEqualToMilliseconds(time1, time2).Should().BeTrue();
+            Utils.TimeCodeFromFloatString(input).Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(0.000f, 0.001f)]
-        [InlineData(0.001f, 0.000f)]
-        [InlineData(0.004f, 0.005f)]
-        [InlineData(12.345f, 12.346f)]
-        [InlineData(44.873f, 44.874f)]
-        [InlineData(87.999f, 88.000f)]
-        [InlineData(526.820f, 526.819f)]
-        [InlineData(526.819f, 526.820f)]
-        [InlineData(700.021f, 700.022f)]
-        [InlineData(1234.505f, 1234.504f)]
-        public void DifferentTimesAreNotEqual(float time1, float time2)
+        [InlineData("0", 0)]
+        [InlineData("1", 1)]
+        [InlineData("2", 1)]
+        [InlineData("9", 1)]
+        public void ParseBinary_ParsesCorrectly(string input, byte expected)
         {
-            Utils.TimeEqualToMilliseconds(time1, time2).Should().BeFalse();
+            Utils.ParseBinary(input).Should().Be(expected);
         }
     }
 }

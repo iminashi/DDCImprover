@@ -1,17 +1,18 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
 namespace DDCImprover.Core.PreBlocks
 {
     /// <summary>
-    /// Enables LinkNext on any chord that has chordnotes with LinkNext.
+    /// Enables LinkNext on any chord that has chord notes with LinkNext.
     /// </summary>
     internal sealed class EOFLinkNextChordTechNoteFix : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            foreach (var chord in song.Levels.SelectMany(l => l.Chords))
+            foreach (var chord in arrangement.Levels.SelectMany(l => l.Chords))
             {
                 if (chord.ChordNotes is null)
                     continue;

@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
@@ -9,11 +10,11 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class WeakBeatPhraseMovingFix : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             var weakBeatsWithPhrases =
-                from ebeat in song.Ebeats
-                join phraseIter in song.PhraseIterations on ebeat.Time equals phraseIter.Time
+                from ebeat in arrangement.Ebeats
+                join phraseIter in arrangement.PhraseIterations on ebeat.Time equals phraseIter.Time
                 where ebeat.Measure == -1
                 select ebeat;
 

@@ -7,13 +7,13 @@ namespace Rocksmith2014Xml
 {
     public sealed class Tone : IXmlSerializable, IHasTimeCode
     {
-        public float Time { get; set; }
+        public uint Time { get; set; }
         public byte Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
         public Tone() { }
 
-        public Tone(string name, float time, byte id)
+        public Tone(string name, uint time, byte id)
         {
             Name = name;
             Time = time;
@@ -21,7 +21,7 @@ namespace Rocksmith2014Xml
         }
 
         public override string ToString()
-            => $"{Time:F3}: {Name}";
+            => $"{Utils.TimeCodeToString(Time)}: {Name}";
 
         #region IXmlSerializable Implementation
 
@@ -29,7 +29,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            Time = float.Parse(reader.GetAttribute("time"), NumberFormatInfo.InvariantInfo);
+            Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("time"));
             string? id = reader.GetAttribute("id");
             if(!string.IsNullOrEmpty(id))
                 Id = byte.Parse(id, NumberFormatInfo.InvariantInfo);
@@ -40,7 +40,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("id", Id.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("name", Name);
         }

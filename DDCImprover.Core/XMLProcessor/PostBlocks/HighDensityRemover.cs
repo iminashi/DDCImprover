@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
@@ -9,13 +10,13 @@ namespace DDCImprover.Core.PostBlocks
     /// </summary>
     internal sealed class HighDensityRemover : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             int hiDensRemoved = 0;
 
             void removeHighDensity(Chord chord, bool removeChordNotes)
             {
-                if(chord.IsHighDensity)
+                if (chord.IsHighDensity)
                 {
                     chord.IsHighDensity = false;
                     if (removeChordNotes)
@@ -31,9 +32,9 @@ namespace DDCImprover.Core.PostBlocks
             }
 
             // Make sure that the version of the XML file is 8
-            song.Version = 8;
+            arrangement.Version = 8;
 
-            foreach (var level in song.Levels)
+            foreach (var level in arrangement.Levels)
             {
                 foreach (var hs in level.HandShapes)
                 {
@@ -54,10 +55,10 @@ namespace DDCImprover.Core.PostBlocks
                         {
                             startsWithMute = true;
                             // Frethand-muted chords without techniques should not have chord notes
-                            if (chord.ChordNotes?.All(cn => cn.Sustain == 0f) == true)
+                            if (chord.ChordNotes?.All(cn => cn.Sustain == 0) == true)
                                 chord.ChordNotes = null;
                         }
-                        else if(chordNum == 1)
+                        else if (chordNum == 1)
                         {
                             // Do not remove the chord notes even if the first chord somehow has "high density"
                             removeHighDensity(chord, false);
@@ -69,7 +70,8 @@ namespace DDCImprover.Core.PostBlocks
                             // Do not remove the chord notes on the first non-muted chord after muted chord(s)
                             removeHighDensity(chord, false);
                             startsWithMute = false;
-                        } else
+                        }
+                        else
                         {
                             removeHighDensity(chord, true);
                         }

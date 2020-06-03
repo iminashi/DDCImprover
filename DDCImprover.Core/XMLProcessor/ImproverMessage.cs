@@ -6,9 +6,9 @@ namespace DDCImprover.Core
     {
         public string Message { get; }
         public MessageType Type { get; }
-        public float TimeCode { get; }
+        public uint TimeCode { get; }
 
-        public ImproverMessage(string message, MessageType messageType, float timeCode = 0f)
+        public ImproverMessage(string message, MessageType messageType, uint timeCode = 0)
         {
             Message = message;
             Type = messageType;

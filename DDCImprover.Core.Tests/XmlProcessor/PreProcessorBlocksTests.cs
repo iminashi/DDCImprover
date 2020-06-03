@@ -9,62 +9,62 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 {
     public class PreProcessorBlocksTests
     {
-        private readonly RS2014Song testSong;
+        private readonly InstrumentalArrangement testArrangement;
         private readonly Action<string> nullLog = _ => { };
         private readonly PhraseMover phraseMover = new PhraseMover(new List<ImproverMessage>(), new List<Ebeat>());
 
         public PreProcessorBlocksTests()
         {
-            testSong = RS2014Song.Load(@".\TestFiles\preTest_RS2.xml");
+            testArrangement = InstrumentalArrangement.Load(@".\TestFiles\preTest_RS2.xml");
         }
 
         [Fact]
         public void UnpitchedSlideCheckerTest()
         {
-            testSong.ArrangementProperties.UnpitchedSlides.Should().Be(0);
+            testArrangement.ArrangementProperties.UnpitchedSlides.Should().Be(0);
 
-            new UnpitchedSlideChecker().Apply(testSong, nullLog);
+            new UnpitchedSlideChecker().Apply(testArrangement, nullLog);
 
-            testSong.ArrangementProperties.UnpitchedSlides.Should().Be(1);
+            testArrangement.ArrangementProperties.UnpitchedSlides.Should().Be(1);
         }
 
         [Fact]
         public void WrongCrowdEventsFixTest()
         {
-            testSong.Events.Add(new Event("E0", 10f));
-            testSong.Events.Add(new Event("E1", 20f));
-            testSong.Events.Add(new Event("E2", 38f));
-            testSong.Events.Add(new Event("E1", 77f));
+            testArrangement.Events.Add(new Event("E0", 10000));
+            testArrangement.Events.Add(new Event("E1", 20000));
+            testArrangement.Events.Add(new Event("E2", 38000));
+            testArrangement.Events.Add(new Event("E1", 77000));
 
-            new EOFCrowdEventsFix().Apply(testSong, nullLog);
+            new EOFCrowdEventsFix().Apply(testArrangement, nullLog);
 
-            testSong.Events.Should().Contain(e => e.Code == "e0");
-            testSong.Events.Should().Contain(e => e.Code == "e1");
-            testSong.Events.Should().Contain(e => e.Code == "e2");
-            testSong.Events.Should().NotContain(e => e.Code == "E0");
-            testSong.Events.Should().NotContain(e => e.Code == "E1");
-            testSong.Events.Should().NotContain(e => e.Code == "E2");
+            testArrangement.Events.Should().Contain(e => e.Code == "e0");
+            testArrangement.Events.Should().Contain(e => e.Code == "e1");
+            testArrangement.Events.Should().Contain(e => e.Code == "e2");
+            testArrangement.Events.Should().NotContain(e => e.Code == "E0");
+            testArrangement.Events.Should().NotContain(e => e.Code == "E1");
+            testArrangement.Events.Should().NotContain(e => e.Code == "E2");
         }
 
         [Fact]
         public void ToneEventGeneratorTest()
         {
-            testSong.Events.Should().NotContain(e => e.Code == "tone_a");
-            testSong.Events.Should().NotContain(e => e.Code == "tone_b");
+            testArrangement.Events.Should().NotContain(e => e.Code == "tone_a");
+            testArrangement.Events.Should().NotContain(e => e.Code == "tone_b");
 
-            new ToneEventGenerator().Apply(testSong, nullLog);
+            new ToneEventGenerator().Apply(testArrangement, nullLog);
 
-            testSong.Events.Should().Contain(e => e.Code == "tone_a");
-            testSong.Events.Should().Contain(e => e.Code == "tone_b");
+            testArrangement.Events.Should().Contain(e => e.Code == "tone_a");
+            testArrangement.Events.Should().Contain(e => e.Code == "tone_b");
         }
 
         [Fact]
         public void CrowdEventAdderTest()
         {
-            var events = testSong.Events;
+            var events = testArrangement.Events;
             int eventCountBefore = events.Count;
 
-            new CrowdEventAdder().Apply(testSong, nullLog);
+            new CrowdEventAdder().Apply(testArrangement, nullLog);
 
             // Should generate 5 crowd events: e1, E3, E13, D3, E13
             events.Should().HaveCount(eventCountBefore + 5);
@@ -78,38 +78,34 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void WeakBeatPhraseMovingTest()
         {
-            const float phraseOnAWeakBeatTime = 7.875f;
-            var beatBefore = testSong.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
+            const uint phraseOnAWeakBeatTime = 7875;
+            var beatBefore = testArrangement.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
             beatBefore.Measure.Should().NotBe(XMLProcessor.TempMeasureNumber);
-            testSong.PhraseIterations.Should().Contain(pi => pi.Time == phraseOnAWeakBeatTime);
+            testArrangement.PhraseIterations.Should().Contain(pi => pi.Time == phraseOnAWeakBeatTime);
 
-            new WeakBeatPhraseMovingFix().Apply(testSong, nullLog);
+            new WeakBeatPhraseMovingFix().Apply(testArrangement, nullLog);
 
-            var beat = testSong.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
+            var beat = testArrangement.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
             beat.Measure.Should().Be(XMLProcessor.TempMeasureNumber);
         }
 
         [Fact]
         public void HandShapeAdjusterTest()
         {
-            var testHandshape = new HandShape(0, 10f, 11.999f);
-            testSong.Levels[0].HandShapes.Add(testHandshape);
-            testSong.Levels[0].HandShapes.Add(new HandShape(0, 12f, 13f));
+            var testHandshape = new HandShape(0, 10000, 11999);
+            testArrangement.Levels[0].HandShapes.Add(testHandshape);
+            testArrangement.Levels[0].HandShapes.Add(new HandShape(0, 12000, 13000));
 
-            new HandShapeAdjuster().Apply(testSong, nullLog);
+            new HandShapeAdjuster().Apply(testArrangement, nullLog);
 
-            testHandshape.EndTime.Should().BeLessThan(11.999f);
+            testHandshape.EndTime.Should().BeLessThan(11999);
         }
 
-        private PhraseIteration AddTestPhrase(string name, float time)
+        private PhraseIteration AddTestPhrase(string name, uint time)
         {
-            testSong.Phrases.Add(new Phrase(name, 0, PhraseMask.None));
-            var phraseIter = new PhraseIteration
-            {
-                PhraseId = testSong.Phrases.Count - 1,
-                Time = time
-            };
-            testSong.PhraseIterations.Add(phraseIter);
+            testArrangement.Phrases.Add(new Phrase(name, 0, PhraseMask.None));
+            var phraseIter = new PhraseIteration(time, testArrangement.Phrases.Count - 1);
+            testArrangement.PhraseIterations.Add(phraseIter);
 
             return phraseIter;
         }
@@ -117,66 +113,66 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void PhraseMover_MoveTo_Test()
         {
-            var testPhraseIter = AddTestPhrase("moveto18s300", 15f);
+            var testPhraseIter = AddTestPhrase("moveto18s300", 15000);
 
-            phraseMover.Apply(testSong, nullLog);
+            phraseMover.Apply(testArrangement, nullLog);
 
-            testPhraseIter.Time.Should().BeApproximately(18.3f, 0.001f);
+            testPhraseIter.Time.Should().Be(18300);
         }
 
         [Fact]
         public void PhraseMover_MoveRelative_Test()
         {
-            const float noteTime = 16.666f;
+            const uint noteTime = 16666;
 
-            var testPhraseIter = AddTestPhrase("moveR1", 15f);
-            testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
+            var testPhraseIter = AddTestPhrase("moveR1", 15000);
+            testArrangement.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
-            phraseMover.Apply(testSong, nullLog);
+            phraseMover.Apply(testArrangement, nullLog);
 
-            testPhraseIter.Time.Should().BeApproximately(noteTime, 0.001f);
+            testPhraseIter.Time.Should().Be(noteTime);
         }
 
         [Fact]
         public void PhraseMoverMovesSectionAlso()
         {
-            const float noteTime = 16.666f;
-            const float phraseTime = 15f;
+            const uint noteTime = 16666;
+            const uint phraseTime = 15000;
 
             AddTestPhrase("moveR1", phraseTime);
             var testSection = new Section("riff", phraseTime, 1);
-            testSong.Sections.Add(testSection);
-            testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
+            testArrangement.Sections.Add(testSection);
+            testArrangement.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
-            phraseMover.Apply(testSong, nullLog);
+            phraseMover.Apply(testArrangement, nullLog);
 
-            testSection.Time.Should().BeApproximately(noteTime, 0.001f);
+            testSection.Time.Should().Be(noteTime);
         }
 
         [Fact]
         public void PhraseMoverMovesAnchorAlso()
         {
-            const float noteTime = 16.666f;
-            const float phraseTime = 15f;
+            const uint noteTime = 16666;
+            const uint phraseTime = 15000;
 
             AddTestPhrase("mover1", phraseTime);
-            testSong.Levels[0].Anchors.Add(new Anchor(1, phraseTime, 4));
-            testSong.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
+            testArrangement.Levels[0].Anchors.Add(new Anchor(1, phraseTime, 4));
+            testArrangement.Levels[0].Notes.Add(new Note { Time = noteTime, String = 2 });
 
-            phraseMover.Apply(testSong, nullLog);
+            phraseMover.Apply(testArrangement, nullLog);
 
-            testSong.Levels[0].Anchors.Should().Contain(a => a.Time == noteTime);
+            testArrangement.Levels[0].Anchors.Should().Contain(a => a.Time == noteTime);
         }
 
         [Fact]
         public void CustomEvent_Width3_Test()
         {
-            testSong.Events.Add(new Event("w3", testSong.Levels[0].Anchors[0].Time));
+            testArrangement.Events.Add(new Event("w3", testArrangement.Levels[0].Anchors[0].Time));
 
-            new CustomEventsPreProcessor().Apply(testSong, nullLog);
+            new CustomEventsPreProcessor().Apply(testArrangement, nullLog);
 
-            testSong.Events.Should().NotContain(ev => ev.Code == "w3");
-            testSong.Levels[0].Anchors[0].Width.Should().Be(3);
+            testArrangement.Events.Should().NotContain(ev => ev.Code == "w3");
+            testArrangement.Levels[0].Anchors[0].Width.Should().Be(3);
         }
     }
 }

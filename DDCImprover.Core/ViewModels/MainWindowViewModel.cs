@@ -227,15 +227,14 @@ namespace DDCImprover.Core.ViewModels
                     },
                     async fn =>
                     {
-                        RS2014Song song = RS2014Song.Load(fn);
-                        await DDRemover.RemoveDD(song, MatchPhrasesToSections, DeleteTranscriptionTrack).ConfigureAwait(false);
+                        var arrangement = InstrumentalArrangement.Load(fn);
+                        await DDRemover.RemoveDD(arrangement, MatchPhrasesToSections, DeleteTranscriptionTrack).ConfigureAwait(false);
                         string oldFileName = Path.GetFileName(fn);
                         string newFileName = oldFileName.StartsWith("DDC_") ?
                             oldFileName.Substring(4) :
                             oldFileName;
-                        song.Save(Path.Combine(Path.GetDirectoryName(fn), "NDD_" + newFileName));
-                    }))
-                    .ConfigureAwait(false);
+                        arrangement.Save(Path.Combine(Path.GetDirectoryName(fn), "NDD_" + newFileName));
+                    }));
 
                 string files = (fileNames.Length == 1) ? "File" : "Files";
                 string statusText = $"Removing DD completed. {files} saved with NDD_ prefix.";

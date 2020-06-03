@@ -5,6 +5,6 @@ namespace DDCImprover.Core
 {
     internal interface IProcessorBlock
     {
-        void Apply(RS2014Song song, Action<string> Log);
+        void Apply(InstrumentalArrangement arrangement, Action<string> Log);
     }
 }

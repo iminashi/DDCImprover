@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 
@@ -16,15 +17,15 @@ namespace DDCImprover.Core.PostBlocks
             _ngAnchors = ngAnchors;
         }
 
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             Log("Restoring noguitar section anchors:");
 
-            var firstLevelAnchors = song.Levels[0].Anchors;
+            var firstLevelAnchors = arrangement.Levels[0].Anchors;
 
             foreach (Anchor anchor in _ngAnchors)
             {
-                // Add anchor to the first difficulty level
+                // Add the anchor to the first difficulty level
                 if (firstLevelAnchors.FindIndexByTime(anchor.Time) == -1)
                 {
                     firstLevelAnchors.InsertByTime(anchor);

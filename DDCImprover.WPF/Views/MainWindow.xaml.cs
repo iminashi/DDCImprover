@@ -17,6 +17,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
+#pragma warning disable RCS1090 // Call 'ConfigureAwait(false)'.
+
 namespace DDCImprover.WPF
 {
     /// <summary>

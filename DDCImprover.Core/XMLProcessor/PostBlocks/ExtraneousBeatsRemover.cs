@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 
 namespace DDCImprover.Core.PostBlocks
@@ -8,12 +9,12 @@ namespace DDCImprover.Core.PostBlocks
     /// </summary>
     internal sealed class ExtraneousBeatsRemover : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            var lastBeat = song.Ebeats[song.Ebeats.Count - 1];
-            var penultimateBeat = song.Ebeats[song.Ebeats.Count - 2];
-            float audioEnd = song.SongLength;
-            float lastBeatTime = lastBeat.Time;
+            var lastBeat = arrangement.Ebeats[^1];
+            var penultimateBeat = arrangement.Ebeats[^2];
+            uint audioEnd = arrangement.SongLength;
+            uint lastBeatTime = lastBeat.Time;
             bool first = true;
 
             if (lastBeatTime < audioEnd)
@@ -29,7 +30,7 @@ namespace DDCImprover.Core.PostBlocks
                         break;
                 }
 
-                song.Ebeats.Remove(lastBeat);
+                arrangement.Ebeats.Remove(lastBeat);
 
                 if (first)
                 {
@@ -41,7 +42,7 @@ namespace DDCImprover.Core.PostBlocks
 
                 lastBeat = penultimateBeat;
                 lastBeatTime = lastBeat.Time;
-                penultimateBeat = song.Ebeats[song.Ebeats.Count - 2];
+                penultimateBeat = arrangement.Ebeats[^2];
             }
 
             // Move the last beat to the time audio ends

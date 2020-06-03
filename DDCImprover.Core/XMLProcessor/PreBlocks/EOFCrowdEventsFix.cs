@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
@@ -11,11 +12,11 @@ namespace DDCImprover.Core.PreBlocks
     {
         private static readonly string[] wrongCrowdEvents = { "E0", "E1", "E2" };
 
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            if (song.Events?.Count > 0)
+            if (arrangement.Events?.Count > 0)
             {
-                foreach (var @event in song.Events)
+                foreach (var @event in arrangement.Events)
                 {
                     if (wrongCrowdEvents.Contains(@event.Code))
                     {

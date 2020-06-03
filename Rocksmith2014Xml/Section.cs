@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -10,9 +9,9 @@ namespace Rocksmith2014Xml
     {
         public string Name { get; set; } = string.Empty;
         public int Number { get; set; }
-        public float Time { get; set; }
+        public uint Time { get; set; }
 
-        public Section(string name, float startTime, int number)
+        public Section(string name, uint startTime, int number)
         {
             Name = name;
             Number = number;
@@ -22,7 +21,7 @@ namespace Rocksmith2014Xml
         public Section() { }
 
         public override string ToString()
-            => $"{Time:F3}: {Name} #{Number}";
+            => $"{Utils.TimeCodeToString(Time)}: {Name} #{Number}";
 
         #region IXmlSerializable Implementation
 
@@ -32,7 +31,7 @@ namespace Rocksmith2014Xml
         {
             Name = reader.GetAttribute("name");
             Number = int.Parse(reader.GetAttribute("number"), NumberFormatInfo.InvariantInfo);
-            Time = float.Parse(reader.GetAttribute("startTime"), NumberFormatInfo.InvariantInfo);
+            Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("startTime"));
 
             reader.ReadStartElement();
         }
@@ -41,7 +40,7 @@ namespace Rocksmith2014Xml
         {
             writer.WriteAttributeString("name", Name);
             writer.WriteAttributeString("number", Number.ToString(NumberFormatInfo.InvariantInfo));
-            writer.WriteAttributeString("startTime", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("startTime", Utils.TimeCodeToString(Time));
         }
 
         #endregion

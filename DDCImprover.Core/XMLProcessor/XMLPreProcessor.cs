@@ -9,24 +9,24 @@ namespace DDCImprover.Core
     internal class XMLPreProcessor
     {
         private XMLProcessor Parent { get; }
-        private RS2014Song Song { get; }
-        public float LastPhraseTime { get; }
-        public float? FirstNGSectionTime { get; }
+        private InstrumentalArrangement Arrangement { get; }
+        public uint LastPhraseTime { get; }
+        public uint? FirstNGSectionTime { get; }
 
-        private bool IsNonDDFile => Song.Levels.Count == 1;
+        private bool IsNonDDFile => Arrangement.Levels.Count == 1;
 
         private readonly Action<string> Log;
 
         internal XMLPreProcessor(XMLProcessor parent, Action<string> logAction)
         {
             Parent = parent;
-            Song = parent.OriginalSong!;
+            Arrangement = parent.OriginalArrangement!;
             Log = logAction;
-            LastPhraseTime = Song.PhraseIterations[Song.PhraseIterations.Count - 1].Time;
+            LastPhraseTime = Arrangement.PhraseIterations[^1].Time;
 
             if (Preferences.RestoreFirstNoguitarSection && IsNonDDFile)
             {
-                var firstSection = Song.Sections[0];
+                var firstSection = Arrangement.Sections[0];
 
                 if (firstSection.Name == "noguitar")
                 {
@@ -42,7 +42,7 @@ namespace DDCImprover.Core
             if (Preferences.RestoreNoguitarSectionAnchors && IsNonDDFile)
                 StoreNGSectionAnchors();
 
-            var context = new ProcessorContext(Song, Log);
+            var context = new ProcessorContext(Arrangement, Log);
 
             context
                 // Add missing linknext to chords
@@ -104,7 +104,7 @@ namespace DDCImprover.Core
         {
             int rightHandCount = 0;
 
-            foreach (var note in Song.Levels.SelectMany(lev => lev.Notes))
+            foreach (var note in Arrangement.Levels.SelectMany(lev => lev.Notes))
             {
                 if (note.IsTap && !note.IsRightHand)
                 {
@@ -124,7 +124,7 @@ namespace DDCImprover.Core
         {
             int removeCount = 0;
 
-            foreach (var chord in Song.Levels.SelectMany(lev => lev.Chords))
+            foreach (var chord in Arrangement.Levels.SelectMany(lev => lev.Chords))
             {
                 if (chord.ChordNotes is null)
                     continue;
@@ -148,10 +148,10 @@ namespace DDCImprover.Core
         /// </summary>
         private void StoreNGSectionAnchors()
         {
-            float firstBeatTime = Song.Ebeats[0].Time;
+            uint firstBeatTime = Arrangement.Ebeats[0].Time;
 
             // Check for anchor at the beginning of the beatmap
-            Anchor? firstBeatAnchor = Song.Levels[0].Anchors.FindByTime(firstBeatTime);
+            Anchor? firstBeatAnchor = Arrangement.Levels[0].Anchors.FindByTime(firstBeatTime);
             if (firstBeatAnchor is Anchor)
             {
                 Log($"Stored the anchor found at the beginning of the beatmap at {firstBeatTime.TimeToString()}.");
@@ -161,8 +161,8 @@ namespace DDCImprover.Core
 
             // Check NG sections
             var ngSectionAnchors =
-               from section in Song.Sections
-               join anchor in Song.Levels[0].Anchors on section.Time equals anchor.Time
+               from section in Arrangement.Sections
+               join anchor in Arrangement.Levels[0].Anchors on section.Time equals anchor.Time
                where section.Name == "noguitar"
                select anchor;
 
@@ -179,25 +179,8 @@ namespace DDCImprover.Core
         /// </summary>
         private void Lint()
         {
-            var arrangementChecker = new ArrangementChecker(Song, Parent.StatusMessages, Log);
+            var arrangementChecker = new ArrangementChecker(Arrangement, Parent.StatusMessages, Log);
             arrangementChecker.RunAllChecks();
-
-            /*// Check for duplicate notes
-            var overlappingNotes =
-                from note in Song.Levels[0].Notes
-                group note by note.Time into noteGroup
-                where noteGroup.Count() > 1
-                select noteGroup;
-
-            foreach (var grp in overlappingNotes)
-            {
-                HashSet<sbyte> strings = new HashSet<sbyte>();
-                foreach (var note in grp)
-                {
-                    if(!strings.Add(note.String))
-                        AddIssue($"Duplicate note at {note.Time.TimeToString()}.", note.Time);
-                }
-            }*/
         }
     }
 }

@@ -120,62 +120,62 @@ namespace Rocksmith2014Xml
 
             if (Fingers[0] != -1)
                 writer.WriteAttributeString("finger0", Fingers[0].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("finger0", "-1");
 
             if (Fingers[1] != -1)
                 writer.WriteAttributeString("finger1", Fingers[1].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("finger1", "-1");
 
             if (Fingers[2] != -1)
                 writer.WriteAttributeString("finger2", Fingers[2].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("finger2", "-1");
 
             if (Fingers[3] != -1)
                 writer.WriteAttributeString("finger3", Fingers[3].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("finger3", "-1");
 
             if (Fingers[4] != -1)
                 writer.WriteAttributeString("finger4", Fingers[4].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("finger4", "-1");
 
             if (Fingers[5] != -1)
                 writer.WriteAttributeString("finger5", Fingers[5].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("finger5", "-1");
 
             if (Frets[0] != -1)
                 writer.WriteAttributeString("fret0", Frets[0].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fret0", "-1");
 
             if (Frets[1] != -1)
                 writer.WriteAttributeString("fret1", Frets[1].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fret1", "-1");
 
             if (Frets[2] != -1)
                 writer.WriteAttributeString("fret2", Frets[2].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fret2", "-1");
 
             if (Frets[3] != -1)
                 writer.WriteAttributeString("fret3", Frets[3].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fret3", "-1");
 
             if (Frets[4] != -1)
                 writer.WriteAttributeString("fret4", Frets[4].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fret4", "-1");
 
             if (Frets[5] != -1)
                 writer.WriteAttributeString("fret5", Frets[5].ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("fret5", "-1");
         }
 

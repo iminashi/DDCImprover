@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
@@ -10,16 +11,16 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class CustomEventsPreProcessor : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            var events = song.Events;
+            var events = arrangement.Events;
 
             var width3events = events.Where(ev => ev.Code.Equals("w3", StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var w3event in width3events)
             {
-                var modifiedAnchors = song.Levels
+                var modifiedAnchors = arrangement.Levels
                     .SelectMany(lvl => lvl.Anchors)
-                    .Where(a => Utils.TimeEqualToMilliseconds(a.Time, w3event.Time));
+                    .Where(a => a.Time == w3event.Time);
 
                 foreach (var anchor in modifiedAnchors)
                 {

@@ -14,7 +14,7 @@ namespace Rocksmith2014Xml
     /// Represents a Rocksmith 2014 instrumental arrangement.
     /// </summary>
     [XmlRoot("song")]
-    public class RS2014Song : IXmlSerializable
+    public class InstrumentalArrangement : IXmlSerializable
     {
         internal static bool UseAbridgedXml { get; set; }
 
@@ -38,9 +38,9 @@ namespace Rocksmith2014Xml
         public int CentOffset { get; set; }
 
         /// <summary>
-        /// The length of the arrangement in seconds.
+        /// The length of the arrangement in milliseconds.
         /// </summary>
-        public float SongLength { get; set; }
+        public uint SongLength { get; set; }
 
         /// <summary>
         /// The average tempo of the arrangement in beats per minute.
@@ -66,7 +66,7 @@ namespace Rocksmith2014Xml
         // CrowdSpeed - Completely purposeless since it does not have an equivalent in the SNG files or manifest files.
         //              The crowd speed is controlled with events e0, e1 and e2.
 
-        public float StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0f;
+        public uint StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0;
 
         /// <summary>
         /// Contains various metadata about the arrangement.
@@ -103,7 +103,7 @@ namespace Rocksmith2014Xml
         public Level? TranscriptionTrack { get; set; }
 
         /// <summary>
-        /// The difficulty levels for the arrangement.
+        /// The difficulty levels of the arrangement.
         /// </summary>
         public LevelCollection Levels { get; set; } = new LevelCollection();
 
@@ -134,8 +134,8 @@ namespace Rocksmith2014Xml
         /// Loads a Rocksmith 2014 arrangement from the given file name.
         /// </summary>
         /// <param name="fileName">The file name of a Rocksmith 2014 instrumental arrangement.</param>
-        /// <returns>A Rocksmith 2014 song parsed from the XML file.</returns>
-        public static RS2014Song Load(string fileName)
+        /// <returns>A Rocksmith 2014 arrangement parsed from the XML file.</returns>
+        public static InstrumentalArrangement Load(string fileName)
         {
             var settings = new XmlReaderSettings
             {
@@ -146,17 +146,17 @@ namespace Rocksmith2014Xml
             using XmlReader reader = XmlReader.Create(fileName, settings);
 
             reader.MoveToContent();
-            RS2014Song song = new RS2014Song();
-            ((IXmlSerializable)song).ReadXml(reader);
-            return song;
+            var arr = new InstrumentalArrangement();
+            ((IXmlSerializable)arr).ReadXml(reader);
+            return arr;
         }
 
         /// <summary>
         /// Loads a Rocksmith 2014 arrangement from the given file name on a background thread.
         /// </summary>
         /// <param name="fileName">The file name of a Rocksmith 2014 instrumental arrangement.</param>
-        /// <returns>A Rocksmith 2014 song parsed from the XML file.</returns>
-        public static Task<RS2014Song> LoadAsync(string fileName)
+        /// <returns>A Rocksmith 2014 arrangement parsed from the XML file.</returns>
+        public static Task<InstrumentalArrangement> LoadAsync(string fileName)
             => Task.Run(() => Load(fileName));
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Rocksmith2014Xml
                         CentOffset = int.Parse(reader.ReadElementContentAsString(), NumberFormatInfo.InvariantInfo);
                         break;
                     case "songLength":
-                        SongLength = float.Parse(reader.ReadElementContentAsString(), NumberFormatInfo.InvariantInfo);
+                        SongLength = Utils.TimeCodeFromFloatString(reader.ReadElementContentAsString());
                         break;
                     case "songNameSort":
                         TitleSort = reader.ReadElementContentAsString();
@@ -365,23 +365,23 @@ namespace Rocksmith2014Xml
                 }
             }
 
-            float firstBeat = 0.0f;
+            uint firstBeat = 0;
             if (Ebeats.Count > 0)
                 firstBeat = Ebeats[0].Time;
 
             writer.WriteElementString("title", Title);
             writer.WriteElementString("arrangement", Arrangement);
             writer.WriteElementString("part", Part.ToString(NumberFormatInfo.InvariantInfo));
-            writer.WriteElementString("offset", (-firstBeat).ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteElementString("offset", (firstBeat / -1000f).ToString("F3", NumberFormatInfo.InvariantInfo));
             writer.WriteElementString("centOffset", CentOffset.ToString(NumberFormatInfo.InvariantInfo));
-            writer.WriteElementString("songLength", SongLength.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteElementString("songLength", Utils.TimeCodeToString(SongLength));
 
             if (TitleSort != null)
             {
                 writer.WriteElementString("songNameSort", TitleSort);
             }
 
-            writer.WriteElementString("startBeat", firstBeat.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteElementString("startBeat", Utils.TimeCodeToString(firstBeat));
             writer.WriteElementString("averageTempo", AverageTempo.ToString("F3", NumberFormatInfo.InvariantInfo));
 
             if (Tuning != null)

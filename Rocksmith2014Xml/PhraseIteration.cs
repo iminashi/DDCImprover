@@ -7,14 +7,22 @@ namespace Rocksmith2014Xml
 {
     public sealed class PhraseIteration : IXmlSerializable, IHasTimeCode
     {
-        public float Time { get; set; }
+        public uint Time { get; set; }
         public int PhraseId { get; set; }
         public string? Variation { get; set; }
 
         public HeroLevelCollection? HeroLevels { get; set; }
 
+        public PhraseIteration() { }
+
+        public PhraseIteration(uint time, int phraseId)
+        {
+            Time = time;
+            PhraseId = phraseId;
+        }
+
         public override string ToString()
-            => $"{Time:F3}: Phrase ID: {PhraseId}, Variation: \"{Variation}\"";
+            => $"{Utils.TimeCodeToString(Time)}: Phrase ID: {PhraseId}, Variation: \"{Variation}\"";
 
         #region IXmlSerializable Implementation
 
@@ -22,7 +30,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            Time = float.Parse(reader.GetAttribute("time"), NumberFormatInfo.InvariantInfo);
+            Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("time"));
             PhraseId = int.Parse(reader.GetAttribute("phraseId"), NumberFormatInfo.InvariantInfo);
             Variation = reader.GetAttribute("variation");
 
@@ -42,9 +50,9 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("phraseId", PhraseId.ToString(NumberFormatInfo.InvariantInfo));
-            if(!(RS2014Song.UseAbridgedXml && string.IsNullOrEmpty(Variation)))
+            if(!(InstrumentalArrangement.UseAbridgedXml && string.IsNullOrEmpty(Variation)))
                 writer.WriteAttributeString("variation", Variation);
 
             if (HeroLevels?.Count > 0)

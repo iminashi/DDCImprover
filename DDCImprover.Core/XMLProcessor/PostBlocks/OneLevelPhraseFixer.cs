@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,33 +11,33 @@ namespace DDCImprover.Core.PostBlocks
         /// <summary>
         /// Adds a second difficulty level to phrases that have only one level.
         /// </summary>
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             Log("********** Begin one level phrase fix **********");
 
-            for (int phraseID = 0; phraseID < song.Phrases.Count; phraseID++)
+            for (int phraseID = 0; phraseID < arrangement.Phrases.Count; phraseID++)
             {
-                if (song.Phrases[phraseID].MaxDifficulty == 0)
+                if (arrangement.Phrases[phraseID].MaxDifficulty == 0)
                 {
-                    Log($"--Phrase #{phraseID} ({song.Phrases[phraseID].Name}, {song.PhraseIterations.First(pi => pi.PhraseId == phraseID).Time.TimeToString()}) has only one level.");
+                    Log($"--Phrase #{phraseID} ({arrangement.Phrases[phraseID].Name}, {arrangement.PhraseIterations.First(pi => pi.PhraseId == phraseID).Time.TimeToString()}) has only one level.");
 
-                    var phraseIterations = from pi in song.PhraseIterations
+                    var phraseIterations = from pi in arrangement.PhraseIterations
                                            where pi.PhraseId == phraseID
                                            select pi;
 
                     foreach (var pi in phraseIterations)
                     {
-                        float startTime = pi.Time;
-                        int piIndex = song.PhraseIterations.IndexOf(pi);
-                        if(piIndex == 0 || piIndex == song.PhraseIterations.Count - 1)
+                        uint startTime = pi.Time;
+                        int piIndex = arrangement.PhraseIterations.IndexOf(pi);
+                        if (piIndex == 0 || piIndex == arrangement.PhraseIterations.Count - 1)
                         {
                             // Skip first phrase (COUNT) and last phrase (END)
                             continue;
                         }
-                        float endTime = song.PhraseIterations[piIndex + 1].Time;
+                        uint endTime = arrangement.PhraseIterations[piIndex + 1].Time;
 
-                        var firstLevel = song.Levels[0];
-                        var secondLevel = song.Levels[1];
+                        var firstLevel = arrangement.Levels[0];
+                        var secondLevel = arrangement.Levels[1];
 
                         var firstLevelNotes = (from note in firstLevel.Notes
                                                where note.Time >= startTime && note.Time < endTime
@@ -58,7 +59,7 @@ namespace DDCImprover.Core.PostBlocks
                         int notesRemoved = 0;
 
                         var removableSustainNotes =
-                            firstLevelNotes.Where(note => note.Sustain != 0.0f
+                            firstLevelNotes.Where(note => note.Sustain != 0
                                                           && !note.IsBend
                                                           && !note.IsVibrato
                                                           && !note.IsTremolo
@@ -95,9 +96,9 @@ namespace DDCImprover.Core.PostBlocks
                                     Log($"Removed linkNext from note at time {note.Time.TimeToString()}");
                                     note.IsLinkNext = false;
 
-                                    if (note.Sustain < 0.5f && !note.IsBend) // Remove sustain if very short
+                                    if (note.Sustain < 500 && !note.IsBend) // Remove sustain if it is very short
                                     {
-                                        note.Sustain = 0.0f;
+                                        note.Sustain = 0;
                                         Log($"Removed sustain from note at time {note.Time.TimeToString()}");
                                     }
                                 }
@@ -110,8 +111,7 @@ namespace DDCImprover.Core.PostBlocks
                                     note.BendValues.RemoveRange(2, note.BendValues.Count - 2);
 
                                     // Set sustain of the note to end at the second bendValue
-                                    float newSustain = secondBendValue.Time - note.Time;
-                                    note.Sustain = (float)Math.Round(newSustain, 3, MidpointRounding.AwayFromZero);
+                                    note.Sustain = secondBendValue.Time - note.Time;
 
                                     Log($"Removed bendvalues and adjusted the sustain of note at {note.Time.TimeToString()}");
                                 }
@@ -122,7 +122,7 @@ namespace DDCImprover.Core.PostBlocks
                         {
                             foreach (var note in removableSustainNotes)
                             {
-                                note.Sustain = 0.0f;
+                                note.Sustain = 0;
                             }
 
                             Log($"Solution: Removed sustain from note{(notesInPhrase == 1 ? "" : "s")}.");
@@ -142,7 +142,7 @@ namespace DDCImprover.Core.PostBlocks
                         };
 
                         // Find correct place where to insert the notes in the second difficulty level
-                        float lastNoteTime = harderLevelNotes.Last().Time;
+                        uint lastNoteTime = harderLevelNotes.Last().Time;
                         int noteAfterIndex = secondLevel.Notes.FindIndex(n => n.Time > lastNoteTime);
 
                         if (noteAfterIndex == -1) // Add to the end
@@ -150,7 +150,7 @@ namespace DDCImprover.Core.PostBlocks
                         else
                             secondLevel.Notes.InsertRange(noteAfterIndex, harderLevelNotes);
 
-                        song.Phrases[phraseID].MaxDifficulty = 1;
+                        arrangement.Phrases[phraseID].MaxDifficulty = 1;
                     }
                 }
             }

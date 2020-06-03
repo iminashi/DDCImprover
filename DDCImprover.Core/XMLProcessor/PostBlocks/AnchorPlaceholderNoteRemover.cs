@@ -1,5 +1,7 @@
 ﻿using DynamicData;
+
 using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +9,15 @@ using System.Linq;
 namespace DDCImprover.Core.PostBlocks
 {
     /// <summary>
-    /// Removes notes with no sustain after linknext slides.
+    /// Removes notes with no sustain after LinkNext slides.
     /// </summary>
     internal sealed class AnchorPlaceholderNoteRemover : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             int notesRemoved = 0;
 
-            foreach (var level in song.Levels)
+            foreach (var level in arrangement.Levels)
             {
                 var notesToRemove = new List<Note>();
                 var notes = level.Notes;
@@ -38,7 +40,7 @@ namespace DDCImprover.Core.PostBlocks
                             break;
 
                         // Remove the note if it has no sustain
-                        if (notes[j].Sustain == 0f)
+                        if (notes[j].Sustain == 0)
                         {
                             notesToRemove.Add(notes[j]);
                             note.IsLinkNext = false;
@@ -50,25 +52,23 @@ namespace DDCImprover.Core.PostBlocks
                 {
                     Chord chord = chords[i];
 
-                    if(chord.IsLinkNext && chord.ChordNotes.Any(n => n.IsSlide))
+                    if (chord.IsLinkNext && chord.ChordNotes.Any(n => n.IsSlide))
                     {
                         // Find the first note after the chord
                         int noteIndex = notes.FindIndex(n => n.Time > chord.Time);
 
-                        if(noteIndex == -1)
-                        {
+                        if (noteIndex == -1)
                             continue;
-                        }
 
                         // Get all the chord notes that have LinkNext slides
                         var chordNotes = chord.ChordNotes.Where(n => n.IsLinkNext && n.IsSlide).ToDictionary(n => n.String);
-                        while(chordNotes.Count > 0 && noteIndex < notes.Count)
+                        while (chordNotes.Count > 0 && noteIndex < notes.Count)
                         {
                             var note = notes[noteIndex];
                             sbyte nString = note.String;
                             if (chordNotes.ContainsKey(nString))
                             {
-                                if (note.Sustain == 0f)
+                                if (note.Sustain == 0)
                                 {
                                     chordNotes[nString].IsLinkNext = false;
                                     notesToRemove.Add(note);
@@ -85,7 +85,7 @@ namespace DDCImprover.Core.PostBlocks
                 notes.Remove(notesToRemove);
             }
 
-            if(notesRemoved > 0)
+            if (notesRemoved > 0)
                 Log($"Removed {notesRemoved} anchor placeholder note{(notesRemoved == 1 ? "" : "s")}.");
         }
     }

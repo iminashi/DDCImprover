@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Rocksmith2014Xml;
+
+using System;
 using System.Linq;
-using Rocksmith2014Xml;
 
 namespace DDCImprover.Core.PostBlocks
 {
@@ -9,14 +10,14 @@ namespace DDCImprover.Core.PostBlocks
     /// </summary>
     internal sealed class UnnecessaryNGPhraseRemover : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             const int ngPhraseId = 1;
 
-            if (song.Phrases[ngPhraseId].MaxDifficulty != 0)
+            if (arrangement.Phrases[ngPhraseId].MaxDifficulty != 0)
                 return;
 
-            var ngPhrasesIterations = from pi in song.PhraseIterations
+            var ngPhrasesIterations = from pi in arrangement.PhraseIterations
                                       where pi.PhraseId == ngPhraseId
                                       select pi;
 
@@ -24,10 +25,10 @@ namespace DDCImprover.Core.PostBlocks
             {
                 Log("Removed unnecessary noguitar phrase.");
 
-                song.Phrases.RemoveAt(ngPhraseId);
+                arrangement.Phrases.RemoveAt(ngPhraseId);
 
                 // Set correct phrase IDs for phrase iterations
-                foreach (var pi in song.PhraseIterations)
+                foreach (var pi in arrangement.PhraseIterations)
                 {
                     if (pi.PhraseId > ngPhraseId)
                     {
@@ -36,7 +37,7 @@ namespace DDCImprover.Core.PostBlocks
                 }
 
                 // Set correct phrase IDs for NLDs
-                foreach (var nld in song.NewLinkedDiffs)
+                foreach (var nld in arrangement.NewLinkedDiffs)
                 {
                     for (int i = 0; i < nld.PhraseCount; i++)
                     {

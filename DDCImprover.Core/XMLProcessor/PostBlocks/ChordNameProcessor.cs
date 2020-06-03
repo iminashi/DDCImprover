@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,15 +19,15 @@ namespace DDCImprover.Core.PostBlocks
             _statusMessages = statusMessages;
         }
 
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
             var chordRenamed = new Dictionary<string, bool>();
 
             Log("Processing chord names...");
 
-            for (int i = 0; i < song.ChordTemplates.Count; i++)
+            for (int i = 0; i < arrangement.ChordTemplates.Count; i++)
             {
-                var currentChordTemplate = song.ChordTemplates[i];
+                var currentChordTemplate = arrangement.ChordTemplates[i];
                 string chordName = currentChordTemplate.ChordName;
 
                 // One fret handshape fret moving

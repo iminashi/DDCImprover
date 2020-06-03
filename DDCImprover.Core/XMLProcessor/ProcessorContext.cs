@@ -5,18 +5,18 @@ namespace DDCImprover.Core
 {
     internal class ProcessorContext
     {
-        private readonly RS2014Song song;
+        private readonly InstrumentalArrangement arrangement;
         private readonly Action<string> logAction;
 
-        public ProcessorContext(RS2014Song song, Action<string> logAction)
+        public ProcessorContext(InstrumentalArrangement arrangement, Action<string> logAction)
         {
-            this.song = song;
+            this.arrangement = arrangement;
             this.logAction = logAction;
         }
 
         internal ProcessorContext ApplyFix(IProcessorBlock block)
         {
-            block.Apply(song, logAction);
+            block.Apply(arrangement, logAction);
             return this;
         }
 
@@ -24,7 +24,7 @@ namespace DDCImprover.Core
         {
             if (condition)
             {
-                block.Apply(song, logAction);
+                block.Apply(arrangement, logAction);
             }
 
             return this;

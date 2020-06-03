@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using System;
+
 using Xunit;
 
 namespace Rocksmith2014Xml.Tests
@@ -124,19 +124,6 @@ namespace Rocksmith2014Xml.Tests
             chord.IsLinkNext.Should().BeFalse();
             chord.IsPalmMute.Should().BeTrue();
             chord.IsUpStrum.Should().BeTrue();
-        }
-
-        [Fact]
-        public static void TimeCannotBeAssignedNegativeValues()
-        {
-            Chord chord = new Chord
-            {
-                Time = 10f
-            };
-
-            Action action = () => chord.Time = -10f;
-
-            action.Should().Throw<InvalidOperationException>();
         }
     }
 }

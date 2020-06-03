@@ -21,7 +21,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             preProcessor.Process();
 
-            preProcessor.FirstNGSectionTime.Should().BeApproximately(4.5f, 0.001f);
+            preProcessor.FirstNGSectionTime.Should().Be(4500);
         }
     }
 }

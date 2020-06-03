@@ -220,32 +220,9 @@ namespace Rocksmith2014Xml
 
         #region Properties
 
-        private float _time;
-        private float _sustain;
+        public uint Time { get; set; }
 
-        public float Time
-        {
-            get => _time;
-            set
-            {
-                if (value < 0.0f)
-                    throw new InvalidOperationException("Time cannot be less than zero");
-
-                _time = value;
-            }
-        }
-
-        public float Sustain
-        {
-            get => _sustain;
-            set
-            {
-                if (value < 0.0f)
-                    throw new InvalidOperationException("Sustain cannot be less than zero");
-
-                _sustain = value;
-            }
-        }
+        public uint Sustain { get; set; }
 
         public float Bend { get; set; }
         public sbyte Fret { get; set; }
@@ -268,7 +245,7 @@ namespace Rocksmith2014Xml
         #endregion
 
         public override string ToString()
-            => $"{Time.ToString("F3", NumberFormatInfo.InvariantInfo)}: Fret: {Fret}, String: {String}";
+            => $"{Utils.TimeCodeToString(Time)}: Fret: {Fret}, String: {String}";
 
         public int CompareTo(Note other)
             => Time.CompareTo(other.Time);
@@ -284,10 +261,10 @@ namespace Rocksmith2014Xml
                 switch (reader.Name)
                 {
                     case "time":
-                        Time = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                        Time = Utils.TimeCodeFromFloatString(reader.Value);
                         break;
                     case "sustain":
-                        Sustain = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                        Sustain = Utils.TimeCodeFromFloatString(reader.Value);
                         break;
                     case "bend":
                         Bend = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -380,118 +357,118 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("string", String.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("fret", Fret.ToString(NumberFormatInfo.InvariantInfo));
 
             if (Sustain > 0.0f)
-                writer.WriteAttributeString("sustain", Sustain.ToString("F3", NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+                writer.WriteAttributeString("sustain", Utils.TimeCodeToString(Sustain));
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("sustain", "0.000");
 
             if (IsLinkNext)
                 writer.WriteAttributeString("linkNext", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("linkNext", "0");
 
             if (IsAccent)
                 writer.WriteAttributeString("accent", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("accent", "0");
 
             if (IsBend)
                 writer.WriteAttributeString("bend", Bend.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("bend", "0");
 
             if (IsHammerOn)
                 writer.WriteAttributeString("hammerOn", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("hammerOn", "0");
 
             if (IsHarmonic)
                 writer.WriteAttributeString("harmonic", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("harmonic", "0");
 
             if (Hopo)
                 writer.WriteAttributeString("hopo", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("hopo", "0");
 
             if (IsIgnore)
                 writer.WriteAttributeString("ignore", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("ignore", "0");
 
             if (LeftHand != -1)
                 writer.WriteAttributeString("leftHand", LeftHand.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("leftHand", "-1");
 
             if (IsMute)
                 writer.WriteAttributeString("mute", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("mute", "0");
 
             if (IsPalmMute)
                 writer.WriteAttributeString("palmMute", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("palmMute", "0");
 
             if (IsPluck)
                 writer.WriteAttributeString("pluck", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("pluck", "-1");
 
             if (IsPullOff)
                 writer.WriteAttributeString("pullOff", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("pullOff", "0");
 
             if (IsSlap)
                 writer.WriteAttributeString("slap", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("slap", "-1");
 
             if (IsSlide)
                 writer.WriteAttributeString("slideTo", SlideTo.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("slideTo", "-1");
 
             if (IsTremolo)
                 writer.WriteAttributeString("tremolo", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("tremolo", "0");
 
             if (IsHarmonicPinch)
                 writer.WriteAttributeString("harmonicPinch", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("harmonicPinch", "0");
 
             if ((Mask & NoteMask.PickDirection) != 0)
                 writer.WriteAttributeString("pickDirection", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("pickDirection", "0");
 
             if (IsRightHand)
                 writer.WriteAttributeString("rightHand", "1");
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("rightHand", "-1");
 
             if (IsUnpitchedSlide)
                 writer.WriteAttributeString("slideUnpitchTo", SlideUnpitchTo.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("slideUnpitchTo", "-1");
 
             if (IsTap)
                 writer.WriteAttributeString("tap", Tap.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("tap", "0");
 
             if (IsVibrato)
                 writer.WriteAttributeString("vibrato", Vibrato.ToString(NumberFormatInfo.InvariantInfo));
-            else if (!RS2014Song.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("vibrato", "0");
 
             if (BendValues?.Count > 0)

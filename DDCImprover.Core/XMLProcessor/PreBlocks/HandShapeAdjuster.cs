@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
@@ -9,77 +10,76 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class HandShapeAdjuster : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            foreach (var level in song.Levels)
+            foreach (var level in arrangement.Levels)
             {
                 var handShapes = level.HandShapes;
 
                 for (int i = 1; i < handShapes.Count; i++)
                 {
-                    float followingStartTime = handShapes[i].StartTime;
-                    float followingEndTime = handShapes[i].EndTime;
+                    uint followingStartTime = handShapes[i].StartTime;
+                    uint followingEndTime = handShapes[i].EndTime;
 
                     var precedingHandshape = handShapes[i - 1];
-                    float precedingStartTime = precedingHandshape.StartTime;
-                    float precedingEndTime = precedingHandshape.EndTime;
+                    uint precedingStartTime = precedingHandshape.StartTime;
+                    uint precedingEndTime = precedingHandshape.EndTime;
 
                     // Ignore nested handshapes
-                    if (precedingEndTime >= followingEndTime || followingStartTime - precedingEndTime < -0.001f)
+                    if (precedingEndTime >= followingEndTime)
                     {
                         Log($"Skipped nested handshape starting at {precedingStartTime.TimeToString()}.");
                         continue;
                     }
 
-                    int beat1Index = song.Ebeats.FindIndex(b => b.Time > precedingEndTime);
-                    var beat1 = song.Ebeats[beat1Index - 1];
-                    var beat2 = song.Ebeats[beat1Index];
+                    int beat1Index = arrangement.Ebeats.FindIndex(b => b.Time > precedingEndTime);
+                    var beat1 = arrangement.Ebeats[beat1Index - 1];
+                    var beat2 = arrangement.Ebeats[beat1Index];
 
-                    double note32nd = Math.Round((beat2.Time - beat1.Time) / 8, 3, MidpointRounding.AwayFromZero);
+                    uint note32nd = (beat2.Time - beat1.Time) / 8;
                     bool shortenBy16thNote = false;
 
-                    // Check if the chord that starts the handshape is a linknext slide
+                    // Check if the chord that starts the handshape is a LinkNext slide
                     var startChord = level.Chords?.FindByTime(precedingStartTime);
                     if (startChord?.IsLinkNext == true && startChord?.ChordNotes?.Any(cn => cn.IsSlide) == true)
                     {
                         // Check if the handshape length is an 8th note or longer
-                        if ((note32nd * 4) - (precedingEndTime - precedingStartTime) < 0.003)
+                        if (precedingEndTime - precedingStartTime > note32nd * 4)
                         {
                             shortenBy16thNote = true;
                         }
                     }
 
-                    double minDistance = shortenBy16thNote ? note32nd * 2 : note32nd;
+                    uint minDistance = shortenBy16thNote ? note32nd * 2 : note32nd;
 
                     // Shorten the min. distance required for 32nd notes or smaller
                     if (precedingEndTime - precedingStartTime <= note32nd)
-                        minDistance = Math.Round((beat2.Time - beat1.Time) / 12, 3, MidpointRounding.AwayFromZero);
+                        minDistance = (beat2.Time - beat1.Time) / 12;
 
-                    double currentDistance = Math.Round(followingStartTime - precedingEndTime, 3);
+                    // The following handshape might begin before the preceding one ends (floating point rounding errors?)
+                    uint currentDistance = (followingStartTime < precedingEndTime) ? 0 : followingStartTime - precedingEndTime;
 
                     if (currentDistance < minDistance)
                     {
-                        double newEndTime = Math.Round(followingStartTime - minDistance, 3, MidpointRounding.AwayFromZero);
+                        uint newEndTime = followingStartTime - minDistance;
                         int safetyCount = 0;
 
                         // Shorten the distance for very small note values
                         while (newEndTime <= precedingStartTime && ++safetyCount < 3)
                         {
-                            minDistance = Math.Round(minDistance / 2, 3, MidpointRounding.AwayFromZero);
-                            newEndTime = Math.Round(followingStartTime - minDistance, 3, MidpointRounding.AwayFromZero);
+                            minDistance /= 2;
+                            newEndTime = followingStartTime - minDistance;
 #if DEBUG
                             Log("Reduced handshape min. distance by half.");
 #endif
                         }
 
-                        handShapes[i - 1].EndTime = (float)newEndTime;
+                        handShapes[i - 1].EndTime = newEndTime;
 
                         // Skip logging < 5ms adjustments
-                        if (minDistance - currentDistance > 0.005)
+                        if (minDistance - currentDistance > 5)
                         {
-                            string oldDistanceMs = ((int)(currentDistance * 1000)).ToString();
-                            string newDistanceMs = ((int)(minDistance * 1000)).ToString();
-                            var message = $"Adjusted the length of handshape starting at {precedingHandshape.StartTime.TimeToString()} (Distance: {oldDistanceMs}ms -> {newDistanceMs}ms)";
+                            var message = $"Adjusted the length of handshape starting at {precedingHandshape.StartTime.TimeToString()} (Distance: {currentDistance}ms -> {minDistance}ms)";
                             if (shortenBy16thNote)
                                 message += " (Chord slide)";
 

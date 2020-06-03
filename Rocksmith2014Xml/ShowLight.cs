@@ -7,16 +7,19 @@ namespace Rocksmith2014Xml
 {
     public sealed class ShowLight : IHasTimeCode, IXmlSerializable
     {
-        public float Time { get; set; }
+        public uint Time { get; set; }
         public byte Note { get; set; }
 
         public ShowLight() { }
 
-        public ShowLight(float time, byte note)
+        public ShowLight(uint time, byte note)
         {
             Time = time;
             Note = note;
         }
+
+        public override string ToString()
+            => $"{Utils.TimeCodeToString(Time)}: {Note}";
 
         #region IXmlSerializable Implementation
 
@@ -31,7 +34,7 @@ namespace Rocksmith2014Xml
                 switch (reader.Name)
                 {
                     case "time":
-                        Time = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                        Time = Utils.TimeCodeFromFloatString(reader.Value);
                         break;
                     case "note":
                         Note = byte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -44,7 +47,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("note", Note.ToString(NumberFormatInfo.InvariantInfo));
         }
 

@@ -9,12 +9,12 @@ namespace Rocksmith2014Xml
     public sealed class Anchor : IXmlSerializable, IHasTimeCode, IEquatable<Anchor>
     {
         public byte Fret { get; set; }
-        public float Time { get; set; }
+        public uint Time { get; set; }
         public byte Width { get; set; }
 
         public Anchor() { }
 
-        public Anchor(byte fret, float time, byte width = 4)
+        public Anchor(byte fret, uint time, byte width = 4)
         {
             Fret = fret;
             Time = time;
@@ -22,7 +22,7 @@ namespace Rocksmith2014Xml
         }
 
         public override string ToString()
-            => $"{Time:F3}: Fret {Fret}, Width: {Width:F3}";
+            => $"{Utils.TimeCodeToString(Time)}: Fret {Fret}, Width: {Width:F3}";
 
         #region IXmlSerializable Implementation
 
@@ -30,7 +30,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            Time = float.Parse(reader.GetAttribute("time"), NumberFormatInfo.InvariantInfo);
+            Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("time"));
             Fret = byte.Parse(reader.GetAttribute("fret"), NumberFormatInfo.InvariantInfo);
             Width = (byte)float.Parse(reader.GetAttribute("width"), NumberFormatInfo.InvariantInfo);
 
@@ -39,7 +39,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("time", Time.ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("fret", Fret.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("width", Width.ToString("F3", NumberFormatInfo.InvariantInfo));
         }
@@ -58,7 +58,7 @@ namespace Rocksmith2014Xml
 
             return Fret == other.Fret
                 && Width == other.Width
-                && Utils.TimeEqualToMilliseconds(Time, other.Time);
+                && Time == other.Time;
         }
 
         public override int GetHashCode()

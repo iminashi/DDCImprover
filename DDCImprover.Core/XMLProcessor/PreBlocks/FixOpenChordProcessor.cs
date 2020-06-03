@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Linq;
 
@@ -9,9 +10,9 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class FixOpenChordProcessor : IProcessorBlock
     {
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            var ChordTemplates = song.ChordTemplates;
+            var ChordTemplates = arrangement.ChordTemplates;
             for (int chordId = 0; chordId < ChordTemplates.Count; chordId++)
             {
                 var currentChordTemplate = ChordTemplates[chordId];
@@ -26,7 +27,7 @@ namespace DDCImprover.Core.PreBlocks
                             currentChordTemplate.Frets[i] = -1;
                     }
 
-                    foreach (var level in song.Levels)
+                    foreach (var level in arrangement.Levels)
                     {
                         var chordsToFix = from chord in level.Chords
                                           where chord.ChordId == chordId
@@ -34,7 +35,7 @@ namespace DDCImprover.Core.PreBlocks
 
                         foreach (var chord in chordsToFix)
                         {
-                            if(chord.ChordNotes is null)
+                            if (chord.ChordNotes is null)
                             {
                                 Log("ERROR: FIXOPEN chord does not have chord notes at " + chord.Time.TimeToString());
                                 continue;
@@ -42,11 +43,11 @@ namespace DDCImprover.Core.PreBlocks
 
                             var chordNotesToRemove = chord.ChordNotes.Where(cn => cn.Fret == 0).ToArray();
                             // Store sustain of chord
-                            double initSustain = chordNotesToRemove[0].Sustain;
+                            uint initSustain = chordNotesToRemove[0].Sustain;
 
                             foreach (var chordNote in chordNotesToRemove)
                             {
-                                double sustain = initSustain;
+                                uint sustain = initSustain;
 
                                 var noteToRemove =
                                     (from note in level.Notes
@@ -76,7 +77,7 @@ namespace DDCImprover.Core.PreBlocks
                                 // Add new note
                                 var newNote = new Note(chordNote)
                                 {
-                                    Sustain = (float)Math.Round(sustain, 3, MidpointRounding.AwayFromZero),
+                                    Sustain = sustain,
                                     IsLinkNext = false
                                 };
 
@@ -96,8 +97,8 @@ namespace DDCImprover.Core.PreBlocks
                             }
 
                             // Move chord and handshape forward 20 ms (hack for DDC)
-                            const float amountToMove = 0.020f;
-                            var handShape = level.HandShapes.First(hs => Utils.TimeEqualToMilliseconds(hs.StartTime, chord.Time));
+                            const uint amountToMove = 20;
+                            var handShape = level.HandShapes.First(hs => hs.StartTime == chord.Time);
                             handShape.StartTime += amountToMove;
                             chord.Time += amountToMove;
 
@@ -106,7 +107,7 @@ namespace DDCImprover.Core.PreBlocks
                                 cn.Time += amountToMove;
 
                                 // Reduce sustain by amount moved
-                                if (cn.Sustain != 0.0f)
+                                if (cn.Sustain >= amountToMove)
                                 {
                                     cn.Sustain -= amountToMove;
                                 }

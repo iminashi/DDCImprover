@@ -1,4 +1,5 @@
 ﻿using Rocksmith2014Xml;
+
 using System;
 using System.Globalization;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace DDCImprover.Core.PreBlocks
     /// </summary>
     internal sealed class CrowdEventAdder : IProcessorBlock
     {
-        private const float IntroCrowdReactionDelay = 0.6f;
-        private const float IntroApplauseLength = 2.5f;
-        private const float OutroApplauseLength = 4.0f;
-        private const float VenueFadeOutLength = 5.0f;
+        private const uint IntroCrowdReactionDelay = 600; // 0.6 s
+        private const uint IntroApplauseLength = 2500; // 2.5 s
+        private const uint OutroApplauseLength = 4000; // 4 s
+        private const uint VenueFadeOutLength = 5000; // 5 s
 
-        private static float GetMinTime(IHasTimeCode? first, IHasTimeCode? second)
+        private static uint GetMinTime(IHasTimeCode? first, IHasTimeCode? second)
         {
             if (first is null)
             {
@@ -32,22 +33,22 @@ namespace DDCImprover.Core.PreBlocks
             }
         }
 
-        private void AddIntroApplauseEvent(RS2014Song song, Action<string> Log)
+        private void AddIntroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
         {
             Level firstPhraseLevel;
 
-            if (song.Levels.Count == 1)
+            if (arrangement.Levels.Count == 1)
             {
-                firstPhraseLevel = song.Levels[0];
+                firstPhraseLevel = arrangement.Levels[0];
             }
             else
             {
                 // Find the first phrase that has difficulty levels
-                int firstPhraseId = song.PhraseIterations
-                    .First(pi => song.Phrases[pi.PhraseId].MaxDifficulty > 0)
+                int firstPhraseId = arrangement.PhraseIterations
+                    .First(pi => arrangement.Phrases[pi.PhraseId].MaxDifficulty > 0)
                     .PhraseId;
-                var firstPhrase = song.Phrases[firstPhraseId];
-                firstPhraseLevel = song.Levels[firstPhrase.MaxDifficulty];
+                var firstPhrase = arrangement.Phrases[firstPhraseId];
+                firstPhraseLevel = arrangement.Levels[firstPhrase.MaxDifficulty];
             }
 
             Note? firstNote = null;
@@ -58,48 +59,48 @@ namespace DDCImprover.Core.PreBlocks
             if (firstPhraseLevel.Chords.Count > 0)
                 firstChord = firstPhraseLevel.Chords[0];
 
-            float applauseStartTime = (float)Math.Round(GetMinTime(firstNote, firstChord) + IntroCrowdReactionDelay, 3);
-            float applauseEndTime = (float)Math.Round(applauseStartTime + IntroApplauseLength, 3);
+            uint applauseStartTime = GetMinTime(firstNote, firstChord) + IntroCrowdReactionDelay;
+            uint applauseEndTime = applauseStartTime + IntroApplauseLength;
 
             var startEvent = new Event("E3", applauseStartTime);
             var stopEvent = new Event("E13", applauseEndTime);
 
-            song.Events.InsertByTime(startEvent);
-            song.Events.InsertByTime(stopEvent);
+            arrangement.Events.InsertByTime(startEvent);
+            arrangement.Events.InsertByTime(stopEvent);
 
             Log($"Added intro applause event (E3) at time: {applauseStartTime.TimeToString()}.");
         }
 
-        private void AddOutroApplauseEvent(RS2014Song song, Action<string> Log)
+        private void AddOutroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            float audioEnd = song.SongLength;
+            uint audioEnd = arrangement.SongLength;
 
-            float applauseStartTime = (float)Math.Round(audioEnd - VenueFadeOutLength - OutroApplauseLength, 3);
+            uint applauseStartTime = audioEnd - VenueFadeOutLength - OutroApplauseLength;
 
             var startEvent = new Event("D3", applauseStartTime);
             var stopEvent = new Event("E13", audioEnd);
 
-            song.Events.InsertByTime(startEvent);
-            song.Events.InsertByTime(stopEvent);
+            arrangement.Events.InsertByTime(startEvent);
+            arrangement.Events.InsertByTime(stopEvent);
 
             Log($"Added outro applause event (D3) at time: {applauseStartTime.TimeToString()}.");
         }
 
-        public void Apply(RS2014Song song, Action<string> Log)
+        public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            if (song.Events is null)
-                song.Events = new EventCollection();
+            if (arrangement.Events is null)
+                arrangement.Events = new EventCollection();
 
-            var events = song.Events;
+            var events = arrangement.Events;
 
             // Add initial crowd tempo event only if there are no other tempo events present
             if (!events.Any(ev => Regex.IsMatch(ev.Code, "e[0-2]$")))
             {
-                float averageTempo = song.AverageTempo;
-                float startBeat = song.StartBeat;
+                float averageTempo = arrangement.AverageTempo;
+                uint startBeat = arrangement.StartBeat;
 
-                string crowdSpeed = (averageTempo < 90) ? "e0" :
-                                    (averageTempo < 170) ? "e1" : "e2";
+                string crowdSpeed = (averageTempo < 90f) ? "e0" :
+                                    (averageTempo < 170f) ? "e1" : "e2";
 
                 events.InsertByTime(new Event(crowdSpeed, startBeat));
 
@@ -109,13 +110,13 @@ namespace DDCImprover.Core.PreBlocks
             // Add intro applause
             if (!events.Any(ev => ev.Code == "E3"))
             {
-                AddIntroApplauseEvent(song, Log);
+                AddIntroApplauseEvent(arrangement, Log);
             }
 
             // Add outro applause
             if (!events.Any(ev => ev.Code == "D3"))
             {
-                AddOutroApplauseEvent(song, Log);
+                AddOutroApplauseEvent(arrangement, Log);
             }
         }
     }
