@@ -57,21 +57,7 @@ namespace DDCImprover.Core.PreBlocks
                         if (int.TryParse(phraseToMoveName.Substring("moveR".Length), NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int moveRightBy))
                         {
                             var level = arrangement.Levels[phraseToMove.MaxDifficulty];
-                            var noteTimes = level.Notes
-                                .Where(n => n.Time >= phraseTime)
-                                .Select(n => n.Time)
-                                .Distinct() // Notes on the same timecode (e.g. split chords) count as one
-                                .Take(moveRightBy);
-
-                            var chordTimes = level.Chords
-                                .Where(c => c.Time >= phraseTime)
-                                .Select(c => c.Time)
-                                .Distinct()
-                                .Take(moveRightBy);
-
-                            var noteAndChordTimes = noteTimes.Concat(chordTimes).OrderBy(time => time);
-
-                            movetoTime = noteAndChordTimes.Skip(moveRightBy - 1).First();
+                            movetoTime = TimeParser.GetRelativeTime(level, phraseTime, moveRightBy);
                         }
                         else
                         {

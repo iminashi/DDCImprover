@@ -82,7 +82,8 @@
       </TextBlock>
       <TextBlock>
         If the chord is on a beat you can simply use the event "so" on that beat.
-        If the chord is not on a beat, you must specify the timecode of the chord in the event text in the same format as in the phrase moving, for example "so2m16s885".
+        If the chord is not on a beat, you must place the event on a beat left of the target chord/notes and add a number to the event name (for example "so1").
+        This number specifies how many notes right of the target is from the event. It works the same as the number in "moveR" phrases.
       </TextBlock>
       <TextBlock Classes="SubTitle">• removebeats</TextBlock>
       <TextBlock>

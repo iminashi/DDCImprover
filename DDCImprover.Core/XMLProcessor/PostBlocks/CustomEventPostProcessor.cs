@@ -5,6 +5,7 @@ using Rocksmith2014Xml.Extensions;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace DDCImprover.Core.PostBlocks
@@ -39,13 +40,19 @@ namespace DDCImprover.Core.PostBlocks
             var slideoutEvents = events.Where(ev => ev.Code.StartsWith("so", StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var slideEvent in slideoutEvents)
             {
-                int? parsedTime = TimeParser.Parse(slideEvent.Code);
-                int slideTime = parsedTime ?? slideEvent.Time;
+                int slideTime = slideEvent.Time;
 
                 // Find the max level for the phrase the slide is in
                 var phraseIter = arrangement.PhraseIterations.Last(pi => pi.Time <= slideTime);
                 int diff = arrangement.Phrases[phraseIter.PhraseId].MaxDifficulty;
                 var level = arrangement.Levels[diff];
+
+                // If a number was given after the event code, get the time of the chord or note that is right of the event by that number
+                if (slideEvent.Code.Length > 2
+                    && int.TryParse(slideEvent.Code.Substring(2), NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int rightBy))
+                {
+                    slideTime = TimeParser.GetRelativeTime(level, slideTime, rightBy);
+                }
 
                 int noteIndex = level.Notes.FindIndexByTime(slideTime);
                 int chordIndex = level.Chords.FindIndexByTime(slideTime);
@@ -117,7 +124,7 @@ namespace DDCImprover.Core.PostBlocks
                 }
                 arrangement.ChordTemplates.Add(soChordTemplate);
 
-                Log($"Processed SlideOut event at {slideEvent.Time.TimeToString()}");
+                Log($"Processed SlideOut event at {slideEvent.Time.TimeToString()}, target at {slideTime.TimeToString()}.");
             }
 
             events.Remove(slideoutEvents);

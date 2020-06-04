@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DDCImprover.Core
@@ -63,6 +64,25 @@ namespace DDCImprover.Core
             {
                 return null;
             }
+        }
+
+        public static int GetRelativeTime(Level level, int startTime, int rightBy)
+        {
+            var noteTimes = level.Notes
+                .Where(n => n.Time >= startTime)
+                .Select(n => n.Time)
+                .Distinct() // Notes on the same timecode (e.g. split chords) count as one
+                .Take(rightBy);
+
+            var chordTimes = level.Chords
+                .Where(c => c.Time >= startTime)
+                .Select(c => c.Time)
+                .Distinct()
+                .Take(rightBy);
+
+            var noteAndChordTimes = noteTimes.Concat(chordTimes).OrderBy(time => time);
+
+            return noteAndChordTimes.Skip(rightBy - 1).First();
         }
     }
 }

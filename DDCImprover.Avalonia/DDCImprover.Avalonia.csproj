@@ -8,8 +8,8 @@
     <Authors>iminashi</Authors>
     <Version>3.0.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>3.0.2.155</AssemblyVersion>
-    <FileVersion>3.0.2.155</FileVersion>
+    <AssemblyVersion>3.0.4.156</AssemblyVersion>
+    <FileVersion>3.0.4.156</FileVersion>
     <Product>DDC Improver</Product>
     <Copyright>Copyright © 2020</Copyright>
     <ApplicationIcon>..\DDCImprover.WPF\Assets\icon.ico</ApplicationIcon>

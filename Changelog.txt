@@ -2,6 +2,7 @@
 -Added "Quick Remove DD" feature
 -Added "Remove High Density Statuses" option
 -Added "Open Containing Folder" context menu item
+-Added relative note/chord finding to "so" custom event
 -Fixed a minor bug with crowd event placement checking
 -Fixed the tab order in the configuration window
 -Fixed a null reference exception in the chord slide handshape length fix
