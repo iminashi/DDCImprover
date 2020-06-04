@@ -19,7 +19,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void UnpitchedSlideCheckerTest()
+        public void UnpitchedSlideChecker_EnablesUnpithcedSlides()
         {
             testArrangement.ArrangementProperties.UnpitchedSlides.Should().Be(0);
 
@@ -29,7 +29,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void WrongCrowdEventsFixTest()
+        public void WrongCrowdEventsFix_FixesWrongEvents()
         {
             testArrangement.Events.Add(new Event("E0", 10000));
             testArrangement.Events.Add(new Event("E1", 20000));
@@ -47,7 +47,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void ToneEventGeneratorTest()
+        public void ToneEventGenerator_GeneratesToneEvents()
         {
             testArrangement.Events.Should().NotContain(e => e.Code == "tone_a");
             testArrangement.Events.Should().NotContain(e => e.Code == "tone_b");
@@ -59,7 +59,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void CrowdEventAdderTest()
+        public void CrowdEventAdder_AddsCrowdEvents()
         {
             var events = testArrangement.Events;
             int eventCountBefore = events.Count;
@@ -76,7 +76,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void WeakBeatPhraseMovingTest()
+        public void WeakBeatPhraseMovingFix_MakesWeakBeatStrong()
         {
             const uint phraseOnAWeakBeatTime = 7875;
             var beatBefore = testArrangement.Ebeats.Find(eb => eb.Time == phraseOnAWeakBeatTime);
@@ -90,7 +90,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void HandShapeAdjusterTest()
+        public void HandShapeAdjuster_ShortensHandshape()
         {
             var testHandshape = new HandShape(0, 10000, 11999);
             testArrangement.Levels[0].HandShapes.Add(testHandshape);
@@ -111,7 +111,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void PhraseMover_MoveTo_Test()
+        public void PhraseMoverMoveTo_MovesPhraseToCorrectPlace()
         {
             var testPhraseIter = AddTestPhrase("moveto18s300", 15000);
 
@@ -121,7 +121,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void PhraseMover_MoveRelative_Test()
+        public void PhraseMoverRelative_MovesPhraseToCorrectPlace()
         {
             const int noteTime = 16666;
 
@@ -134,7 +134,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void PhraseMoverMovesSectionAlso()
+        public void PhraseMoverRelative_MovesSectionAlso()
         {
             const int noteTime = 16666;
             const int phraseTime = 15000;
@@ -150,7 +150,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void PhraseMoverMovesAnchorAlso()
+        public void PhraseMoverRelative_MovesAnchorAlso()
         {
             const int noteTime = 16666;
             const int phraseTime = 15000;
@@ -165,7 +165,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void CustomEvent_Width3_Test()
+        public void Width3Event_ChangesAnchorWidth()
         {
             testArrangement.Events.Add(new Event("w3", testArrangement.Levels[0].Anchors[0].Time));
 

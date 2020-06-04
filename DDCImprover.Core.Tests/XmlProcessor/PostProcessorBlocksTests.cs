@@ -25,7 +25,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void ExtraneousBeatsRemoverTest()
+        public void ExtraneousBeatsRemover_RemovesExtraBeats()
         {
             int audioEnd = testArrangement.SongLength;
             testArrangement.Ebeats.Should().Contain(b => b.Time > audioEnd);
@@ -125,7 +125,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void OneLevelPhraseFixerTest()
+        public void OneLevelPhraseFixer_AddsASecondDifficultyLevel()
         {
             testArrangement.PhraseIterations.Last().Time = testArrangement.SongLength;
             testArrangement.PhraseIterations.Last().PhraseId++;
@@ -148,7 +148,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void TimeSignatureEventRemoverTest()
+        public void TimeSignatureEventRemover_RemovesTimeSignatureEvents()
         {
             testArrangement.Events.Should().Contain(e => e.Code.StartsWith("TS"));
 
@@ -158,7 +158,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void TemporaryBeatRemoverTest()
+        public void TemporaryBeatRemover_RemovesAddedBeats()
         {
             var testBeat = new Ebeat(222222, 1);
             var addedBeats = new List<Ebeat> { testBeat };
@@ -170,7 +170,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void FirstNoguitarSectionRestorerTest()
+        public void FirstNoguitarSectionRestorer_RestoresNoguitarSection()
         {
             const int firstNGSectionTime = 4500;
 
@@ -182,7 +182,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void ENDPhraseProcessorTest()
+        public void ENDPhraseProcessor_MovesEndPhrase()
         {
             int endPhraseId = testArrangement.Phrases.FindIndex(p => p.Name.Equals("END", StringComparison.OrdinalIgnoreCase));
             var endPhraseIter = testArrangement.PhraseIterations.First(pi => pi.PhraseId == endPhraseId);
@@ -194,7 +194,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void NoguitarAnchorRestorerTest()
+        public void NoguitarAnchorRestorer_RestoresAnchor()
         {
             var testAnchor = new Anchor(1, 4500);
             var ngAnchors = new List<Anchor>
@@ -208,7 +208,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void CustomEvent_RemoveBeats_Test()
+        public void RemoveBeatsEvent_RemovesBeats()
         {
             testArrangement.Events.Add(new Event("removebeats", 112500));
 
@@ -219,7 +219,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void CustomEvent_SlideOut_Test()
+        public void SlideOutEvent_CreatesHandshape()
         {
             const int chordTime = 20222;
             const int sustainTime = 3000;
