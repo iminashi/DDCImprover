@@ -51,7 +51,7 @@ namespace DDCImprover.Core.PostBlocks
                 if (slideEvent.Code.Length > 2
                     && int.TryParse(slideEvent.Code.Substring(2), NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int rightBy))
                 {
-                    slideTime = TimeParser.GetRelativeTime(level, slideTime, rightBy);
+                    slideTime = TimeParser.FindTimeOfNthNoteFrom(level, slideTime, rightBy);
                 }
 
                 int noteIndex = level.Notes.FindIndexByTime(slideTime);

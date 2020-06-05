@@ -57,7 +57,7 @@ namespace DDCImprover.Core.PreBlocks
                         if (int.TryParse(phraseToMoveName.Substring("moveR".Length), NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int moveRightBy))
                         {
                             var level = arrangement.Levels[phraseToMove.MaxDifficulty];
-                            movetoTime = TimeParser.GetRelativeTime(level, phraseTime, moveRightBy);
+                            movetoTime = TimeParser.FindTimeOfNthNoteFrom(level, phraseTime, moveRightBy);
                         }
                         else
                         {

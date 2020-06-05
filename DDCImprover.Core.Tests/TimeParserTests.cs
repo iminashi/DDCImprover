@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 
+using Rocksmith2014Xml;
+
 using Xunit;
 
 namespace DDCImprover.Core.Tests
@@ -29,6 +31,76 @@ namespace DDCImprover.Core.Tests
             int? result = TimeParser.Parse(input);
             result.Should().HaveValue();
             result.Should().Be(expected);
+        }
+
+        [Fact]
+        public void FindTimeOfNthNoteFrom_FindsCorrectNote()
+        {
+            const int noteTime = 1200;
+
+            var testArr = new InstrumentalArrangement();
+            testArr.Levels.Add(new Level());
+            testArr.Levels[0].Notes.Add(new Note
+            {
+                Time = noteTime
+            });
+
+            int result = TimeParser.FindTimeOfNthNoteFrom(testArr.Levels[0], 0, 1);
+
+            result.Should().Be(noteTime);
+        }
+
+        [Fact]
+        public void FindTimeOfNthNoteFrom_FindsCorrectChord()
+        {
+            const int chordTime = 1800;
+
+            var testArr = new InstrumentalArrangement();
+            testArr.Levels.Add(new Level());
+            testArr.Levels[0].Notes.Add(new Note
+            {
+                Time = chordTime - 500
+            });
+            testArr.Levels[0].Chords.Add(new Chord
+            {
+                Time = chordTime
+            });
+
+            int result = TimeParser.FindTimeOfNthNoteFrom(testArr.Levels[0], 0, 2);
+
+            result.Should().Be(chordTime);
+        }
+
+        [Fact]
+        public void FindTimeOfNthNoteFrom_SkipsSplitChordCorrectly()
+        {
+            const int chordTime = 1800;
+
+            var testArr = new InstrumentalArrangement();
+            testArr.Levels.Add(new Level());
+            testArr.Levels[0].Notes.Add(new Note
+            {
+                Time = chordTime - 500,
+                String = 1
+            });
+            testArr.Levels[0].Notes.Add(new Note
+            {
+                Time = chordTime - 500,
+                String = 2
+            });
+            testArr.Levels[0].Notes.Add(new Note
+            {
+                Time = chordTime - 500,
+                String = 3
+            });
+            testArr.Levels[0].Chords.Add(new Chord
+            {
+                Time = chordTime
+            });
+
+            int result = TimeParser.FindTimeOfNthNoteFrom(testArr.Levels[0], 0, 2);
+
+            result.Should().Be(chordTime);
         }
     }
 }
