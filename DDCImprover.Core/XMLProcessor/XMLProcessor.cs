@@ -394,6 +394,8 @@ namespace DDCImprover.Core
                     DDCArrangement = InstrumentalArrangement.Load(XMLFileFullPath);
                 else
                     DDCArrangement = InstrumentalArrangement.Load(DDCXMLFileFullPath);
+
+                Log($"{DDCArrangement.Levels.Count} difficulty levels generated.");
             }
             else
             {
