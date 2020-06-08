@@ -33,20 +33,18 @@ namespace DDCImprover.Core
         public bool WriteAbridgedXmlFiles { get; set; } = true;
         public bool OverwriteOriginalFile { get; set; } = false;
 
-        public static void LoadConfiguration()
+        public static void LoadConfiguration(string fileName)
         {
-            XMLProcessor.Preferences = File.Exists(Program.ConfigFileName) ?
-                Load() :
-                new Configuration();
+            XMLProcessor.Preferences = File.Exists(fileName) ? Load(fileName) : new Configuration();
         }
 
         /// <summary>
         /// Deserializes the configuration from an XML file.
         /// </summary>
-        private static Configuration Load()
+        private static Configuration Load(string fileName)
         {
             Configuration cfg = new Configuration();
-            ReflectionConfig.LoadFromXml(Program.ConfigFileName, cfg);
+            ReflectionConfig.LoadFromXml(fileName, cfg);
             cfg.ValidateValues();
 
             return cfg;

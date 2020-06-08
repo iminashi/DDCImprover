@@ -33,7 +33,7 @@ namespace DDCImprover.ViewModels
 
         public ConfigurationWindowViewModel()
         {
-            Configuration.LoadConfiguration();
+            Configuration.LoadConfiguration(Program.ConfigFileName);
             Config = XMLProcessor.Preferences;
 
             LogsCleared = logsCleared.AsObservable();

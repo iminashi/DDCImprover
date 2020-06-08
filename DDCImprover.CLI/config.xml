@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <DDCPhraseLength value="256" />
+  <DDCRampupFile value="ddc_default" />
+  <DDCConfigFile value="ddc_default" />
+  <MaxThreads value="16" />
+  <AddCrowdEvents value="True" />
+  <AdjustHandshapes value="True" />
+  <CheckXML value="False" />
+  <CheckForArrIdReset value="False" />
+  <EnableLogging value="False" />
+  <FixChordNames value="True" />
+  <FixOneLevelPhrases value="True" />
+  <PreserveENDPhraseLocation value="True" />
+  <RestoreFirstNoguitarSection value="True" />
+  <RestoreNoguitarSectionAnchors value="True" />
+  <RemoveAnchorPlaceholderNotes value="True" />
+  <RemoveBeatsPastAudioEnd value="True" />
+  <RemoveHighDensityStatuses value="False" />
+  <RemoveTimeSignatureEvents value="False" />
+  <RemoveTranscriptionTrack value="False" />
+  <DisplayTimesInSeconds value="True" />
+  <WriteAbridgedXmlFiles value="True" />
+  <OverwriteOriginalFile value="False" />
+</Configuration>
