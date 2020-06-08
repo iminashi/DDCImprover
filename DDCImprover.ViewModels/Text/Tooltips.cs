@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DDCImprover.Core.Text
+namespace DDCImprover.ViewModels.Text
 {
     public static class Tooltips
     {

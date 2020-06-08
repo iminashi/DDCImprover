@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDCImprover.Core", "DDCImprover.Core\DDCImprover.Core.csproj", "{D048CC20-90EB-4DC6-88E5-D32352EC259A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDCImprover.WPF", "DDCImprover.WPF\DDCImprover.WPF.csproj", "{23D5D72A-216C-4BD9-BF54-39536BE51DC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDCImprover.WPF", "DDCImprover.WPF\DDCImprover.WPF.csproj", "{23D5D72A-216C-4BD9-BF54-39536BE51DC4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDCImprover.Avalonia", "DDCImprover.Avalonia\DDCImprover.Avalonia.csproj", "{022186C5-ABF4-4123-AA09-5FA4F1743AE3}"
 EndProject
@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocksmith2014Xml", "Rocksmith2014Xml\Rocksmith2014Xml.csproj", "{FA61B6B7-B726-4385-BAF0-A88AA8DB3678}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocksmith2014Xml.Tests", "Rocksmith2014Xml.Tests\Rocksmith2014Xml.Tests.csproj", "{7A931E33-437A-4EC6-86AE-C6FC2AEED4DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocksmith2014Xml.Tests", "Rocksmith2014Xml.Tests\Rocksmith2014Xml.Tests.csproj", "{7A931E33-437A-4EC6-86AE-C6FC2AEED4DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDCImprover.Core.Tests", "DDCImprover.Core.Tests\DDCImprover.Core.Tests.csproj", "{6B68DE67-F7FB-472F-B29A-A38FAD477E5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDCImprover.Core.Tests", "DDCImprover.Core.Tests\DDCImprover.Core.Tests.csproj", "{6B68DE67-F7FB-472F-B29A-A38FAD477E5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDCImprover.ViewModels", "DDCImprover.ViewModels\DDCImprover.ViewModels.csproj", "{6A04FF60-0E42-4929-B81B-17F9A04FDE52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,21 +52,15 @@ Global
 		{6B68DE67-F7FB-472F-B29A-A38FAD477E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B68DE67-F7FB-472F-B29A-A38FAD477E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B68DE67-F7FB-472F-B29A-A38FAD477E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A04FF60-0E42-4929-B81B-17F9A04FDE52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A04FF60-0E42-4929-B81B-17F9A04FDE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A04FF60-0E42-4929-B81B-17F9A04FDE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A04FF60-0E42-4929-B81B-17F9A04FDE52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8C5635A-1662-4209-B8BB-74796BD453D3}
-	EndGlobalSection
-	GlobalSection(AutomaticVersions) = postSolution
-		UpdateAssemblyVersion = True
-		UpdateAssemblyFileVersion = True
-		UpdateAssemblyInfoVersion = False
-		AssemblyVersionSettings = IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.DayOfYearStamp
-		AssemblyFileVersionSettings = IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.DayOfYearStamp
-		UpdatePackageVersion = False
-		AssemblyInfoVersionType = SettingsVersion
-		InheritWinAppVersionFrom = None
 	EndGlobalSection
 EndGlobal

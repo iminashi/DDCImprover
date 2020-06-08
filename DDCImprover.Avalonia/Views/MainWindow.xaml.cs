@@ -6,8 +6,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
 using DDCImprover.Core;
-using DDCImprover.Core.Services;
-using DDCImprover.Core.ViewModels;
+using DDCImprover.ViewModels;
+using DDCImprover.ViewModels.Services;
 
 using ReactiveUI;
 

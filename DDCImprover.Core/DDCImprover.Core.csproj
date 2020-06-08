@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.14.158</AssemblyVersion>
-    <FileVersion>3.0.14.158</FileVersion>
+    <AssemblyVersion>3.0.17.160</AssemblyVersion>
+    <FileVersion>3.0.17.160</FileVersion>
     <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
   
@@ -30,15 +30,6 @@
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Fody" Version="6.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="11.4.1" />
-    <PackageReference Include="ReactiveUI.Fody" Version="11.4.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Rocksmith2014Xml\Rocksmith2014Xml.csproj" />

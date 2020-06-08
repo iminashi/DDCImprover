@@ -1,4 +1,4 @@
-﻿namespace DDCImprover.Core.Services
+﻿namespace DDCImprover.ViewModels.Services
 {
     public enum WindowType
     {

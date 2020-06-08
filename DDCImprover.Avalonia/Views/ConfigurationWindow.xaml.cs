@@ -1,8 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+
 using DDCImprover.Core;
-using DDCImprover.Core.ViewModels;
+using DDCImprover.ViewModels;
 
 using System;
 

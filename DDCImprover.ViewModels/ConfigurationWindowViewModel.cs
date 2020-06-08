@@ -1,4 +1,4 @@
-﻿using DDCImprover.Core.Services;
+﻿using DDCImprover.Core;
 
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -12,7 +12,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace DDCImprover.Core.ViewModels
+namespace DDCImprover.ViewModels
 {
     public class ConfigurationWindowViewModel : ReactiveObject
     {

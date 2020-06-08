@@ -1,5 +1,5 @@
 ﻿using DDCImprover.Core;
-using DDCImprover.Core.ViewModels;
+using DDCImprover.ViewModels;
 
 using System;
 using System.Windows;

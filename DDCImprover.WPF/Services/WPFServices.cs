@@ -1,4 +1,5 @@
-﻿using DDCImprover.Core.Services;
+﻿using DDCImprover.ViewModels.Services;
+
 using Microsoft.Win32;
 
 using System;

@@ -1,4 +1,4 @@
-﻿namespace DDCImprover.Core.Text
+﻿namespace DDCImprover.ViewModels.Text
 {
     public static class ConfigurationTooltips
     {

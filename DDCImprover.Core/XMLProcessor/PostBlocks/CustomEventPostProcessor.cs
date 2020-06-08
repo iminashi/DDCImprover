@@ -1,6 +1,4 @@
-﻿using DynamicData;
-
-using Rocksmith2014Xml;
+﻿using Rocksmith2014Xml;
 using Rocksmith2014Xml.Extensions;
 
 using System;
@@ -127,7 +125,10 @@ namespace DDCImprover.Core.PostBlocks
                 Log($"Processed SlideOut event at {slideEvent.Time.TimeToString()}, target at {slideTime.TimeToString()}.");
             }
 
-            events.Remove(slideoutEvents);
+            foreach (var ev in slideoutEvents)
+            {
+                events.Remove(ev);
+            }
         }
     }
 }

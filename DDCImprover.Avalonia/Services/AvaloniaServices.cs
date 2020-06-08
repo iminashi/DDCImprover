@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 
-using DDCImprover.Core.Services;
+using DDCImprover.ViewModels.Services;
 
 using System;
 using System.Collections.Generic;

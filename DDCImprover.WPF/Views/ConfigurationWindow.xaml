@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDCImprover.WPF"
-        xmlns:text="clr-namespace:DDCImprover.Core.Text;assembly=DDCImprover.Core"
+        xmlns:text="clr-namespace:DDCImprover.ViewModels.Text;assembly=DDCImprover.ViewModels"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Configuration" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"

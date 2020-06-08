@@ -55,5 +55,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
+    <ProjectReference Include="..\DDCImprover.ViewModels\DDCImprover.ViewModels.csproj" />
   </ItemGroup>
 </Project>

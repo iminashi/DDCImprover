@@ -1,6 +1,4 @@
-﻿using DynamicData;
-
-using Rocksmith2014Xml;
+﻿using Rocksmith2014Xml;
 
 using System;
 using System.Collections.Generic;
@@ -82,7 +80,10 @@ namespace DDCImprover.Core.PostBlocks
                 }
 
                 notesRemoved += notesToRemove.Count;
-                notes.Remove(notesToRemove);
+                foreach (var note in notesToRemove)
+                {
+                    notes.Remove(note);
+                }
             }
 
             if (notesRemoved > 0)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace DDCImprover.Core.Services
+namespace DDCImprover.ViewModels.Services
 {
     public interface IPlatformSpecificServices
     {

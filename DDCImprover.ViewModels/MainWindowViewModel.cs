@@ -1,4 +1,5 @@
-﻿using DDCImprover.Core.Services;
+﻿using DDCImprover.Core;
+using DDCImprover.ViewModels.Services;
 
 using DynamicData;
 using DynamicData.Binding;
@@ -26,7 +27,7 @@ using System.Threading.Tasks;
 
 #pragma warning disable RCS1090 // Call 'ConfigureAwait(false)'.
 
-namespace DDCImprover.Core.ViewModels
+namespace DDCImprover.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject
     {

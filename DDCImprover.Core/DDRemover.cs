@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DDCImprover.Core
 {
-    internal static class DDRemover
+    public static class DDRemover
     {
         public static async Task RemoveDD(InstrumentalArrangement arrangement, bool matchPhrasesToSections, bool deleteTranscriptionTrack)
         {
