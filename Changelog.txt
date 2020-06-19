@@ -1,6 +1,5 @@
 3.0
 -Added "Quick Remove DD" feature
--Added "Remove High Density Statuses" option
 -Added "Open Containing Folder" context menu item
 -Added relative note/chord finding to "so" custom event
 -Fixed a minor bug with crowd event placement checking
@@ -11,7 +10,8 @@
 -Change the internal representation of time codes to use integers instead of floating point numbers
 -Changed where the program settings and logs are stored for better cross-platform compatibility
 -Removed the select DDC executable button from the configuration window
--Minor improvements to the Avalonia UI
+-Updated the phrase moving section in the Help window
+-Improvements to the Avalonia UI
 -Bring the main window to the front when closing a child window (WPF version)
 -Updated Avalonia to version 0.9.10
 -Updated .NET Core to version 3.1
