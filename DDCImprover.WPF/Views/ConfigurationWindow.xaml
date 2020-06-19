@@ -77,7 +77,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
-                    <RowDefinition />
+                    <!--<RowDefinition />-->
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                     <Label Content="Max. _Threads:" Target="{x:Reference maxThreadsUpDown}"/>
@@ -144,18 +144,18 @@
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
-                <CheckBox Grid.Row="6" Grid.Column="0"
+                <!--<CheckBox Grid.Row="6" Grid.Column="0"
                           Content="Remove High Density Statuses"
                           IsChecked="{Binding Config.RemoveHighDensityStatuses}"
                           VerticalAlignment="Center"
-                          ToolTip="{x:Static text:ConfigurationTooltips.RemoveHighDensity}"/>
+                          ToolTip="{x:Static text:ConfigurationTooltips.RemoveHighDensity}"/>-->
                 <CheckBox Grid.Row="6" Grid.Column="1"
                           Content="Display Times in Seconds"
                           IsChecked="{Binding Config.DisplayTimesInSeconds}"
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
-                <CheckBox Grid.Row="7" Grid.Column="0"
+                <CheckBox Grid.Row="6" Grid.Column="0"
                           Content="_Check For Arr. Id Reset"
                           IsChecked="{Binding Config.CheckForArrIdReset}"
                           VerticalAlignment="Center"
@@ -166,7 +166,7 @@
                           VerticalAlignment="Center"
                           Margin="7,0,0,0"
                           ToolTip="{x:Static text:ConfigurationTooltips.OverwriteFile}"/>
-                <CheckBox Grid.Row="8" Grid.Column="0"
+                <CheckBox Grid.Row="7" Grid.Column="0"
                           Content="Enable _Logging"
                           IsChecked="{Binding Config.EnableLogging}"
                           VerticalAlignment="Center"

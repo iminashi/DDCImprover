@@ -64,7 +64,7 @@
     </HeaderedContentControl>
 
     <HeaderedContentControl Header="Program Settings" Background="#EEEEEE" Grid.Row="1" Margin="10,10,10,5">
-      <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*,*,*,*,*,*">
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*,*,*,*,*">
         <Grid.Styles>
           <Style Selector="CheckBox">
             <Setter Property="Margin" Value="2,4,4,4"/>
@@ -72,33 +72,96 @@
         </Grid.Styles>
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
           <TextBlock Text="Max. Threads:" VerticalAlignment="Center"/>
-          <Slider x:Name="maxThreadsSlider"
-                  VerticalAlignment="Center"
-                  Margin="5,0,0,3"
-                  Width="120"
-                  Value="{Binding Config.MaxThreads}"
-                  Minimum="1" Maximum="{x:Static local:ConfigurationWindow.ProcessorCount}"
-                  SmallChange="1"
-                  TickFrequency="1" IsSnapToTickEnabled="True"
-                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.MaxThreads}"/>
-          <TextBlock Text="{Binding ElementName=maxThreadsSlider, Path=Value}" VerticalAlignment="Center"/>
-          <!--<NumericUpDown x:Name="maxThreadsUpDown" Value="{Binding Config.MaxThreads}" Width="50" Minimum="1" Maximum="{Binding Source={x:Static sys:Environment.ProcessorCount}, Mode=OneTime}" ToolTip="Sets the number files processed simultaneously."/>-->
+          <NumericUpDown Classes="nup"
+                         Value="{Binding Config.MaxThreads}"
+                         Margin="10,3,0,3"
+                         Width="60"
+                         Minimum="1"
+                         Maximum="{Binding Source={x:Static sys:Environment.ProcessorCount}, Mode=OneTime}"
+                         ToolTip.Tip="Sets the number files processed simultaneously."/>
         </StackPanel>
-        <CheckBox Grid.Row="1" Grid.Column="0" Content="Adjust Handshapes" IsChecked="{Binding Config.AdjustHandshapes}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AdjustHandshapes}"/>
-        <CheckBox Grid.Row="1" Grid.Column="1" Content="Check XML" IsChecked="{Binding Config.CheckXML}" Margin="7,0,0,0" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckXML}"/>
-        <CheckBox Grid.Row="2" Grid.Column="0" Content="Restore First Noguitar Section" IsChecked="{Binding Config.RestoreFirstNoguitarSection}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreNoguitarSection}"/>
-        <CheckBox Grid.Row="2" Grid.Column="1" Content="Restore Noguitar Anchors" IsChecked="{Binding Config.RestoreNoguitarSectionAnchors}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreNoguitarAnchors}"/>
-        <CheckBox Grid.Row="3" Grid.Column="0" Content="Remove Beats Past Audio End" IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemoveBeats}"/>
-        <CheckBox Grid.Row="3" Grid.Column="1" Content="Keep END Phrase Location" IsChecked="{Binding Config.PreserveENDPhraseLocation}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreEndPhrase}"/>
-        <CheckBox Grid.Row="4" Grid.Column="0" Content="Fix One Level Phrases" IsChecked="{Binding Config.FixOneLevelPhrases}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixOneLevel}"/>
-        <CheckBox Grid.Row="4" Grid.Column="1" Content="Fix Chord Names" IsChecked="{Binding Config.FixChordNames}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixChordNames}"/>
-        <CheckBox Grid.Row="5" Grid.Column="0" Content="Remove Anchor Placeholder Notes" IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemovePlaceholders}"/>
-        <CheckBox Grid.Row="5" Grid.Column="1" Content="Add Crowd Events" IsChecked="{Binding Config.AddCrowdEvents}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
-        <CheckBox Grid.Row="6" Grid.Column="0" Content="Remove High Density Statuses" IsChecked="{Binding Config.RemoveHighDensityStatuses}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemoveHighDensity}"/>
-        <CheckBox Grid.Row="6" Grid.Column="1" Content="Display Times in Seconds" IsChecked="{Binding Config.DisplayTimesInSeconds}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
-        <CheckBox Grid.Row="7" Grid.Column="0" Content="Check For Arr. Id Reset" IsChecked="{Binding Config.CheckForArrIdReset}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckArrIdReset}"/>
-        <CheckBox Grid.Row="7" Grid.Column="1" Content="Overwrite Original File" IsChecked="{Binding Config.OverwriteOriginalFile}" VerticalAlignment="Center" Margin="7,0,0,0" ToolTip.Tip="{x:Static text:ConfigurationTooltips.OverwriteFile}"/>
-        <CheckBox Grid.Row="8" Grid.Column="0" Content="Enable Logging" IsChecked="{Binding Config.EnableLogging}" VerticalAlignment="Center" ToolTip.Tip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
+        <CheckBox Grid.Row="1" Grid.Column="0"
+                  Content="Adjust Handshapes"
+                  IsChecked="{Binding Config.AdjustHandshapes}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.AdjustHandshapes}"/>
+        <CheckBox Grid.Row="1" Grid.Column="1"
+                  Content="Check XML"
+                  IsChecked="{Binding Config.CheckXML}"
+                  Margin="7,0,0,0"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckXML}"/>
+        <CheckBox Grid.Row="2" Grid.Column="0"
+                  Content="Restore First Noguitar Section"
+                  IsChecked="{Binding Config.RestoreFirstNoguitarSection}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreNoguitarSection}"/>
+        <CheckBox Grid.Row="2" Grid.Column="1"
+                  Content="Restore Noguitar Anchors"
+                  IsChecked="{Binding Config.RestoreNoguitarSectionAnchors}"
+                  VerticalAlignment="Center"
+                  Margin="7,0,0,0"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreNoguitarAnchors}"/>
+        <CheckBox Grid.Row="3" Grid.Column="0"
+                  Content="Remove Beats Past Audio End"
+                  IsChecked="{Binding Config.RemoveBeatsPastAudioEnd}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemoveBeats}"/>
+        <CheckBox Grid.Row="3" Grid.Column="1"
+                  Content="Keep END Phrase Location"
+                  IsChecked="{Binding Config.PreserveENDPhraseLocation}"
+                  VerticalAlignment="Center"
+                  Margin="7,0,0,0"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.RestoreEndPhrase}"/>
+        <CheckBox Grid.Row="4" Grid.Column="0"
+                  Content="Fix One Level Phrases"
+                  IsChecked="{Binding Config.FixOneLevelPhrases}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixOneLevel}"/>
+        <CheckBox Grid.Row="4" Grid.Column="1"
+                  Content="Fix Chord Names"
+                  IsChecked="{Binding Config.FixChordNames}"
+                  VerticalAlignment="Center"
+                  Margin="7,0,0,0"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.FixChordNames}"/>
+        <CheckBox Grid.Row="5" Grid.Column="0"
+                  Content="Remove Anchor Placeholder Notes"
+                  IsChecked="{Binding Config.RemoveAnchorPlaceholderNotes}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemovePlaceholders}"/>
+        <CheckBox Grid.Row="5" Grid.Column="1"
+                  Content="Add Crowd Events"
+                  IsChecked="{Binding Config.AddCrowdEvents}"
+                  VerticalAlignment="Center"
+                  Margin="7,0,0,0"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.AddCrowdEvents}"/>
+        <!--<CheckBox Grid.Row="6" Grid.Column="0"
+                  Content="Remove High Density Statuses"
+                  IsChecked="{Binding Config.RemoveHighDensityStatuses}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.RemoveHighDensity}"/>-->
+        <CheckBox Grid.Row="6" Grid.Column="1"
+                  Content="Display Times in Seconds"
+                  IsChecked="{Binding Config.DisplayTimesInSeconds}"
+                  VerticalAlignment="Center"
+                  Margin="7,0,0,0"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.TimesInSeconds}"/>
+        <CheckBox Grid.Row="6" Grid.Column="0"
+                  Content="Check For Arr. Id Reset"
+                  IsChecked="{Binding Config.CheckForArrIdReset}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.CheckArrIdReset}"/>
+        <CheckBox Grid.Row="7" Grid.Column="1"
+                  Content="Overwrite Original File"
+                  IsChecked="{Binding Config.OverwriteOriginalFile}"
+                  VerticalAlignment="Center"
+                  Margin="7,0,0,0"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.OverwriteFile}"/>
+        <CheckBox Grid.Row="7" Grid.Column="0"
+                  Content="Enable Logging"
+                  IsChecked="{Binding Config.EnableLogging}"
+                  VerticalAlignment="Center"
+                  ToolTip.Tip="{x:Static text:ConfigurationTooltips.EnableLogging}"/>
       </Grid>
     </HeaderedContentControl>
     <Grid Grid.Row="2" Margin="0,5,0,10">
