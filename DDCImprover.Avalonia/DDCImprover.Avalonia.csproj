@@ -47,7 +47,7 @@
   <ItemGroup>
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\customevent_so.png" Link="Assets\Help\customevent_so.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\fixopen.png" Link="Assets\Help\fixopen.png" />
-    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\moveto.png" Link="Assets\Help\moveto.png" />
+    <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\mover.png" Link="Assets\Help\mover.png" />
     <EmbeddedResource Include="..\DDCImprover.WPF\Assets\help\OF.png" Link="Assets\Help\OF.png" />
   </ItemGroup>
   

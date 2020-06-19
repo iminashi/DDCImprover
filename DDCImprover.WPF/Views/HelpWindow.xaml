@@ -8,20 +8,21 @@
         Title="Help" Height="650" Width="900" Icon="../Assets/information32.png">
     <FlowDocumentScrollViewer Hyperlink.Click="FlowDocHyperlink_Click">
         <FlowDocument>
-            <Paragraph FontSize="24">1. Basic Usage</Paragraph>
+            <Paragraph FontSize="24">1. Basic Use</Paragraph>
             <Paragraph>Enable the settings you want in the configuration, load some XML files and click process. The processed files are saved in the same directory as the original files, with a DDC_ prefix (or DD_ in case of files that already have DD). Opened files will be automatically reloaded if you process them again.</Paragraph>
             <Paragraph FontSize="24">2. Off Beat Phrases/Sections</Paragraph>
             <Paragraph>
-                Phrases can be moved off beat by giving the phrase a special name. Available options:
+                Phrases can be moved off beat by giving the phrase a special name:
+            </Paragraph>
+            <Paragraph FontWeight="Bold">moveR# (or mover#)</Paragraph>
+            <Paragraph>
+                 This will move the phrase right by # notes, where the number must be 1 or more. 1 will move the phrase to the next note/chord.
+                 Chords and split chords count as one. If the phrase is located on the same timecode as a note/chord (sustain of a previous note does not count), it counts as one.
+            </Paragraph>
+            <Paragraph>
+                You should prefer the "moveR" phrase name since it is easier to use and does not rely on figuring out absolute times, but these options are also available:
             </Paragraph>
             <List>
-                <ListItem>
-                    <Paragraph>
-                        "moveR#" will move the phrase right by # notes, where the number must be 1 or more. 1 will move the phrase to the next note/chord.
-                        Chords and split chords count as one. If the phrase is located on the same timecode as a note/chord (sustain of a previous note does not count), it counts as one.
-                        In the picture below "moveR3" would be the correct alternative. You should prefer this option since it is easier to use than the others. 
-                    </Paragraph>
-                </ListItem>
                 <ListItem>
                     <Paragraph>"moveto---s---": Where "---s---" is the time in seconds and milliseconds, e.g. moveto10s250, moveto150s027</Paragraph>
                 </ListItem>
@@ -30,10 +31,10 @@
                 </ListItem>
             </List>
             <Paragraph TextAlignment="Center">
-                <Image Source="../Assets/help/moveto.png" MaxWidth="718" MaxHeight="314" />
+                <Image Source="../Assets/help/mover.png" MaxWidth="718" MaxHeight="314" />
             </Paragraph>
             <Paragraph>
-                In the above case, the phrase and section will be moved to start at 28.824 seconds (at the G power chord).
+                In the above case, the phrase and section will be moved to start at the G power chord.
                 If an FHP is set at the start of the phrase, it will be moved to the new position. The FHP at the old position is deleted if no note is there.
             </Paragraph>
 
@@ -71,7 +72,6 @@
             </List>
             <Paragraph Padding="20,0,0,0">
                 Changes the handshape into an arpeggio. Can be used to make arpeggios that have chords inside.
-                Requires a relatively new version of the Toolkit to work.
             </Paragraph>
 
             <List>
