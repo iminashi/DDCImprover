@@ -6,8 +6,8 @@
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.17.160</AssemblyVersion>
-    <FileVersion>3.0.17.160</FileVersion>
+    <AssemblyVersion>3.0.19.180</AssemblyVersion>
+    <FileVersion>3.0.19.180</FileVersion>
     <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
   
@@ -16,13 +16,15 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <ShouldCreateLogs>True</ShouldCreateLogs>
     <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
-    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AssemblyVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.DayOfYearStamp</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.DayOfYearStamp</AssemblyFileVersionSettings>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
