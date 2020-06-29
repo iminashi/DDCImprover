@@ -53,7 +53,25 @@ namespace DDCImprover.Avalonia.Views
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(async type => await ShowChildWindow(type));
 
-            this.FindControl<ListBox>("listBox").SelectionChanged += (s, arg) => ViewModel.SelectedItems = (s as ListBox)!.SelectedItems;
+            ListBox processorList = this.FindControl<ListBox>("listBox");
+            processorList.SelectionChanged += (s, arg) => ViewModel.SelectedItems = (s as ListBox)!.SelectedItems;
+
+            static void DragOver(object? sender, DragEventArgs e)
+            {
+                if (!e.Data.Contains(DataFormats.FileNames))
+                    e.DragEffects = DragDropEffects.None;
+                else
+                    e.DragEffects &= DragDropEffects.Copy;
+            }
+
+            async void Drop(object? sender, DragEventArgs e)
+            {
+                if (e.Data.Contains(DataFormats.FileNames))
+                    await ViewModel.AddFilesAsync(e.Data.GetFileNames());
+            }
+
+            processorList.AddHandler(DragDrop.DragOverEvent, DragOver);
+            processorList.AddHandler(DragDrop.DropEvent, Drop);
 
 #if DEBUG
             this.AttachDevTools();

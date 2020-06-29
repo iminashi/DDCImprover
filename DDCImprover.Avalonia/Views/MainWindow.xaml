@@ -182,7 +182,8 @@
       <ListBox Items="{Binding XMLProcessors, Mode=OneTime}"
                Name="listBox"
                SelectionMode="Multiple"
-               BorderBrush="#DEDEDE">
+               BorderBrush="#DEDEDE"
+               DragDrop.AllowDrop="True">
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="Add Files..." Command="{Binding AddFiles}"/>

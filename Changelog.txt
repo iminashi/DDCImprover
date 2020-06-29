@@ -13,7 +13,7 @@
 -Updated the phrase moving section in the Help window
 -Improvements to the Avalonia UI
 -Bring the main window to the front when closing a child window (WPF version)
--Updated Avalonia to version 0.9.10
+-Updated Avalonia to version 0.9.11
 -Updated .NET Core to version 3.1
 
 2.2
