@@ -7,6 +7,11 @@
     <FileVersion>1.0.3.160</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.2.0">
       <PrivateAssets>all</PrivateAssets>
