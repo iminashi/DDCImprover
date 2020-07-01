@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -130,6 +131,20 @@ namespace Rocksmith2014Xml
         public int ChordId { get; set; }
 
         public List<Note>? ChordNotes { get; set; }
+
+        public Chord() { }
+
+        public Chord(Chord other)
+        {
+            Mask = other.Mask;
+            Time = other.Time;
+            ChordId = other.ChordId;
+            if(other.ChordNotes != null)
+            {
+                ChordNotes = new List<Note>(other.ChordNotes.Count);
+                ChordNotes.AddRange(other.ChordNotes.Select(cn => new Note(cn)));
+            }
+        }
 
         public override string ToString()
             => $"{Utils.TimeCodeToString(Time)}: Id: {ChordId}";

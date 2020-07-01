@@ -13,14 +13,21 @@ namespace Rocksmith2014Xml
 
         public int Time => StartTime;
 
+        public HandShape() { }
+
         public HandShape(int chordId, int startTime, int endTime)
         {
             ChordId = chordId;
-            EndTime = endTime;
             StartTime = startTime;
+            EndTime = endTime;
         }
 
-        public HandShape() { }
+        public HandShape(HandShape other)
+        {
+            ChordId = other.ChordId;
+            StartTime = other.StartTime;
+            EndTime = other.EndTime;
+        }
 
         public override string ToString()
             => $"{Utils.TimeCodeToString(StartTime)} - {Utils.TimeCodeToString(EndTime)}: Chord ID {ChordId}";

@@ -21,6 +21,13 @@ namespace Rocksmith2014Xml
             Width = width;
         }
 
+        public Anchor(Anchor other)
+        {
+            Fret = other.Fret;
+            Time = other.Time;
+            Width = other.Width;
+        }
+
         public override string ToString()
             => $"{Utils.TimeCodeToString(Time)}: Fret {Fret}, Width: {Width:F3}";
 

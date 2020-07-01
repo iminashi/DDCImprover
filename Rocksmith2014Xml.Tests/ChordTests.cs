@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 
+using System.Collections.Generic;
+
 using Xunit;
 
 namespace Rocksmith2014Xml.Tests
@@ -124,6 +126,32 @@ namespace Rocksmith2014Xml.Tests
             chord.IsLinkNext.Should().BeFalse();
             chord.IsPalmMute.Should().BeTrue();
             chord.IsUpStrum.Should().BeTrue();
+        }
+
+        [Fact]
+        public static void CopyConstructorCopiesAllValues()
+        {
+            Chord chord1 = new Chord
+            {
+                Time = 5000,
+                ChordId = 77,
+                Mask = ChordMask.Accent | ChordMask.Ignore,
+                ChordNotes = new List<Note>
+                {
+                    new Note { String = 0, Fret = 5 },
+                    new Note { String = 1, Fret = 7 }
+                }
+            };
+
+            Chord chord2 = new Chord(chord1);
+
+            chord1.Should().NotBeSameAs(chord2);
+            chord1.ChordNotes.Should().NotBeSameAs(chord2.ChordNotes);
+            chord1.ChordNotes[0].Should().NotBeSameAs(chord2.ChordNotes[0]);
+
+            Assert.Equal(chord1.Time, chord2.Time);
+            Assert.Equal(chord1.ChordId, chord2.ChordId);
+            Assert.Equal(chord1.Mask, chord2.Mask);
         }
     }
 }
