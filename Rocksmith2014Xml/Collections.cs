@@ -7,11 +7,6 @@ namespace Rocksmith2014Xml
         public BendValueCollection() : base("bendValue") { }
     }
 
-    public sealed class HeroLevelCollection : XmlCountListEx<HeroLevel>
-    {
-        public HeroLevelCollection() : base("heroLevel") { }
-    }
-
     public sealed class NewLinkedDiffCollection : XmlCountListEx<NewLinkedDiff>
     {
         public NewLinkedDiffCollection() : base("newLinkedDiff") { }

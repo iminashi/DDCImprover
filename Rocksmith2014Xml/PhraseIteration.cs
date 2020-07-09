@@ -11,7 +11,7 @@ namespace Rocksmith2014Xml
         public int PhraseId { get; set; }
         public string? Variation { get; set; }
 
-        public HeroLevelCollection? HeroLevels { get; set; }
+        public HeroLevels? HeroLevels { get; set; }
 
         public PhraseIteration() { }
 
@@ -36,7 +36,7 @@ namespace Rocksmith2014Xml
 
             if (!reader.IsEmptyElement && reader.ReadToDescendant("heroLevels"))
             {
-                HeroLevels = new HeroLevelCollection();
+                HeroLevels = new HeroLevels();
 
                 ((IXmlSerializable)HeroLevels).ReadXml(reader);
 

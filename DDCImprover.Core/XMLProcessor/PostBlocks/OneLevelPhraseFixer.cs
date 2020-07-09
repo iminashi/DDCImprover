@@ -134,12 +134,7 @@ namespace DDCImprover.Core.PostBlocks
                             Log("Solution: Kept phrase as is.");
                         }
 
-                        pi.HeroLevels = new HeroLevelCollection
-                        {
-                            new HeroLevel(hero: 1, difficulty: 0),
-                            new HeroLevel(hero: 2, difficulty: 1),
-                            new HeroLevel(hero: 3, difficulty: 1)
-                        };
+                        pi.HeroLevels = new HeroLevels(easy: 0, medium: 1, hard: 1);
 
                         // Find correct place where to insert the notes in the second difficulty level
                         int lastNoteTime = harderLevelNotes.Last().Time;
