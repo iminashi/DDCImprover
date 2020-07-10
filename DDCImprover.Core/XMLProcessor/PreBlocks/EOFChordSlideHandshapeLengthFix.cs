@@ -18,7 +18,7 @@ namespace DDCImprover.Core.PreBlocks
                 {
                     if (chord.ChordNotes.Any(cn => cn.IsSlide))
                     {
-                        var handshape = level.HandShapes.FirstOrDefault(hs => hs.StartTime == chord.Time);
+                        var handshape = level.HandShapes.Find(hs => hs.StartTime == chord.Time);
                         if (!(handshape is null) && !(chord.ChordNotes is null)
                             && (handshape.EndTime > handshape.StartTime + chord.ChordNotes[0].Sustain))
                         {

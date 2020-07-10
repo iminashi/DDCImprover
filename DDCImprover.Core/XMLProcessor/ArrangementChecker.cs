@@ -63,8 +63,8 @@ namespace DDCImprover.Core
         {
             var events = arrangement.Events;
 
-            int? introApplauseStart = events.FirstOrDefault(e => e.Code == "E3")?.Time;
-            int? applauseEnd = events.FirstOrDefault(e => e.Code == "E13")?.Time;
+            int? introApplauseStart = events.Find(e => e.Code == "E3")?.Time;
+            int? applauseEnd = events.Find(e => e.Code == "E13")?.Time;
             Regex crowdSpeedRegex = new Regex("e[0-2]$");
 
             if (introApplauseStart != null && applauseEnd != null)

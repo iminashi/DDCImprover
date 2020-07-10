@@ -46,7 +46,7 @@ namespace DDCImprover.Core
                 }
 
                 // Add END phrase iteration
-                arrangement.PhraseIterations.Add(new PhraseIteration(arrangement.Sections.Last().Time, arrangement.Phrases.Count - 1));
+                arrangement.PhraseIterations.Add(new PhraseIteration(arrangement.Sections[^1].Time, arrangement.Phrases.Count - 1));
             }
             else
             {
@@ -124,13 +124,14 @@ namespace DDCImprover.Core
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            var level = new Level { Difficulty = 0 };
-            level.Notes.AddRange(notes);
-            level.Chords.AddRange(chords);
-            level.Anchors.AddRange(anchors);
-            level.HandShapes.AddRange(handshapes);
-
-            return level;
+            return new Level
+            {
+                Difficulty = 0,
+                Notes = notes,
+                Chords = chords,
+                Anchors = anchors,
+                HandShapes = handshapes
+            };
         }
 
         private static void AddComment(InstrumentalArrangement arrangement)

@@ -25,7 +25,7 @@ namespace DDCImprover.Core.PostBlocks
         {
             var events = arrangement.Events;
 
-            var removeBeatsEvent = events.FirstOrDefault(ev => ev.Code.Equals("removebeats", StringComparison.OrdinalIgnoreCase));
+            var removeBeatsEvent = events.Find(ev => ev.Code.Equals("removebeats", StringComparison.OrdinalIgnoreCase));
             if (!(removeBeatsEvent is null))
             {
                 arrangement.Ebeats.RemoveAll(b => b.Time >= removeBeatsEvent.Time);
@@ -77,7 +77,7 @@ namespace DDCImprover.Core.PostBlocks
 
                     // Find the chord that is linked to the slide, its template and handshape
                     var linkNextChord = level.Chords.Last(c => c.Time < slideTime);
-                    var linkNextChordHs = level.HandShapes.FirstOrDefault(hs => hs.StartTime == linkNextChord.Time);
+                    var linkNextChordHs = level.HandShapes.Find(hs => hs.StartTime == linkNextChord.Time);
                     originalChordTemplate = arrangement.ChordTemplates[linkNextChord.ChordId];
 
                     // Shorten handshapes that EOF has set to include the slide out
@@ -95,7 +95,7 @@ namespace DDCImprover.Core.PostBlocks
                     originalChordTemplate = arrangement.ChordTemplates[chord.ChordId];
 
                     // The length of the handshape likely needs to be shortened
-                    var chordHs = level.HandShapes.FirstOrDefault(hs => hs.StartTime == chord.Time);
+                    var chordHs = level.HandShapes.Find(hs => hs.StartTime == chord.Time);
                     chordHs.EndTime = chordHs.StartTime + ((chordHs.EndTime - chordHs.StartTime) / 3);
                 }
 

@@ -53,7 +53,7 @@ namespace DDCImprover.Core
                 .ApplyFixIf(WasNonDDFile, new UnnecessaryNGPhraseRemover())
 
                 // Process chord names
-                .ApplyFixIf(Preferences.FixChordNames && DDCArrangement.ChordTemplates.Any(), new ChordNameProcessor(Parent.StatusMessages))
+                .ApplyFixIf(Preferences.FixChordNames && DDCArrangement.ChordTemplates.Count > 0, new ChordNameProcessor(Parent.StatusMessages))
 
                 // Remove beats that come after the audio has ended
                 .ApplyFixIf(Preferences.RemoveBeatsPastAudioEnd, new ExtraneousBeatsRemover())

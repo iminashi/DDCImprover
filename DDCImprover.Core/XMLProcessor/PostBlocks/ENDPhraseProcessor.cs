@@ -31,7 +31,7 @@ namespace DDCImprover.Core.PostBlocks
                 if (XMLProcessor.Preferences.PreserveENDPhraseLocation)
                 {
                     // Check if DDC has added an empty phrase to where we want to move the END phrase
-                    var ddcAddedPhraseIteration = arrangement.PhraseIterations.FirstOrDefault(pi => pi.Time == _oldLastPhraseTime);
+                    var ddcAddedPhraseIteration = arrangement.PhraseIterations.Find(pi => pi.Time == _oldLastPhraseTime);
                     if (ddcAddedPhraseIteration != null)
                     {
                         arrangement.PhraseIterations.Remove(ddcAddedPhraseIteration);
