@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 
+using System.Collections.Generic;
+
 using Xunit;
 
 namespace Rocksmith2014Xml.Tests
@@ -222,7 +224,7 @@ namespace Rocksmith2014Xml.Tests
                 Tap = 2,
                 Time = 33000,
                 Vibrato = 80,
-                BendValues = new BendValueCollection
+                BendValues = new List<BendValue>
                 {
                     new BendValue(34000, 3f),
                     new BendValue(35000, 4f)

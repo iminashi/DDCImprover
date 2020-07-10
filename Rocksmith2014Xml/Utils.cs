@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
@@ -102,6 +105,51 @@ namespace Rocksmith2014Xml
 
             // Shift and wrap the discarded bits.
             return BitConverter.ToInt32(BitConverter.GetBytes((number << positions) | wrapped), 0);
+        }
+
+        internal static void SerializeWithCount<T>(IList<T> collection, string listName, string elementName, XmlWriter writer)
+            where T : IXmlSerializable
+        {
+            writer.WriteStartElement(listName);
+            writer.WriteAttributeString("count", collection.Count.ToString(NumberFormatInfo.InvariantInfo));
+
+            for (int i = 0; i < collection.Count; i++)
+            {
+                writer.WriteStartElement(elementName);
+                collection[i].WriteXml(writer);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement(); // </listName>
+        }
+
+        internal static void DeserializeCountList<T>(List<T> list, XmlReader reader)
+            where T : IXmlSerializable, new()
+        {
+            if (reader.IsEmptyElement)
+            {
+                reader.ReadStartElement();
+                return;
+            }
+
+            string countAttr = reader.GetAttribute("count");
+            if (countAttr != null)
+            {
+                int count = int.Parse(countAttr, NumberFormatInfo.InvariantInfo);
+                if (count > 0)
+                    list.Capacity = count;
+            }
+
+            reader.ReadStartElement();
+
+            while (reader.NodeType != XmlNodeType.EndElement)
+            {
+                T element = new T();
+                element.ReadXml(reader);
+                list.Add(element);
+            }
+
+            reader.ReadEndElement();
         }
     }
 }

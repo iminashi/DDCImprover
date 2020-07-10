@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
@@ -44,10 +45,7 @@ namespace Rocksmith2014Xml
             Vibrato = other.Vibrato;
 
             if (other.BendValues != null)
-            {
-                BendValues = new BendValueCollection();
-                BendValues.AddRange(other.BendValues);
-            }
+                BendValues = new List<BendValue>(other.BendValues);
         }
 
         public Note() { }
@@ -240,7 +238,7 @@ namespace Rocksmith2014Xml
 
         public NoteMask Mask { get; set; }
 
-        public BendValueCollection? BendValues { get; set; }
+        public List<BendValue>? BendValues { get; set; }
 
         #endregion
 
@@ -343,9 +341,8 @@ namespace Rocksmith2014Xml
 
             if (!reader.IsEmptyElement && reader.ReadToDescendant("bendValues"))
             {
-                BendValues = new BendValueCollection();
-
-                ((IXmlSerializable)BendValues).ReadXml(reader);
+                BendValues = new List<BendValue>();
+                Utils.DeserializeCountList(BendValues, reader);
 
                 reader.ReadEndElement(); // </note>
             }
@@ -472,11 +469,7 @@ namespace Rocksmith2014Xml
                 writer.WriteAttributeString("vibrato", "0");
 
             if (BendValues?.Count > 0)
-            {
-                writer.WriteStartElement("bendValues");
-                ((IXmlSerializable)BendValues).WriteXml(writer);
-                writer.WriteEndElement(); // </bendValues>
-            }
+                Utils.SerializeWithCount(BendValues, "bendValues", "bendValue", writer);
         }
 
         XmlSchema? IXmlSerializable.GetSchema() => null;

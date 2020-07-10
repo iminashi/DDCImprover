@@ -32,7 +32,7 @@ namespace DDCImprover.Core.Tests
                 Sustain = 1000,
                 IsLinkNext = true,
                 Bend = 1,
-                BendValues = new BendValueCollection
+                BendValues = new List<BendValue>
                 {
                     new BendValue(1000, 1f)
                 }
@@ -58,7 +58,7 @@ namespace DDCImprover.Core.Tests
                 Sustain = 1000,
                 IsLinkNext = true,
                 Bend = 1,
-                BendValues = new BendValueCollection
+                BendValues = new List<BendValue>
                 {
                     new BendValue(0, 1f),
                     new BendValue(1000, 0f)
@@ -69,7 +69,7 @@ namespace DDCImprover.Core.Tests
                 Time = 1000,
                 Sustain = 1000,
                 Bend = 1,
-                BendValues = new BendValueCollection
+                BendValues = new List<BendValue>
                 {
                     new BendValue(2000, 1f)
                 }

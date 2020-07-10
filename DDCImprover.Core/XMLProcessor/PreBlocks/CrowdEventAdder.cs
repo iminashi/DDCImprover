@@ -89,9 +89,6 @@ namespace DDCImprover.Core.PreBlocks
 
         public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            if (arrangement.Events is null)
-                arrangement.Events = new EventCollection();
-
             var events = arrangement.Events;
 
             // Add initial crowd tempo event only if there are no other tempo events present

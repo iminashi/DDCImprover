@@ -52,7 +52,7 @@ namespace DDCImprover.Core
             return null;
         }
 
-        private static string CreatePhraseLevelsString(PhraseCollection phrases)
+        private static string CreatePhraseLevelsString(List<Phrase> phrases)
         {
             var sb = new StringBuilder();
 
@@ -65,7 +65,7 @@ namespace DDCImprover.Core
             return sb.ToString();
         }
 
-        public static void QueueForSave(string filename, PhraseCollection phrases)
+        public static void QueueForSave(string filename, List<Phrase> phrases)
         {
             string entryName = GetHash(filename);
             string levels = CreatePhraseLevelsString(phrases);

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -8,10 +9,10 @@ namespace Rocksmith2014Xml
     public sealed class Level : IXmlSerializable
     {
         public sbyte Difficulty { get; set; } = -1;
-        public NoteCollection Notes { get; set; } = new NoteCollection();
-        public ChordCollection Chords { get; set; } = new ChordCollection();
-        public AnchorCollection Anchors { get; set; } = new AnchorCollection();
-        public HandShapeCollection HandShapes { get; set; } = new HandShapeCollection();
+        public List<Note> Notes { get; set; } = new List<Note>();
+        public List<Chord> Chords { get; set; } = new List<Chord>();
+        public List<Anchor> Anchors { get; set; } = new List<Anchor>();
+        public List<HandShape> HandShapes { get; set; } = new List<HandShape>();
 
         public Level() { }
 
@@ -33,24 +34,24 @@ namespace Rocksmith2014Xml
 
             reader.ReadStartElement();
 
-            while(reader.NodeType != XmlNodeType.EndElement)
+            while (reader.NodeType != XmlNodeType.EndElement)
             {
-                switch(reader.LocalName)
+                switch (reader.LocalName)
                 {
                     case "notes":
-                        ((IXmlSerializable)Notes).ReadXml(reader);
+                        Utils.DeserializeCountList(Notes, reader);
                         break;
 
                     case "chords":
-                        ((IXmlSerializable)Chords).ReadXml(reader);
+                        Utils.DeserializeCountList(Chords, reader);
                         break;
 
                     case "anchors":
-                        ((IXmlSerializable)Anchors).ReadXml(reader);
+                        Utils.DeserializeCountList(Anchors, reader);
                         break;
 
                     case "handShapes":
-                        ((IXmlSerializable)HandShapes).ReadXml(reader);
+                        Utils.DeserializeCountList(HandShapes, reader);
                         break;
 
                     default:
@@ -66,33 +67,10 @@ namespace Rocksmith2014Xml
         {
             writer.WriteAttributeString("difficulty", Difficulty.ToString(NumberFormatInfo.InvariantInfo));
 
-            if (Notes != null)
-            {
-                writer.WriteStartElement("notes");
-                ((IXmlSerializable)Notes).WriteXml(writer);
-                writer.WriteEndElement();
-            }
-
-            if (Chords != null)
-            {
-                writer.WriteStartElement("chords");
-                ((IXmlSerializable)Chords).WriteXml(writer);
-                writer.WriteEndElement();
-            }
-
-            if (Anchors != null)
-            {
-                writer.WriteStartElement("anchors");
-                ((IXmlSerializable)Anchors).WriteXml(writer);
-                writer.WriteEndElement();
-            }
-
-            if (HandShapes != null)
-            {
-                writer.WriteStartElement("handShapes");
-                ((IXmlSerializable)HandShapes).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+            Utils.SerializeWithCount(Notes, "notes", "note", writer);
+            Utils.SerializeWithCount(Chords, "chords", "chord", writer);
+            Utils.SerializeWithCount(Anchors, "anchors", "anchor", writer);
+            Utils.SerializeWithCount(HandShapes, "handShapes", "handShape", writer);
         }
 
         #endregion

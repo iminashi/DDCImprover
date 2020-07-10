@@ -75,13 +75,13 @@ namespace Rocksmith2014Xml
 
         public string? LastConversionDateTime { get; set; }
 
-        public PhraseCollection Phrases { get; set; } = new PhraseCollection();
-        public PhraseIterationCollection PhraseIterations { get; set; } = new PhraseIterationCollection();
-        public NewLinkedDiffCollection NewLinkedDiffs { get; set; } = new NewLinkedDiffCollection();
-        public XmlCountList<LinkedDiff>? LinkedDiffs { get; set; }
-        public XmlCountList<PhraseProperty>? PhraseProperties { get; set; }
-        public ChordTemplateCollection ChordTemplates { get; set; } = new ChordTemplateCollection();
-        public EbeatCollection Ebeats { get; set; } = new EbeatCollection();
+        public List<Phrase> Phrases { get; set; } = new List<Phrase>();
+        public List<PhraseIteration> PhraseIterations { get; set; } = new List<PhraseIteration>();
+        public List<NewLinkedDiff> NewLinkedDiffs { get; set; } = new List<NewLinkedDiff>();
+        public List<LinkedDiff>? LinkedDiffs { get; set; }
+        public List<PhraseProperty>? PhraseProperties { get; set; }
+        public List<ChordTemplate> ChordTemplates { get; set; } = new List<ChordTemplate>();
+        public List<Ebeat> Ebeats { get; set; } = new List<Ebeat>();
 
         /// <summary>
         /// The name of the tone that the arrangement starts with.
@@ -92,10 +92,10 @@ namespace Rocksmith2014Xml
         public string? ToneC { get; set; }
         public string? ToneD { get; set; }
 
-        public ToneCollection? ToneChanges { get; set; }
+        public List<Tone>? ToneChanges { get; set; }
 
-        public SectionCollection Sections { get; set; } = new SectionCollection();
-        public EventCollection Events { get; set; } = new EventCollection();
+        public List<Section> Sections { get; set; } = new List<Section>();
+        public List<Event> Events { get; set; } = new List<Event>();
 
         /// <summary>
         /// Contains the transcription of the arrangement (i.e. only the highest difficulty level of all the phrases).
@@ -105,7 +105,7 @@ namespace Rocksmith2014Xml
         /// <summary>
         /// The difficulty levels of the arrangement.
         /// </summary>
-        public LevelCollection Levels { get; set; } = new LevelCollection();
+        public List<Level> Levels { get; set; } = new List<Level>();
 
         /// <summary>
         /// Saves this Rocksmith 2014 arrangement into the given file.
@@ -287,27 +287,27 @@ namespace Rocksmith2014Xml
                         break;
 
                     case "phrases":
-                        ((IXmlSerializable)Phrases).ReadXml(reader);
+                        Utils.DeserializeCountList(Phrases, reader);
                         break;
                     case "phraseIterations":
-                        ((IXmlSerializable)PhraseIterations).ReadXml(reader);
+                        Utils.DeserializeCountList(PhraseIterations, reader);
                         break;
                     case "newLinkedDiffs":
-                        ((IXmlSerializable)NewLinkedDiffs).ReadXml(reader);
+                        Utils.DeserializeCountList(NewLinkedDiffs, reader);
                         break;
                     case "linkedDiffs":
-                        LinkedDiffs = new XmlCountList<LinkedDiff>();
-                        ((IXmlSerializable)LinkedDiffs).ReadXml(reader);
+                        LinkedDiffs = new List<LinkedDiff>();
+                         Utils.DeserializeCountList(LinkedDiffs, reader);
                         break;
                     case "phraseProperties":
-                        PhraseProperties = new XmlCountList<PhraseProperty>();
-                        ((IXmlSerializable)PhraseProperties).ReadXml(reader);
+                        PhraseProperties = new List<PhraseProperty>();
+                        Utils.DeserializeCountList(PhraseProperties, reader);
                         break;
                     case "chordTemplates":
-                        ((IXmlSerializable)ChordTemplates).ReadXml(reader);
+                        Utils.DeserializeCountList(ChordTemplates, reader);
                         break;
                     case "ebeats":
-                        ((IXmlSerializable)Ebeats).ReadXml(reader);
+                        Utils.DeserializeCountList(Ebeats, reader);
                         break;
 
                     case "tonebase":
@@ -326,22 +326,22 @@ namespace Rocksmith2014Xml
                         ToneD = reader.ReadElementContentAsString();
                         break;
                     case "tones":
-                        ToneChanges = new ToneCollection();
-                        ((IXmlSerializable)ToneChanges).ReadXml(reader);
+                        ToneChanges = new List<Tone>();
+                        Utils.DeserializeCountList(ToneChanges, reader);
                         break;
 
                     case "sections":
-                        ((IXmlSerializable)Sections).ReadXml(reader);
+                        Utils.DeserializeCountList(Sections, reader);
                         break;
                     case "events":
-                        ((IXmlSerializable)Events).ReadXml(reader);
+                        Utils.DeserializeCountList(Events, reader);
                         break;
                     case "transcriptionTrack":
                         TranscriptionTrack = new Level();
                         ((IXmlSerializable)TranscriptionTrack).ReadXml(reader);
                         break;
                     case "levels":
-                        ((IXmlSerializable)Levels).ReadXml(reader);
+                        Utils.DeserializeCountList(Levels, reader);
                         break;
 
                     default:
@@ -365,14 +365,10 @@ namespace Rocksmith2014Xml
                 }
             }
 
-            int firstBeat = 0;
-            if (Ebeats.Count > 0)
-                firstBeat = Ebeats[0].Time;
-
             writer.WriteElementString("title", Title);
             writer.WriteElementString("arrangement", Arrangement);
             writer.WriteElementString("part", Part.ToString(NumberFormatInfo.InvariantInfo));
-            writer.WriteElementString("offset", (firstBeat / -1000f).ToString("F3", NumberFormatInfo.InvariantInfo));
+            writer.WriteElementString("offset", (StartBeat / -1000f).ToString("F3", NumberFormatInfo.InvariantInfo));
             writer.WriteElementString("centOffset", CentOffset.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteElementString("songLength", Utils.TimeCodeToString(SongLength));
 
@@ -381,7 +377,7 @@ namespace Rocksmith2014Xml
                 writer.WriteElementString("songNameSort", TitleSort);
             }
 
-            writer.WriteElementString("startBeat", Utils.TimeCodeToString(firstBeat));
+            writer.WriteElementString("startBeat", Utils.TimeCodeToString(StartBeat));
             writer.WriteElementString("averageTempo", AverageTempo.ToString("F3", NumberFormatInfo.InvariantInfo));
 
             if (Tuning != null)
@@ -420,39 +416,18 @@ namespace Rocksmith2014Xml
 
             writer.WriteElementString("lastConversionDateTime", LastConversionDateTime);
 
-            writer.WriteStartElement("phrases");
-            ((IXmlSerializable)Phrases).WriteXml(writer);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("phraseIterations");
-            ((IXmlSerializable)PhraseIterations).WriteXml(writer);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("newLinkedDiffs");
-            ((IXmlSerializable)NewLinkedDiffs).WriteXml(writer);
-            writer.WriteEndElement();
+            Utils.SerializeWithCount(Phrases, "phrases", "phrase", writer);
+            Utils.SerializeWithCount(PhraseIterations, "phraseIterations", "phraseIteration", writer);
+            Utils.SerializeWithCount(NewLinkedDiffs, "newLinkedDiffs", "newLinkedDiff", writer);
 
             if (LinkedDiffs != null)
-            {
-                writer.WriteStartElement("linkedDiffs");
-                ((IXmlSerializable)LinkedDiffs).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+                Utils.SerializeWithCount(LinkedDiffs, "linkedDiffs", "linkedDiff", writer);
 
             if (PhraseProperties != null)
-            {
-                writer.WriteStartElement("phraseProperties");
-                ((IXmlSerializable)PhraseProperties).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+                Utils.SerializeWithCount(PhraseProperties, "phraseProperties", "phraseProperty", writer);
 
-            writer.WriteStartElement("chordTemplates");
-            ((IXmlSerializable)ChordTemplates).WriteXml(writer);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("ebeats");
-            ((IXmlSerializable)Ebeats).WriteXml(writer);
-            writer.WriteEndElement();
+            Utils.SerializeWithCount(ChordTemplates, "chordTemplates", "chordTemplate", writer);
+            Utils.SerializeWithCount(Ebeats, "ebeats", "ebeat", writer);
 
             if (ToneBase != null) writer.WriteElementString("tonebase", ToneBase);
             if (ToneA != null) writer.WriteElementString("tonea", ToneA);
@@ -461,19 +436,10 @@ namespace Rocksmith2014Xml
             if (ToneD != null) writer.WriteElementString("toned", ToneD);
 
             if (ToneChanges != null)
-            {
-                writer.WriteStartElement("tones");
-                ((IXmlSerializable)ToneChanges).WriteXml(writer);
-                writer.WriteEndElement();
-            }
+                Utils.SerializeWithCount(ToneChanges, "tones", "tone", writer);
 
-            writer.WriteStartElement("sections");
-            ((IXmlSerializable)Sections).WriteXml(writer);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("events");
-            ((IXmlSerializable)Events).WriteXml(writer);
-            writer.WriteEndElement();
+            Utils.SerializeWithCount(Sections, "sections", "section", writer);
+            Utils.SerializeWithCount(Events, "events", "event", writer);
 
             if (TranscriptionTrack != null)
             {
@@ -482,9 +448,7 @@ namespace Rocksmith2014Xml
                 writer.WriteEndElement();
             }
 
-            writer.WriteStartElement("levels");
-            ((IXmlSerializable)Levels).WriteXml(writer);
-            writer.WriteEndElement();
+            Utils.SerializeWithCount(Levels, "levels", "level", writer);
         }
 
         #endregion

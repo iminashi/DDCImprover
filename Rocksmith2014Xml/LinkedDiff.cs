@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    [XmlRoot("linkedDiff", Namespace = "")]
     public struct LinkedDiff : IXmlSerializable, IEquatable<LinkedDiff>
     {
         public int ChildId { get; private set; }

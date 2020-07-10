@@ -75,7 +75,7 @@ namespace DDCImprover.Core.PostBlocks
                                 join note in firstLevelNotes on anchor.Time equals note.Time
                                 select anchor;
 
-                        var newSecondLevelAnchors = new AnchorCollection();
+                        var newSecondLevelAnchors = new List<Anchor>();
                         newSecondLevelAnchors.AddRange(secondLevelAnchors.Union(anchorsToAddToSecondLevel).OrderBy(a => a.Time));
 
                         secondLevel.Anchors = newSecondLevelAnchors;

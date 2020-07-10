@@ -306,7 +306,7 @@ namespace DDCImprover.Core
             }
         }
 
-        internal void CheckHandshapes(Level level, ChordTemplateCollection chordTemplates)
+        internal void CheckHandshapes(Level level, List<ChordTemplate> chordTemplates)
         {
             var handShapes = level.HandShapes;
             var anchors = level.Anchors;
