@@ -11,15 +11,15 @@ namespace Rocksmith2014Xml
     [Flags]
     public enum ChordMask : byte
     {
-        None         = 0,
-        LinkNext     = 1 << 0,
-        Accent       = 1 << 1,
+        None = 0,
+        LinkNext = 1 << 0,
+        Accent = 1 << 1,
         FretHandMute = 1 << 2,
-        HighDensity  = 1 << 3,
-        Ignore       = 1 << 4,
-        PalmMute     = 1 << 5,
-        Hopo         = 1 << 6,
-        UpStrum      = 1 << 7
+        HighDensity = 1 << 3,
+        Ignore = 1 << 4,
+        PalmMute = 1 << 5,
+        Hopo = 1 << 6,
+        UpStrum = 1 << 7
     }
 
     public class Chord : IXmlSerializable, IComparable<Chord>, IHasTimeCode
@@ -128,7 +128,7 @@ namespace Rocksmith2014Xml
 
         public int Time { get; set; }
 
-        public int ChordId { get; set; }
+        public short ChordId { get; set; }
 
         public List<Note>? ChordNotes { get; set; }
 
@@ -139,7 +139,7 @@ namespace Rocksmith2014Xml
             Mask = other.Mask;
             Time = other.Time;
             ChordId = other.ChordId;
-            if(other.ChordNotes != null)
+            if (other.ChordNotes != null)
             {
                 ChordNotes = new List<Note>(other.ChordNotes.Count);
                 ChordNotes.AddRange(other.ChordNotes.Select(cn => new Note(cn)));
@@ -170,11 +170,11 @@ namespace Rocksmith2014Xml
                             Time = Utils.TimeCodeFromFloatString(reader.Value);
                             break;
                         case "chordId":
-                            ChordId = int.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                            ChordId = short.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                             break;
 
                         case "strum":
-                            if(reader.Value == "up")
+                            if (reader.Value == "up")
                                 Mask |= ChordMask.UpStrum;
                             break;
 

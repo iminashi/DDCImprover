@@ -9,9 +9,9 @@ namespace Rocksmith2014Xml
     public sealed class Ebeat : IXmlSerializable, IEquatable<Ebeat>, IHasTimeCode
     {
         public int Time { get; set; }
-        public int Measure { get; set; } = -1;
+        public short Measure { get; set; } = -1;
 
-        public Ebeat(int time, int measure)
+        public Ebeat(int time, short measure)
         {
             Time = time;
             Measure = measure;
@@ -45,7 +45,7 @@ namespace Rocksmith2014Xml
                         Time = Utils.TimeCodeFromFloatString(reader.Value);
                         break;
                     case "measure":
-                        Measure = int.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
+                        Measure = short.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
                 }
             }

@@ -8,10 +8,10 @@ namespace Rocksmith2014Xml
     public sealed class Section : IXmlSerializable, IHasTimeCode
     {
         public string Name { get; set; } = string.Empty;
-        public int Number { get; set; }
+        public short Number { get; set; }
         public int Time { get; set; }
 
-        public Section(string name, int startTime, int number)
+        public Section(string name, int startTime, short number)
         {
             Name = name;
             Number = number;
@@ -30,7 +30,7 @@ namespace Rocksmith2014Xml
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             Name = reader.GetAttribute("name");
-            Number = int.Parse(reader.GetAttribute("number"), NumberFormatInfo.InvariantInfo);
+            Number = short.Parse(reader.GetAttribute("number"), NumberFormatInfo.InvariantInfo);
             Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("startTime"));
 
             reader.ReadStartElement();

@@ -86,7 +86,7 @@ namespace Rocksmith2014Xml
 
             if (IsDisparity)
                 writer.WriteAttributeString("disparity", "1");
-            else if(!InstrumentalArrangement.UseAbridgedXml)
+            else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("disparity", "0");
 
             if (IsIgnore)

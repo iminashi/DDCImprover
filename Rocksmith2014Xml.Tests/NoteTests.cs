@@ -175,7 +175,7 @@ namespace Rocksmith2014Xml.Tests
             note.IsVibrato.Should().BeFalse();
             note.IsTap.Should().BeFalse();
 
-            note.Bend = 2.0f;
+            note.BendValues = new List<BendValue> { new BendValue(100, 1.5f) };
 
             note.IsBend.Should().BeTrue();
             note.IsSlide.Should().BeFalse();
@@ -213,7 +213,6 @@ namespace Rocksmith2014Xml.Tests
         {
             Note note1 = new Note
             {
-                Bend = 7f,
                 Fret = 22,
                 LeftHand = 3,
                 Mask = NoteMask.Accent | NoteMask.Ignore | NoteMask.LinkNext | NoteMask.Mute | NoteMask.Slap,
@@ -238,7 +237,6 @@ namespace Rocksmith2014Xml.Tests
 
             note1.BendValues.Should().BeEquivalentTo(note2.BendValues);
 
-            Assert.Equal(note1.Bend, note2.Bend);
             Assert.Equal(note1.Fret, note2.Fret);
             Assert.Equal(note1.LeftHand, note2.LeftHand);
             Assert.Equal(note1.Mask, note2.Mask);

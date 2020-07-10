@@ -19,7 +19,7 @@ namespace DDCImprover.Core
         /// Number of progress steps reported (GeneratingDD, PostProcessing, Completed)
         /// </summary>
         public const int ProgressSteps = 3;
-        internal const int TempMeasureNumber = 65535;
+        internal const short TempMeasureNumber = short.MaxValue;
 
         private static Configuration? preferences;
 

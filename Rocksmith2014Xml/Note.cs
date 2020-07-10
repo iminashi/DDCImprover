@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -37,7 +38,6 @@ namespace Rocksmith2014Xml
             Fret = other.Fret;
             Sustain = other.Sustain;
 
-            Bend = other.Bend;
             LeftHand = other.LeftHand;
             SlideTo = other.SlideTo;
             SlideUnpitchTo = other.SlideUnpitchTo;
@@ -209,7 +209,7 @@ namespace Rocksmith2014Xml
         }
 
         public bool IsVibrato => Vibrato != 0;
-        public bool IsBend => Bend != 0;
+        public bool IsBend => BendValues?.Count > 0;
         public bool IsSlide => SlideTo != -1;
         public bool IsUnpitchedSlide => SlideUnpitchTo != -1;
         public bool IsTap => Tap != 0;
@@ -219,10 +219,7 @@ namespace Rocksmith2014Xml
         #region Properties
 
         public int Time { get; set; }
-
         public int Sustain { get; set; }
-
-        public float Bend { get; set; }
         public sbyte Fret { get; set; }
 
         public bool Hopo
@@ -263,9 +260,6 @@ namespace Rocksmith2014Xml
                         break;
                     case "sustain":
                         Sustain = Utils.TimeCodeFromFloatString(reader.Value);
-                        break;
-                    case "bend":
-                        Bend = float.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
                         break;
                     case "fret":
                         Fret = sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo);
@@ -358,7 +352,7 @@ namespace Rocksmith2014Xml
             writer.WriteAttributeString("string", String.ToString(NumberFormatInfo.InvariantInfo));
             writer.WriteAttributeString("fret", Fret.ToString(NumberFormatInfo.InvariantInfo));
 
-            if (Sustain > 0.0f)
+            if (Sustain > 0)
                 writer.WriteAttributeString("sustain", Utils.TimeCodeToString(Sustain));
             else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("sustain", "0.000");
@@ -374,7 +368,7 @@ namespace Rocksmith2014Xml
                 writer.WriteAttributeString("accent", "0");
 
             if (IsBend)
-                writer.WriteAttributeString("bend", Bend.ToString(NumberFormatInfo.InvariantInfo));
+                writer.WriteAttributeString("bend", BendValues!.Max(b => b.Step).ToString(NumberFormatInfo.InvariantInfo));
             else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("bend", "0");
 

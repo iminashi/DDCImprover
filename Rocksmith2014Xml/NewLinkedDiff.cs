@@ -8,7 +8,7 @@ namespace Rocksmith2014Xml
 {
     public sealed class NewLinkedDiff : IXmlSerializable
     {
-        public int LevelBreak { get; set; } = -1;
+        public sbyte LevelBreak { get; set; } = -1;
         public string? Ratio { get; set; }
 
         public int PhraseCount => PhraseIds.Count;
@@ -20,7 +20,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            LevelBreak = int.Parse(reader.GetAttribute("levelBreak"), NumberFormatInfo.InvariantInfo);
+            LevelBreak = sbyte.Parse(reader.GetAttribute("levelBreak"), NumberFormatInfo.InvariantInfo);
             Ratio = reader.GetAttribute("ratio");
 
             if(!reader.IsEmptyElement && reader.ReadToDescendant("nld_phrase"))

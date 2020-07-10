@@ -110,7 +110,7 @@ namespace DDCImprover.Core.PostBlocks
                 // Create a new handshape at the slide end
                 int endTime = notes[0].Time + notes[0].Sustain;
                 int startTime = endTime - (notes[0].Sustain / 3);
-                int chordId = arrangement.ChordTemplates.Count;
+                short chordId = (short)arrangement.ChordTemplates.Count;
                 level.HandShapes.InsertByTime(new HandShape(chordId, startTime, endTime));
 
                 // Create a new chord template for the handshape

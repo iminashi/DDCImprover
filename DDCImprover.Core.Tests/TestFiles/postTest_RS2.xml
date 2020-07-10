@@ -61,9 +61,9 @@
         <ebeat time="6.750"/>
         <ebeat time="7.125"/>
         <ebeat time="7.500" measure="4"/>
-        <ebeat time="7.875" measure="65535"/>
+        <ebeat time="7.875" measure="32767"/>
         <ebeat time="8.250"/>
-        <ebeat time="8.625" measure="65535"/>
+        <ebeat time="8.625" measure="32767"/>
         <ebeat time="9.000" measure="5"/>
         <ebeat time="9.375"/>
         <ebeat time="9.750"/>

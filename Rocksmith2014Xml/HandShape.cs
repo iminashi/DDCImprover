@@ -7,7 +7,7 @@ namespace Rocksmith2014Xml
 {
     public sealed class HandShape : IXmlSerializable, IHasTimeCode
     {
-        public int ChordId { get; set; }
+        public short ChordId { get; set; }
         public int EndTime { get; set; }
         public int StartTime { get; set; }
 
@@ -15,7 +15,7 @@ namespace Rocksmith2014Xml
 
         public HandShape() { }
 
-        public HandShape(int chordId, int startTime, int endTime)
+        public HandShape(short chordId, int startTime, int endTime)
         {
             ChordId = chordId;
             StartTime = startTime;
@@ -38,7 +38,7 @@ namespace Rocksmith2014Xml
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            ChordId = int.Parse(reader.GetAttribute("chordId"), NumberFormatInfo.InvariantInfo);
+            ChordId = short.Parse(reader.GetAttribute("chordId"), NumberFormatInfo.InvariantInfo);
             StartTime = Utils.TimeCodeFromFloatString(reader.GetAttribute("startTime"));
             EndTime = Utils.TimeCodeFromFloatString(reader.GetAttribute("endTime"));
 

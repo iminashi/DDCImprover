@@ -236,7 +236,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
                 Frets = new sbyte[] { 1, 3, 4, -1, -1, -1 }
             };
             testArrangement.ChordTemplates.Add(template);
-            int chordId = testArrangement.ChordTemplates.Count - 1;
+            short chordId = (short)(testArrangement.ChordTemplates.Count - 1);
 
             var chord = new Chord
             {

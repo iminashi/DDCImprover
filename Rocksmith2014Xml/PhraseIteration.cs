@@ -52,7 +52,7 @@ namespace Rocksmith2014Xml
         {
             writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
             writer.WriteAttributeString("phraseId", PhraseId.ToString(NumberFormatInfo.InvariantInfo));
-            if(!(InstrumentalArrangement.UseAbridgedXml && string.IsNullOrEmpty(Variation)))
+            if (!(InstrumentalArrangement.UseAbridgedXml && string.IsNullOrEmpty(Variation)))
                 writer.WriteAttributeString("variation", Variation);
 
             if (HeroLevels?.Count > 0)
