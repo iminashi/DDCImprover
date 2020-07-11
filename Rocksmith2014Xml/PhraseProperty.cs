@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents properties for a RS1 phrase.
+    /// </summary>
     public sealed class PhraseProperty : IXmlSerializable
     {
         public int PhraseId { get; set; }

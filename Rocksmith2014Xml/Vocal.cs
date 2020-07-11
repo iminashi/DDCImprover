@@ -5,15 +5,43 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a vocal in a vocals arrangement.
+    /// </summary>
     public sealed class Vocal : IHasTimeCode, IXmlSerializable
     {
+        /// <summary>
+        /// The time code of the vocal.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// The MIDI note of the vocal. Not used in Rocksmith 2014.
+        /// </summary>
         public byte Note { get; set; }
+
+        /// <summary>
+        /// The length of the vocal in milliseconds.
+        /// </summary>
         public int Length { get; set; }
+
+        /// <summary>
+        /// The lyric string of the vocal.
+        /// </summary>
         public string Lyric { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Creates a new vocal.
+        /// </summary>
         public Vocal() { }
 
+        /// <summary>
+        /// Creates a new vocal with the given properties.
+        /// </summary>
+        /// <param name="time">The time code of the vocal.</param>
+        /// <param name="length">The length of the vocal in milliseconds.</param>
+        /// <param name="lyric">The lyric string of the vocal.</param>
+        /// <param name="note">The MIDI note of the vocal (default: 60, middle C).</param>
         public Vocal(int time, int length, string lyric, byte note = 60)
         {
             Time = time;

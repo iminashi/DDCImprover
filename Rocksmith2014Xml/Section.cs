@@ -5,20 +5,43 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a section.
+    /// </summary>
     public sealed class Section : IXmlSerializable, IHasTimeCode
     {
+        /// <summary>
+        /// The name of the section.
+        /// </summary>
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The ordering number of the section.
+        /// </summary>
         public short Number { get; set; }
+
+        /// <summary>
+        /// The time code for the start of the section.
+        /// </summary>
         public int Time { get; set; }
 
+        /// <summary>
+        /// Creates a new section.
+        /// </summary>
+        public Section() { }
+
+        /// <summary>
+        /// Creates a new section with the given properties.
+        /// </summary>
+        /// <param name="name">The name of the section.</param>
+        /// <param name="startTime">The star time of the section.</param>
+        /// <param name="number">The number of the section.</param>
         public Section(string name, int startTime, short number)
         {
             Name = name;
             Number = number;
             Time = startTime;
         }
-
-        public Section() { }
 
         public override string ToString()
             => $"{Utils.TimeCodeToString(Time)}: {Name} #{Number}";

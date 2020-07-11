@@ -1,16 +1,19 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
-
-using XmlUtils;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class Vocals : XmlCountListEx<Vocal>
+    /// <summary>
+    /// Represents a list of vocals that can be saved into an XML file.
+    /// </summary>
+    public sealed class Vocals : List<Vocal>
     {
-        public Vocals() : base("vocal") { }
-
-        public void Save(string filename)
+        /// <summary>
+        /// Saves this vocals list into an XML file.
+        /// </summary>
+        /// <param name="fileName">The target filename.</param>
+        public void Save(string fileName)
         {
             var settings = new XmlWriterSettings
             {
@@ -18,15 +21,18 @@ namespace Rocksmith2014Xml
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
             };
 
-            using XmlWriter writer = XmlWriter.Create(filename, settings);
+            using XmlWriter writer = XmlWriter.Create(fileName, settings);
 
             writer.WriteStartDocument();
-            writer.WriteStartElement("vocals");
-            ((IXmlSerializable)this).WriteXml(writer);
-            writer.WriteEndElement();
+            Utils.SerializeWithCount(this, "vocals", "vocal", writer);
         }
 
-        public static Vocals Load(string filename)
+        /// <summary>
+        /// Loads a list of vocals from an XML file.
+        /// </summary>
+        /// <param name="fileName">The filename.</param>
+        /// <returns>A list of vocals deserialized from the file.</returns>
+        public static Vocals Load(string fileName)
         {
             var settings = new XmlReaderSettings
             {
@@ -34,11 +40,11 @@ namespace Rocksmith2014Xml
                 IgnoreWhitespace = true
             };
 
-            using XmlReader reader = XmlReader.Create(filename, settings);
+            using XmlReader reader = XmlReader.Create(fileName, settings);
 
             reader.MoveToContent();
-            Vocals vocals = new Vocals();
-            ((IXmlSerializable)vocals).ReadXml(reader);
+            var vocals = new Vocals();
+            Utils.DeserializeCountList(vocals, reader);
             return vocals;
         }
     }

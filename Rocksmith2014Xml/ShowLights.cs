@@ -1,18 +1,19 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
-
-using XmlUtils;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class ShowLights : XmlCountListEx<ShowLight>
+    /// <summary>
+    /// Represents a list of show lights that can be saved into an XML file.
+    /// </summary>
+    public sealed class ShowLights : List<ShowLight>
     {
-        public ShowLights() : base("showlight")
-        {
-        }
-
-        public void Save(string filename)
+        /// <summary>
+        /// Saves this show light list into an XML file.
+        /// </summary>
+        /// <param name="fileName">The target filename.</param>
+        public void Save(string fileName)
         {
             var settings = new XmlWriterSettings
             {
@@ -20,15 +21,18 @@ namespace Rocksmith2014Xml
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
             };
 
-            using XmlWriter writer = XmlWriter.Create(filename, settings);
+            using XmlWriter writer = XmlWriter.Create(fileName, settings);
 
             writer.WriteStartDocument();
-            writer.WriteStartElement("showlights");
-            ((IXmlSerializable)this).WriteXml(writer);
-            writer.WriteEndElement();
+            Utils.SerializeWithCount(this, "showlights", "showlight", writer);
         }
 
-        public static ShowLights Load(string filename)
+        /// <summary>
+        /// Loads a list of show lights from an XML file.
+        /// </summary>
+        /// <param name="fileName">The filename.</param>
+        /// <returns>A list of show lights deserialized from the file.</returns>
+        public static ShowLights Load(string fileName)
         {
             var settings = new XmlReaderSettings
             {
@@ -36,11 +40,11 @@ namespace Rocksmith2014Xml
                 IgnoreWhitespace = true
             };
 
-            using XmlReader reader = XmlReader.Create(filename, settings);
+            using XmlReader reader = XmlReader.Create(fileName, settings);
 
             reader.MoveToContent();
-            ShowLights showLights = new ShowLights();
-            ((IXmlSerializable)showLights).ReadXml(reader);
+            var showLights = new ShowLights();
+            Utils.DeserializeCountList(showLights, reader);
             return showLights;
         }
     }

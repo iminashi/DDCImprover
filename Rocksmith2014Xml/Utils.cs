@@ -29,9 +29,19 @@ namespace Rocksmith2014Xml
                 return 0;
         }
 
+        /// <summary>
+        /// Parses a boolean from a string that is assumed to be either "0" or "1".
+        /// </summary>
+        /// <param name="text">The input string.</param>
+        /// <returns>False if the string is "0", true otherwise.</returns>
         internal static bool ParseBinaryBoolean(string text) => ParseBinary(text) == 1;
 
-        internal static string BooleanToBinaryString(bool v) => v ? "1" : "0";
+        /// <summary>
+        /// Converts a boolean into a binary string.
+        /// </summary>
+        /// <param name="b">The boolean value.</param>
+        /// <returns>"1" if true, "0" if false.</returns>
+        internal static string BooleanToBinaryString(bool b) => b ? "1" : "0";
 
         /// <summary>
         /// Converts a time in milliseconds into a string in seconds with three decimal places.
@@ -111,22 +121,37 @@ namespace Rocksmith2014Xml
             return BitConverter.ToInt32(BitConverter.GetBytes((number << positions) | wrapped), 0);
         }
 
-        internal static void SerializeWithCount<T>(IList<T> collection, string listName, string elementName, XmlWriter writer)
+        /// <summary>
+        /// Serializes a list into the XML writer with a count attribute.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">The list.</param>
+        /// <param name="listName">The tag name for the list.</param>
+        /// <param name="elementName">The tag name for the elements in the list.</param>
+        /// <param name="writer">The XML writer.</param>
+        internal static void SerializeWithCount<T>(IList<T> list, string listName, string elementName, XmlWriter writer)
             where T : IXmlSerializable
         {
             writer.WriteStartElement(listName);
-            writer.WriteAttributeString("count", collection.Count.ToString(NumberFormatInfo.InvariantInfo));
+            writer.WriteAttributeString("count", list.Count.ToString(NumberFormatInfo.InvariantInfo));
 
-            for (int i = 0; i < collection.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 writer.WriteStartElement(elementName);
-                collection[i].WriteXml(writer);
+                list[i].WriteXml(writer);
                 writer.WriteEndElement();
             }
 
             writer.WriteEndElement(); // </listName>
         }
 
+        /// <summary>
+        /// Deserializes a list of elements from an XML reader.
+        /// If a count attribute is present, it is used to set the capacity of the list.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">The list.</param>
+        /// <param name="reader">The XML reader.</param>
         internal static void DeserializeCountList<T>(List<T> list, XmlReader reader)
             where T : IXmlSerializable, new()
         {

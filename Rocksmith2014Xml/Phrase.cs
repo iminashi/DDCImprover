@@ -6,37 +6,89 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// A mask for phrase attributes.
+    /// </summary>
     [Flags]
     public enum PhraseMask : byte
     {
+        /// <summary>
+        /// Empty mask.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// A disparity phrase. Purpose unknown.
+        /// </summary>
         Disparity = 1 << 0,
+
+        /// <summary>
+        /// An ignored phrase. Purpose unknown.
+        /// </summary>
         Ignore = 1 << 1,
+
+        /// <summary>
+        /// A solo phrase.
+        /// </summary>
         Solo = 1 << 2
     }
 
+    /// <summary>
+    /// Represents a phrase.
+    /// </summary>
     public sealed class Phrase : IXmlSerializable
     {
         #region Quick Access Properties
 
+        /// <summary>
+        /// Gets whether this is a disparity phrase.
+        /// </summary>
         public bool IsDisparity => (Mask & PhraseMask.Disparity) != 0;
+
+        /// <summary>
+        /// Gets whether this is an ignored phrase.
+        /// </summary>
         public bool IsIgnore => (Mask & PhraseMask.Ignore) != 0;
+
+        /// <summary>
+        /// Gets whether this is a solo phrase.
+        /// </summary>
         public bool IsSolo => (Mask & PhraseMask.Solo) != 0;
 
         #endregion
 
+        /// <summary>
+        /// Gets or sets the mask.
+        /// </summary>
         public PhraseMask Mask { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum difficulty of the phrase.
+        /// </summary>
         public byte MaxDifficulty { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the phrase.
+        /// </summary>
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Creates a new phrase.
+        /// </summary>
+        public Phrase() { }
+
+        /// <summary>
+        /// Creates a new phrase with the given properties.
+        /// </summary>
+        /// <param name="name">The name of the phrase.</param>
+        /// <param name="maxDifficulty">The maximum difficulty of the phrase.</param>
+        /// <param name="mask">The phrase mask.</param>
         public Phrase(string name, byte maxDifficulty, PhraseMask mask)
         {
             Name = name;
             MaxDifficulty = maxDifficulty;
             Mask = mask;
         }
-
-        public Phrase() { }
 
         public override string ToString()
             => $"{Name}, Max Diff: {MaxDifficulty}, Mask: {Mask}";

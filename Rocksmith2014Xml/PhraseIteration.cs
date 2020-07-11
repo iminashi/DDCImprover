@@ -5,16 +5,41 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents an iteration of a phrase.
+    /// </summary>
     public sealed class PhraseIteration : IXmlSerializable, IHasTimeCode
     {
+        /// <summary>
+        /// The time code of the phrase iteration.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// The phrase ID.
+        /// </summary>
         public int PhraseId { get; set; }
+
+        /// <summary>
+        /// A variation string. Unused.
+        /// </summary>
         public string? Variation { get; set; }
 
+        /// <summary>
+        /// The hero levels of the phrase iteration.
+        /// </summary>
         public HeroLevels? HeroLevels { get; set; }
 
+        /// <summary>
+        /// Creates a new phrase iteration.
+        /// </summary>
         public PhraseIteration() { }
 
+        /// <summary>
+        /// Creates a new phrase iteration with the given properties.
+        /// </summary>
+        /// <param name="time">The time code of the phrase.</param>
+        /// <param name="phraseId">The phrase ID.</param>
         public PhraseIteration(int time, int phraseId)
         {
             Time = time;

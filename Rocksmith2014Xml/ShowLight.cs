@@ -5,13 +5,35 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a show light.
+    /// </summary>
     public sealed class ShowLight : IHasTimeCode, IXmlSerializable
     {
+        /// <summary>
+        /// The time code of the show light.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// The note of the show light.
+        ///
+        /// <para>
+        /// Valid values: 24-35, 42, 48-59, 66-67.
+        /// </para>
+        /// </summary>
         public byte Note { get; set; }
 
+        /// <summary>
+        /// Creates a new show light.
+        /// </summary>
         public ShowLight() { }
 
+        /// <summary>
+        /// Creates a new show light with the given properties.
+        /// </summary>
+        /// <param name="time">The time code of the show light.</param>
+        /// <param name="note">The note of the show light.</param>
         public ShowLight(int time, byte note)
         {
             Time = time;

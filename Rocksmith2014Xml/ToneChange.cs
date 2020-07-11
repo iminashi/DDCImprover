@@ -5,15 +5,38 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public sealed class Tone : IXmlSerializable, IHasTimeCode
+    /// <summary>
+    /// Represents a tone change.
+    /// </summary>
+    public sealed class ToneChange : IXmlSerializable, IHasTimeCode
     {
+        /// <summary>
+        /// The time code of the tone change.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// The ID of the tone.
+        /// </summary>
         public byte Id { get; set; }
+
+        /// <summary>
+        /// The name of the tone.
+        /// </summary>
         public string Name { get; set; } = string.Empty;
 
-        public Tone() { }
+        /// <summary>
+        /// Creates a new tone change.
+        /// </summary>
+        public ToneChange() { }
 
-        public Tone(string name, int time, byte id)
+        /// <summary>
+        /// Creates a new tone change with the given properties.
+        /// </summary>
+        /// <param name="name">The name of the tone.</param>
+        /// <param name="time">The time code of the tone change.</param>
+        /// <param name="id">The ID of the tone.</param>
+        public ToneChange(string name, int time, byte id)
         {
             Name = name;
             Time = time;
@@ -31,7 +54,7 @@ namespace Rocksmith2014Xml
         {
             Time = Utils.TimeCodeFromFloatString(reader.GetAttribute("time"));
             string? id = reader.GetAttribute("id");
-            if(!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id))
                 Id = byte.Parse(id, NumberFormatInfo.InvariantInfo);
             Name = reader.GetAttribute("name");
 

@@ -175,7 +175,7 @@ namespace Rocksmith2014Xml
         /// <summary>
         /// A list of tone changes in the arrangement.
         /// </summary>
-        public List<Tone>? ToneChanges { get; set; }
+        public List<ToneChange>? ToneChanges { get; set; }
 
         /// <summary>
         /// A list of sections in the arrangement.
@@ -416,7 +416,7 @@ namespace Rocksmith2014Xml
                         ToneD = reader.ReadElementContentAsString();
                         break;
                     case "tones":
-                        ToneChanges = new List<Tone>();
+                        ToneChanges = new List<ToneChange>();
                         Utils.DeserializeCountList(ToneChanges, reader);
                         break;
 
