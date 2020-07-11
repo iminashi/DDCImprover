@@ -19,7 +19,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         }
 
         [Fact]
-        public void UnpitchedSlideChecker_EnablesUnpithcedSlides()
+        public void UnpitchedSlideChecker_EnablesUnpitchedSlides()
         {
             testArrangement.ArrangementProperties.UnpitchedSlides.Should().Be(false);
 
