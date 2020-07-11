@@ -5,11 +5,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="XmlUtils">
-      <HintPath>..\lib\XmlUtils.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DynamicData">
       <Version>6.15.1</Version>
     </PackageReference>

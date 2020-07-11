@@ -21,10 +21,4 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="XmlUtils">
-      <HintPath>..\lib\XmlUtils.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
