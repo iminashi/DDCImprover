@@ -6,13 +6,13 @@ using System.Linq;
 namespace DDCImprover.Core.PreBlocks
 {
     /// <summary>
-    /// Enables 'unpitchedSlides' in arrangement properties if unpitched slides found.
+    /// Enables "unpitched slides" in arrangement properties if unpitched slides exist in the arrangement.
     /// </summary>
     internal sealed class UnpitchedSlideChecker : IProcessorBlock
     {
         public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            if (arrangement.ArrangementProperties.UnpitchedSlides == 1)
+            if (arrangement.ArrangementProperties.UnpitchedSlides)
                 return;
 
             // TODO: Could optimize by looking at hardest level only
@@ -20,7 +20,7 @@ namespace DDCImprover.Core.PreBlocks
 
             if (notes.Any(n => n.IsUnpitchedSlide))
             {
-                arrangement.ArrangementProperties.UnpitchedSlides = 1;
+                arrangement.ArrangementProperties.UnpitchedSlides = true;
             }
             else
             {
@@ -31,14 +31,14 @@ namespace DDCImprover.Core.PreBlocks
 
                     if (chord.ChordNotes.Any(n => n.IsUnpitchedSlide))
                     {
-                        arrangement.ArrangementProperties.UnpitchedSlides = 1;
+                        arrangement.ArrangementProperties.UnpitchedSlides = true;
 
                         break;
                     }
                 }
             }
 
-            if (arrangement.ArrangementProperties.UnpitchedSlides == 1)
+            if (arrangement.ArrangementProperties.UnpitchedSlides)
                 Log("Enabled unpitched slides in arrangement properties.");
         }
     }

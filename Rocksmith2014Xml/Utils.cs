@@ -29,6 +29,10 @@ namespace Rocksmith2014Xml
                 return 0;
         }
 
+        internal static bool ParseBinaryBoolean(string text) => ParseBinary(text) == 1;
+
+        internal static string BooleanToBinaryString(bool v) => v ? "1" : "0";
+
         /// <summary>
         /// Converts a time in milliseconds into a string in seconds with three decimal places.
         /// </summary>

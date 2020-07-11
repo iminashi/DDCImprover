@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using XmlUtils;
 
 namespace Rocksmith2014Xml
 {
@@ -16,6 +15,9 @@ namespace Rocksmith2014Xml
     [XmlRoot("song")]
     public class InstrumentalArrangement : IXmlSerializable
     {
+        /// <summary>
+        /// Sets whether to use abridged XML when writing a file.
+        /// </summary>
         internal static bool UseAbridgedXml { get; set; }
 
         /// <summary>
@@ -33,8 +35,14 @@ namespace Rocksmith2014Xml
         /// </summary>
         public string? Arrangement { get; set; }
 
+        /// <summary>
+        /// The part number in a similarly named arrangements (e.g. 2 in "Combo 2").
+        /// </summary>
         public int Part { get; set; }
 
+        /// <summary>
+        /// The tuning offset in cents from 440Hz.
+        /// </summary>
         public int CentOffset { get; set; }
 
         /// <summary>
@@ -47,25 +55,67 @@ namespace Rocksmith2014Xml
         /// </summary>
         public float AverageTempo { get; set; } = 120.000f;
 
+        /// <summary>
+        /// The tuning of the arrangement.
+        /// </summary>
         public Tuning Tuning { get; set; } = new Tuning();
+
+        /// <summary>
+        /// The fret where the capo is set. 0 for no capo.
+        /// </summary>
         public int Capo { get; set; }
+
+        /// <summary>
+        /// The title of the arrangement.
+        /// </summary>
         public string? Title { get; set; }
+
+        /// <summary>
+        /// The title of the arrangement when sorting.
+        /// </summary>
         public string? TitleSort { get; set; }
+
+        /// <summary>
+        /// The artist name.
+        /// </summary>
         public string? ArtistName { get; set; }
+
+        /// <summary>
+        /// The artist name when sorting.
+        /// </summary>
         public string? ArtistNameSort { get; set; }
+
+        /// <summary>
+        /// The album name. Not displayed in the game.
+        /// </summary>
         public string? AlbumName { get; set; }
+
+        /// <summary>
+        /// The album name when sorting. Not used by the game.
+        /// </summary>
         public string? AlbumNameSort { get; set; }
+
+        /// <summary>
+        /// The year the album/song was released.
+        /// </summary>
         public int AlbumYear { get; set; }
+
+        /// <summary>
+        /// Path to the image file for the album art.
+        /// </summary>
         public string? AlbumArt { get; set; }
 
         // Other metadata:
         //
-        // Offset - Handled automatically.
+        // Offset - Start beat * -1. Handled automatically.
         // WaveFilePath - Used only in official files.
         // InternalName - Used only in official files.
         // CrowdSpeed - Completely purposeless since it does not have an equivalent in the SNG files or manifest files.
         //              The crowd speed is controlled with events e0, e1 and e2.
 
+        /// <summary>
+        /// Gets the time code for the first beat in the song.
+        /// </summary>
         public int StartBeat => Ebeats.Count > 0 ? Ebeats[0].Time : 0;
 
         /// <summary>
@@ -73,14 +123,44 @@ namespace Rocksmith2014Xml
         /// </summary>
         public ArrangementProperties ArrangementProperties { get; set; } = new ArrangementProperties();
 
+        /// <summary>
+        /// The date the arrangement was converted into SNG (or XML).
+        /// </summary>
         public string? LastConversionDateTime { get; set; }
 
+        /// <summary>
+        /// A list of phrases in the arrangement.
+        /// </summary>
         public List<Phrase> Phrases { get; set; } = new List<Phrase>();
+
+        /// <summary>
+        /// A list of phrase iterations in the arrangement.
+        /// </summary>
         public List<PhraseIteration> PhraseIterations { get; set; } = new List<PhraseIteration>();
+
+        /// <summary>
+        /// A list of linked difficulty levels in the arrangement.
+        /// </summary>
         public List<NewLinkedDiff> NewLinkedDiffs { get; set; } = new List<NewLinkedDiff>();
+
+        /// <summary>
+        /// Leftover from RS1. Used in some early RS2014 files.
+        /// </summary>
         public List<LinkedDiff>? LinkedDiffs { get; set; }
+
+        /// <summary>
+        /// Leftover from RS1. Used in some early RS2014 files.
+        /// </summary>
         public List<PhraseProperty>? PhraseProperties { get; set; }
+
+        /// <summary>
+        /// A list of chord templates in the arrangement.
+        /// </summary>
         public List<ChordTemplate> ChordTemplates { get; set; } = new List<ChordTemplate>();
+
+        /// <summary>
+        /// A list of beats in the arrangement.
+        /// </summary>
         public List<Ebeat> Ebeats { get; set; } = new List<Ebeat>();
 
         /// <summary>
@@ -92,9 +172,19 @@ namespace Rocksmith2014Xml
         public string? ToneC { get; set; }
         public string? ToneD { get; set; }
 
+        /// <summary>
+        /// A list of tone changes in the arrangement.
+        /// </summary>
         public List<Tone>? ToneChanges { get; set; }
 
+        /// <summary>
+        /// A list of sections in the arrangement.
+        /// </summary>
         public List<Section> Sections { get; set; } = new List<Section>();
+
+        /// <summary>
+        /// A list of events in the arrangement.
+        /// </summary>
         public List<Event> Events { get; set; } = new List<Event>();
 
         /// <summary>
@@ -270,7 +360,7 @@ namespace Rocksmith2014Xml
                         break;
                     case "albumYear":
                         string content = reader.ReadElementContentAsString();
-                        if(!string.IsNullOrEmpty(content))
+                        if (!string.IsNullOrEmpty(content))
                             AlbumYear = int.Parse(content, NumberFormatInfo.InvariantInfo);
                         break;
                     case "albumArt":
@@ -297,7 +387,7 @@ namespace Rocksmith2014Xml
                         break;
                     case "linkedDiffs":
                         LinkedDiffs = new List<LinkedDiff>();
-                         Utils.DeserializeCountList(LinkedDiffs, reader);
+                        Utils.DeserializeCountList(LinkedDiffs, reader);
                         break;
                     case "phraseProperties":
                         PhraseProperties = new List<PhraseProperty>();
