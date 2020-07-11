@@ -6,7 +6,7 @@
     public interface IHasTimeCode
     {
         /// <summary>
-        /// Time in milliseconds.
+        /// A time code in milliseconds.
         /// </summary>
         int Time { get; }
     }

@@ -6,16 +6,45 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a difficulty level with notes, chords, anchors and hand shapes.
+    /// </summary>
     public sealed class Level : IXmlSerializable
     {
+        /// <summary>
+        /// Gets or sets the difficulty level.
+        /// </summary>
         public sbyte Difficulty { get; set; } = -1;
+
+        /// <summary>
+        /// A list of notes in the level.
+        /// </summary>
         public List<Note> Notes { get; set; } = new List<Note>();
+
+        /// <summary>
+        /// A list of chords in the level.
+        /// </summary>
         public List<Chord> Chords { get; set; } = new List<Chord>();
+
+        /// <summary>
+        /// A list of anchors in the level.
+        /// </summary>
         public List<Anchor> Anchors { get; set; } = new List<Anchor>();
+
+        /// <summary>
+        /// A list of hand shapes in the level.
+        /// </summary>
         public List<HandShape> HandShapes { get; set; } = new List<HandShape>();
 
+        /// <summary>
+        /// Creates a new level.
+        /// </summary>
         public Level() { }
 
+        /// <summary>
+        /// Creates a new level with the given difficulty.
+        /// </summary>
+        /// <param name="difficulty">The difficulty level.</param>
         public Level(sbyte difficulty)
         {
             Difficulty = difficulty;

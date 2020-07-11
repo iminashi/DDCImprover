@@ -6,14 +6,37 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents an anchor that sets the position and width of the anchor zone.
+    /// </summary>
     public sealed class Anchor : IXmlSerializable, IHasTimeCode, IEquatable<Anchor>
     {
+        /// <summary>
+        /// Gets or sets the fret position of the anchor.
+        /// </summary>
         public byte Fret { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time code of the anchor.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of the anchor.
+        /// </summary>
         public byte Width { get; set; }
 
+        /// <summary>
+        /// Creates a new anchor.
+        /// </summary>
         public Anchor() { }
 
+        /// <summary>
+        /// Creates a new anchor with the given properties.
+        /// </summary>
+        /// <param name="fret">The fret position of the anchor.</param>
+        /// <param name="time">The time code of the anchor.</param>
+        /// <param name="width">The width of the anchor (default: 4).</param>
         public Anchor(byte fret, int time, byte width = 4)
         {
             Fret = fret;
@@ -21,6 +44,10 @@ namespace Rocksmith2014Xml
             Width = width;
         }
 
+        /// <summary>
+        /// Creates a new anchor by copying the values from another anchor.
+        /// </summary>
+        /// <param name="other">The other anchor to copy.</param>
         public Anchor(Anchor other)
         {
             Fret = other.Fret;

@@ -6,9 +6,19 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a RS1 linked difficulty level.
+    /// </summary>
     public struct LinkedDiff : IXmlSerializable, IEquatable<LinkedDiff>
     {
+        /// <summary>
+        /// The ID of the child difficulty level.
+        /// </summary>
         public int ChildId { get; private set; }
+
+        /// <summary>
+        /// The ID of the parent difficulty level.
+        /// </summary>
         public int ParentId { get; private set; }
 
         #region IXmlSerializable Implementation

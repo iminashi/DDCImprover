@@ -8,28 +8,102 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// A mask for note attributes.
+    /// </summary>
     [Flags]
     public enum NoteMask : ushort
     {
+        /// <summary>
+        /// Empty mask.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// The note is linked to the next note on the same string.
+        /// </summary>
         LinkNext = 1 << 0,
+
+        /// <summary>
+        /// The note is accented.
+        /// </summary>
         Accent = 1 << 1,
+
+        /// <summary>
+        /// The note is a hammer-on.
+        /// </summary>
         HammerOn = 1 << 2,
+
+        /// <summary>
+        /// The note is a harmonic.
+        /// </summary>
         Harmonic = 1 << 3,
+
+        /// <summary>
+        /// The note is ignored.
+        /// </summary>
         Ignore = 1 << 4,
+
+        /// <summary>
+        /// The note is a fret-hand mute.
+        /// </summary>
         Mute = 1 << 5,
+
+        /// <summary>
+        /// The note is a palm-mute.
+        /// </summary>
         PalmMute = 1 << 6,
+
+        /// <summary>
+        /// The note is a pull-off.
+        /// </summary>
         PullOff = 1 << 7,
+
+        /// <summary>
+        /// The note is tremolo picked.
+        /// </summary>
         Tremolo = 1 << 8,
+
+        /// <summary>
+        /// The note is a pinch harmonic.
+        /// </summary>
         HarmonicPinch = 1 << 9,
+
+        /// <summary>
+        /// Unused.
+        /// </summary>
         PickDirection = 1 << 10,
+
+        /// <summary>
+        /// The note is a slap.
+        /// </summary>
         Slap = 1 << 11,
+
+        /// <summary>
+        /// The note is pluck/pop.
+        /// </summary>
         Pluck = 1 << 12,
+
+        /// <summary>
+        /// The note is played with the right hand.
+        /// </summary>
         RightHand = 1 << 13
     }
 
+    /// <summary>
+    /// Represents a note.
+    /// </summary>
     public class Note : IXmlSerializable, IComparable<Note>, IHasTimeCode
     {
+        /// <summary>
+        /// Creates a new note.
+        /// </summary>
+        public Note() { }
+
+        /// <summary>
+        /// Creates a new note by copying the properties of another note.
+        /// </summary>
+        /// <param name="other">The note to copy.</param>
         public Note(Note other)
         {
             Mask = other.Mask;
@@ -48,10 +122,11 @@ namespace Rocksmith2014Xml
                 BendValues = new List<BendValue>(other.BendValues);
         }
 
-        public Note() { }
-
         #region Quick Access Properties
 
+        /// <summary>
+        /// Gets or sets whether this note is linked to the next.
+        /// </summary>
         public bool IsLinkNext
         {
             get => (Mask & NoteMask.LinkNext) != 0;
@@ -64,6 +139,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is accented.
+        /// </summary>
         public bool IsAccent
         {
             get => (Mask & NoteMask.Accent) != 0;
@@ -76,6 +154,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a hammer-on.
+        /// </summary>
         public bool IsHammerOn
         {
             get => (Mask & NoteMask.HammerOn) != 0;
@@ -88,6 +169,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a harmonic.
+        /// </summary>
         public bool IsHarmonic
         {
             get => (Mask & NoteMask.Harmonic) != 0;
@@ -100,6 +184,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a pinch harmonic.
+        /// </summary>
         public bool IsHarmonicPinch
         {
             get => (Mask & NoteMask.HarmonicPinch) != 0;
@@ -112,6 +199,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is ignored.
+        /// </summary>
         public bool IsIgnore
         {
             get => (Mask & NoteMask.Ignore) != 0;
@@ -124,6 +214,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a fret-hand mute.
+        /// </summary>
         public bool IsMute
         {
             get => (Mask & NoteMask.Mute) != 0;
@@ -136,6 +229,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a palm mute.
+        /// </summary>
         public bool IsPalmMute
         {
             get => (Mask & NoteMask.PalmMute) != 0;
@@ -148,6 +244,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a pull-off.
+        /// </summary>
         public bool IsPullOff
         {
             get => (Mask & NoteMask.PullOff) != 0;
@@ -160,6 +259,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is tremolo picked.
+        /// </summary>
         public bool IsTremolo
         {
             get => (Mask & NoteMask.Tremolo) != 0;
@@ -172,6 +274,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a slap.
+        /// </summary>
         public bool IsSlap
         {
             get => (Mask & NoteMask.Slap) != 0;
@@ -184,6 +289,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is a pluck/pop.
+        /// </summary>
         public bool IsPluck
         {
             get => (Mask & NoteMask.Pluck) != 0;
@@ -196,6 +304,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this note is played with the right hand.
+        /// </summary>
         public bool IsRightHand
         {
             get => (Mask & NoteMask.RightHand) != 0;
@@ -208,33 +319,98 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets whether this note is a vibrato.
+        /// </summary>
         public bool IsVibrato => Vibrato != 0;
+
+        /// <summary>
+        /// Gets whether this note is a bend.
+        /// </summary>
         public bool IsBend => BendValues?.Count > 0;
+
+        /// <summary>
+        /// Gets whether this note is a slide.
+        /// </summary>
         public bool IsSlide => SlideTo != -1;
+
+        /// <summary>
+        /// Gets whether this note is an unpitched slide.
+        /// </summary>
         public bool IsUnpitchedSlide => SlideUnpitchTo != -1;
+
+        /// <summary>
+        /// Gets whether this note is a tap.
+        /// </summary>
         public bool IsTap => Tap != 0;
+
+        /// <summary>
+        /// Gets whether this note is a hammer-on or pull-off.
+        /// </summary>
+        public bool IsHopo
+            => (Mask & NoteMask.HammerOn) != 0 || (Mask & NoteMask.PullOff) != 0;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the time code of the note.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sustain of the note in milliseconds.
+        /// </summary>
         public int Sustain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fret of the note.
+        /// </summary>
         public sbyte Fret { get; set; }
 
-        public bool Hopo
-            => (Mask & NoteMask.HammerOn) != 0 || (Mask & NoteMask.PullOff) != 0;
-
+        /// <summary>
+        /// Gets or sets the left hand finger used for this note (for chord notes).
+        /// </summary>
         public sbyte LeftHand { get; set; } = -1;
+
+        /// <summary>
+        /// Gets or sets the fret to slide to.
+        /// </summary>
         public sbyte SlideTo { get; set; } = -1;
+
+        /// <summary>
+        /// Gets or sets the fret to unpitched slide to.
+        /// </summary>
         public sbyte SlideUnpitchTo { get; set; } = -1;
+
+        /// <summary>
+        /// Gets or sets the string of the note.
+        /// </summary>
         public sbyte String { get; set; }
 
+        /// <summary>
+        /// Gets or sets the finger to tap the note with.
+        /// </summary>
         public byte Tap { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vibrato strength of the note.
+        ///
+        /// <para>
+        /// Values 40 (L), 80 (M) and 120 (S) are used, but they all look the same in-game.
+        /// </para>
+        /// </summary>
         public byte Vibrato { get; set; }
 
+        /// <summary>
+        /// Gets or sets the mask of the note.
+        /// </summary>
         public NoteMask Mask { get; set; }
 
+        /// <summary>
+        /// A list of bend values of the note.
+        /// </summary>
         public List<BendValue>? BendValues { get; set; }
 
         #endregion
@@ -317,11 +493,11 @@ namespace Rocksmith2014Xml
                         Mask |= (NoteMask)(Utils.ParseBinary(reader.Value) << 10);
                         break;
                     case "slap":
-                        if(sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
+                        if (sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
                             Mask |= NoteMask.Slap;
                         break;
                     case "pluck":
-                        if(sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
+                        if (sbyte.Parse(reader.Value, NumberFormatInfo.InvariantInfo) != -1)
                             Mask |= NoteMask.Pluck;
                         break;
                     case "rightHand":
@@ -382,7 +558,7 @@ namespace Rocksmith2014Xml
             else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("harmonic", "0");
 
-            if (Hopo)
+            if (IsHopo)
                 writer.WriteAttributeString("hopo", "1");
             else if (!InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("hopo", "0");

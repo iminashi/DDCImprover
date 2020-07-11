@@ -8,24 +8,68 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// A mask for chord attributes.
+    /// </summary>
     [Flags]
     public enum ChordMask : byte
     {
+        /// <summary>
+        /// Empty mask.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// The chord contains at least one note that has link next.
+        /// </summary>
         LinkNext = 1 << 0,
+
+        /// <summary>
+        /// The chord is accented.
+        /// </summary>
         Accent = 1 << 1,
+
+        /// <summary>
+        /// The chord is fret-hand muted.
+        /// </summary>
         FretHandMute = 1 << 2,
+
+        /// <summary>
+        /// Leftover from RS1. Has no purpose.
+        /// </summary>
         HighDensity = 1 << 3,
+
+        /// <summary>
+        /// The chord is ignored.
+        /// </summary>
         Ignore = 1 << 4,
+
+        /// <summary>
+        /// The chord is palm-muted.
+        /// </summary>
         PalmMute = 1 << 5,
+
+        /// <summary>
+        /// The chord is a hammer-on or pull-off. Unused.
+        /// </summary>
         Hopo = 1 << 6,
+
+        /// <summary>
+        /// The chord is an up strum. Unused, XML only.
+        /// </summary>
         UpStrum = 1 << 7
     }
 
+    /// <summary>
+    /// Represents a chord.
+    /// </summary>
     public class Chord : IXmlSerializable, IComparable<Chord>, IHasTimeCode
     {
         #region Quick Access Properties
 
+        /// <summary>
+        /// Gets or sets whether the chord is link next.
+        /// </summary>
         public bool IsLinkNext
         {
             get => (Mask & ChordMask.LinkNext) != 0;
@@ -38,6 +82,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord is accented.
+        /// </summary>
         public bool IsAccent
         {
             get => (Mask & ChordMask.Accent) != 0;
@@ -50,6 +97,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord is fret-hand muted.
+        /// </summary>
         public bool IsFretHandMute
         {
             get => (Mask & ChordMask.FretHandMute) != 0;
@@ -62,6 +112,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord is high density.
+        /// </summary>
         public bool IsHighDensity
         {
             get => (Mask & ChordMask.HighDensity) != 0;
@@ -74,6 +127,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord ignored.
+        /// </summary>
         public bool IsIgnore
         {
             get => (Mask & ChordMask.Ignore) != 0;
@@ -86,6 +142,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord is palm-muted.
+        /// </summary>
         public bool IsPalmMute
         {
             get => (Mask & ChordMask.PalmMute) != 0;
@@ -98,6 +157,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord is hammer-on or pull-off.
+        /// </summary>
         public bool IsHopo
         {
             get => (Mask & ChordMask.Hopo) != 0;
@@ -110,6 +172,9 @@ namespace Rocksmith2014Xml
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the chord is an up strum.
+        /// </summary>
         public bool IsUpStrum
         {
             get => (Mask & ChordMask.UpStrum) != 0;
@@ -124,16 +189,35 @@ namespace Rocksmith2014Xml
 
         #endregion
 
+        /// <summary>
+        /// Gets or sets the mask of the chord.
+        /// </summary>
         public ChordMask Mask { get; set; }
 
+        /// <summary>
+        /// Gets or sets the time code of the chord.
+        /// </summary>
         public int Time { get; set; }
 
+        /// <summary>
+        /// Gets or sets chord ID.
+        /// </summary>
         public short ChordId { get; set; }
 
+        /// <summary>
+        /// A list of notes in the chord.
+        /// </summary>
         public List<Note>? ChordNotes { get; set; }
 
+        /// <summary>
+        /// Creates a new chord.
+        /// </summary>
         public Chord() { }
 
+        /// <summary>
+        /// Creates a new chord by copying the properties of another chord.
+        /// </summary>
+        /// <param name="other">The chord to copy.</param>
         public Chord(Chord other)
         {
             Mask = other.Mask;

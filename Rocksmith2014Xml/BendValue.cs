@@ -6,11 +6,26 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
-    public struct BendValue: IXmlSerializable, IEquatable<BendValue>, IHasTimeCode
+    /// <summary>
+    /// Represents a bend value with a time code and a strength.
+    /// </summary>
+    public struct BendValue : IXmlSerializable, IEquatable<BendValue>, IHasTimeCode
     {
+        /// <summary>
+        /// Gets the time code of the bend value.
+        /// </summary>
         public int Time { get; private set; }
+
+        /// <summary>
+        /// Gets the strength of the bend in half steps.
+        /// </summary>
         public float Step { get; private set; }
 
+        /// <summary>
+        /// Creates a new bend value with the given properties.
+        /// </summary>
+        /// <param name="time">The time code of the bend value.</param>
+        /// <param name="step">The strength of the bend value.</param>
         public BendValue(int time, float step)
         {
             Time = time;
@@ -49,7 +64,7 @@ namespace Rocksmith2014Xml
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString("time", Utils.TimeCodeToString(Time));
-            if(Step != 0f || !InstrumentalArrangement.UseAbridgedXml)
+            if (Step != 0f || !InstrumentalArrangement.UseAbridgedXml)
                 writer.WriteAttributeString("step", Step.ToString("F3", NumberFormatInfo.InvariantInfo));
         }
 

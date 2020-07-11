@@ -5,12 +5,28 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a chord template.
+    /// </summary>
     public sealed class ChordTemplate : IXmlSerializable
     {
+        /// <summary>
+        /// Gets or sets the name of the chord.
+        /// </summary>
         public string ChordName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the "display name" of the chord.
+        /// <para>
+        /// May contain postfixes "-arp" for arpeggios and "-nop" for double stops.
+        /// </para>
+        /// </summary>
         public string DisplayName { get; set; } = string.Empty;
 
-        public sbyte[] Fingers =
+        /// <summary>
+        /// Sets the fingering of the chord template.
+        /// </summary>
+        public readonly sbyte[] Fingers =
         {
             -1,
             -1,
@@ -20,7 +36,10 @@ namespace Rocksmith2014Xml
             -1
         };
 
-        public sbyte[] Frets =
+        /// <summary>
+        /// Sets the frets of the chord template.
+        /// </summary>
+        public readonly sbyte[] Frets =
         {
             -1,
             -1,
@@ -36,12 +55,12 @@ namespace Rocksmith2014Xml
 
             for (int i = 0; i < 6; i++)
             {
-                if(Frets[i] != -1)
+                if (Frets[i] != -1)
                 {
                     result += $"Fret{i}={Frets[i]} ";
                 }
 
-                if(Fingers[i] != -1)
+                if (Fingers[i] != -1)
                 {
                     result += $"Finger{i}={Fingers[i]} ";
                 }

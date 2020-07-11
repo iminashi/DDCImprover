@@ -5,14 +5,37 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents the hero levels of a phrase iteration.
+    /// </summary>
     public sealed class HeroLevels : IXmlSerializable
     {
+        /// <summary>
+        /// The difficulty level for easy.
+        /// </summary>
         public sbyte Easy { get; set; } = -1;
+
+        /// <summary>
+        /// The difficulty level for medium.
+        /// </summary>
         public sbyte Medium { get; set; } = -1;
+
+        /// <summary>
+        /// The difficulty level for hard.
+        /// </summary>
         public sbyte Hard { get; set; } = -1;
 
+        /// <summary>
+        /// Creates a new hero levels.
+        /// </summary>
         public HeroLevels() { }
 
+        /// <summary>
+        /// Creates a new hero levels with the given difficulty levels.
+        /// </summary>
+        /// <param name="easy">The difficulty level for easy.</param>
+        /// <param name="medium">The difficulty level for medium.</param>
+        /// <param name="hard">The difficulty level for hard.</param>
         public HeroLevels(sbyte easy, sbyte medium, sbyte hard)
         {
             Easy = easy;
@@ -23,6 +46,9 @@ namespace Rocksmith2014Xml
         public override string ToString()
             => $"Easy: {Easy}, Medium: {Medium}, Hard: {Hard}";
 
+        /// <summary>
+        /// Gets the number of defined hero levels.
+        /// </summary>
         public int Count =>
             (Easy == -1 ? 0 : 1) +
             (Medium == -1 ? 0 : 1) +

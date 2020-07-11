@@ -6,18 +6,36 @@ using System.Xml.Serialization;
 
 namespace Rocksmith2014Xml
 {
+    /// <summary>
+    /// Represents a beat.
+    /// </summary>
     public sealed class Ebeat : IXmlSerializable, IEquatable<Ebeat>, IHasTimeCode
     {
+        /// <summary>
+        /// Gets or sets the time code of the beat.
+        /// </summary>
         public int Time { get; set; }
+
+        /// <summary>
+        /// Gets or sets the measure number of the beat. -1 for weak beats.
+        /// </summary>
         public short Measure { get; set; } = -1;
 
+        /// <summary>
+        /// Creates a new beat.
+        /// </summary>
+        public Ebeat() { }
+
+        /// <summary>
+        /// Creates a new beat with the given properties.
+        /// </summary>
+        /// <param name="time">The time code of the beat.</param>
+        /// <param name="measure">The measure number of the beat.</param>
         public Ebeat(int time, short measure)
         {
             Time = time;
             Measure = measure;
         }
-
-        public Ebeat() { }
 
         public override string ToString()
         {
