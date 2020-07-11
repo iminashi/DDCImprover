@@ -358,9 +358,13 @@
   <tonebase>tone2</tonebase>
   <tonea>tone2</tonea>
   <toneb>tone1</toneb>
+  <tonec>tone3</tonec>
+  <toned>tone4</toned>
   <tones count="2">
     <tone time="4.500" name="tone1"/>
     <tone time="7.500" name="tone2"/>
+    <tone time="8.500" name="tone3"/>
+    <tone time="10.500" name="tone4"/>
   </tones>
   <sections count="3">
     <section name="noguitar" number="1" startTime="4.500"/>

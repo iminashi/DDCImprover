@@ -26,28 +26,50 @@ namespace Rocksmith2014Xml
         /// <summary>
         /// Sets the fingering of the chord template.
         /// </summary>
-        public readonly sbyte[] Fingers =
-        {
-            -1,
-            -1,
-            -1,
-            -1,
-            -1,
-            -1
-        };
+        public readonly sbyte[] Fingers = { -1, -1, -1, -1, -1, -1 };
 
         /// <summary>
         /// Sets the frets of the chord template.
         /// </summary>
-        public readonly sbyte[] Frets =
+        public readonly sbyte[] Frets = { -1, -1, -1, -1, -1, -1 };
+
+        /// <summary>
+        /// Sets the fingering of the chord template.
+        /// </summary>
+        /// <param name="lowE">Low E string.</param>
+        /// <param name="A">A string.</param>
+        /// <param name="D">D string.</param>
+        /// <param name="G">G string.</param>
+        /// <param name="B">B string.</param>
+        /// <param name="highE">High E string.</param>
+        public void SetFingering(sbyte lowE, sbyte A, sbyte D, sbyte G, sbyte B, sbyte highE)
         {
-            -1,
-            -1,
-            -1,
-            -1,
-            -1,
-            -1
-        };
+            Fingers[0] = lowE;
+            Fingers[1] = A;
+            Fingers[2] = D;
+            Fingers[3] = G;
+            Fingers[4] = B;
+            Fingers[5] = highE;
+        }
+
+        /// <summary>
+        /// Sets the frets of the chord template.
+        /// </summary>
+        /// <param name="lowE">Low E string.</param>
+        /// <param name="A">A string.</param>
+        /// <param name="D">D string.</param>
+        /// <param name="G">G string.</param>
+        /// <param name="B">B string.</param>
+        /// <param name="highE">High E string.</param>
+        public void SetFrets(sbyte lowE, sbyte A, sbyte D, sbyte G, sbyte B, sbyte highE)
+        {
+            Frets[0] = lowE;
+            Frets[1] = A;
+            Frets[2] = D;
+            Frets[3] = G;
+            Frets[4] = B;
+            Frets[5] = highE;
+        }
 
         public override string ToString()
         {

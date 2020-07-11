@@ -13,25 +13,29 @@ namespace DDCImprover.Core.PreBlocks
     {
         public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            var toneChanges = arrangement.ToneChanges;
+            var toneChanges = arrangement.Tones.Changes;
 
             if (toneChanges is null || toneChanges.Count == 0 || arrangement.Events.Any(ev => ev.Code.StartsWith("tone_")))
                 return;
 
             var toneCodes = new Dictionary<string, string>();
-            if (arrangement.ToneA != null) toneCodes.Add(arrangement.ToneA, "tone_a");
-            if (arrangement.ToneB != null) toneCodes.Add(arrangement.ToneB, "tone_b");
-            if (arrangement.ToneC != null) toneCodes.Add(arrangement.ToneC, "tone_c");
-            if (arrangement.ToneD != null) toneCodes.Add(arrangement.ToneD, "tone_d");
+            for (int i = 0; i < arrangement.Tones.Names.Length; i++)
+            {
+                var t = arrangement.Tones.Names[i];
+                if (!string.IsNullOrEmpty(t))
+                {
+                    toneCodes.Add(t, "tone_" + (char)('a' + i));
+                }
+            }
 
             var toneEvents = from tone in toneChanges.Where(t => toneCodes.ContainsKey(t.Name))
                              select new Event(toneCodes[tone.Name], tone.Time);
 
-            var events = arrangement.Events;
-            var newEvents = events.Union(toneEvents).OrderBy(e => e.Time).ToArray();
-
-            arrangement.Events.Clear();
-            arrangement.Events.AddRange(newEvents);
+            arrangement.Events =
+                arrangement.Events
+                .Union(toneEvents)
+                .OrderBy(e => e.Time)
+                .ToList();
 
             Log("Generated tone events.");
         }

@@ -164,18 +164,9 @@ namespace Rocksmith2014Xml
         public List<Ebeat> Ebeats { get; set; } = new List<Ebeat>();
 
         /// <summary>
-        /// The name of the tone that the arrangement starts with.
+        /// The tone names and changes for the arrangement.
         /// </summary>
-        public string? ToneBase { get; set; }
-        public string? ToneA { get; set; }
-        public string? ToneB { get; set; }
-        public string? ToneC { get; set; }
-        public string? ToneD { get; set; }
-
-        /// <summary>
-        /// A list of tone changes in the arrangement.
-        /// </summary>
-        public List<ToneChange>? ToneChanges { get; set; }
+        public ToneInfo Tones { get; } = new ToneInfo();
 
         /// <summary>
         /// A list of sections in the arrangement.
@@ -253,8 +244,8 @@ namespace Rocksmith2014Xml
         /// Reads the tone names from the given file using an XmlReader.
         /// </summary>
         /// <param name="fileName">The file name of a Rocksmith 2014 instrumental arrangement.</param>
-        /// <returns>An array of five tone names, the first being the base tone. Null represents the absence of a tone name.</returns>
-        public static string?[] ReadToneNames(string fileName)
+        /// <returns>A tone info object with the tone names. Null represents the absence of a tone name.</returns>
+        public static ToneInfo ReadToneNames(string fileName)
         {
             using XmlReader reader = XmlReader.Create(fileName);
 
@@ -263,7 +254,7 @@ namespace Rocksmith2014Xml
             if (reader.LocalName != "song")
                 throw new InvalidOperationException("Expected root node of the XML file to be \"song\", instead found: " + reader.LocalName);
 
-            var toneNames = new string?[5];
+            var tones = new ToneInfo();
 
             while (reader.Read())
             {
@@ -272,29 +263,29 @@ namespace Rocksmith2014Xml
                     switch (reader.Name)
                     {
                         case "tonebase":
-                            toneNames[0] = reader.ReadElementContentAsString();
+                            tones.BaseToneName = reader.ReadElementContentAsString();
                             break;
                         case "tonea":
-                            toneNames[1] = reader.ReadElementContentAsString();
+                            tones.Names[0] = reader.ReadElementContentAsString();
                             break;
                         case "toneb":
-                            toneNames[2] = reader.ReadElementContentAsString();
+                            tones.Names[1] = reader.ReadElementContentAsString();
                             break;
                         case "tonec":
-                            toneNames[3] = reader.ReadElementContentAsString();
+                            tones.Names[2] = reader.ReadElementContentAsString();
                             break;
                         case "toned":
-                            toneNames[4] = reader.ReadElementContentAsString();
+                            tones.Names[3] = reader.ReadElementContentAsString();
                             break;
                         // The tone names should come before the sections.
                         case "sections":
                         case "levels":
-                            return toneNames;
+                            return tones;
                     }
                 }
             }
 
-            return toneNames;
+            return tones;
         }
 
         #region IXmlSerializable Implementation
@@ -401,23 +392,23 @@ namespace Rocksmith2014Xml
                         break;
 
                     case "tonebase":
-                        ToneBase = reader.ReadElementContentAsString();
+                        Tones.BaseToneName = reader.ReadElementContentAsString();
                         break;
                     case "tonea":
-                        ToneA = reader.ReadElementContentAsString();
+                        Tones.Names[0] = reader.ReadElementContentAsString();
                         break;
                     case "toneb":
-                        ToneB = reader.ReadElementContentAsString();
+                        Tones.Names[1] = reader.ReadElementContentAsString();
                         break;
                     case "tonec":
-                        ToneC = reader.ReadElementContentAsString();
+                        Tones.Names[2] = reader.ReadElementContentAsString();
                         break;
                     case "toned":
-                        ToneD = reader.ReadElementContentAsString();
+                        Tones.Names[3] = reader.ReadElementContentAsString();
                         break;
                     case "tones":
-                        ToneChanges = new List<ToneChange>();
-                        Utils.DeserializeCountList(ToneChanges, reader);
+                        Tones.Changes = new List<ToneChange>();
+                        Utils.DeserializeCountList(Tones.Changes, reader);
                         break;
 
                     case "sections":
@@ -519,14 +510,7 @@ namespace Rocksmith2014Xml
             Utils.SerializeWithCount(ChordTemplates, "chordTemplates", "chordTemplate", writer);
             Utils.SerializeWithCount(Ebeats, "ebeats", "ebeat", writer);
 
-            if (ToneBase != null) writer.WriteElementString("tonebase", ToneBase);
-            if (ToneA != null) writer.WriteElementString("tonea", ToneA);
-            if (ToneB != null) writer.WriteElementString("toneb", ToneB);
-            if (ToneC != null) writer.WriteElementString("tonec", ToneC);
-            if (ToneD != null) writer.WriteElementString("toned", ToneD);
-
-            if (ToneChanges != null)
-                Utils.SerializeWithCount(ToneChanges, "tones", "tone", writer);
+            Tones.WriteToXml(writer);
 
             Utils.SerializeWithCount(Sections, "sections", "section", writer);
             Utils.SerializeWithCount(Events, "events", "event", writer);

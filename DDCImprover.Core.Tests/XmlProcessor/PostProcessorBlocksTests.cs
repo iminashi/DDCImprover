@@ -111,10 +111,10 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             var testChordTemp = new ChordTemplate
             {
                 ChordName = $"OF{number}",
-                DisplayName = $"OF{number}",
-                Fingers = new sbyte[] { 1, -1, -1, -1, -1, -1 },
-                Frets = new sbyte[] { 8, -1, -1, -1, -1, -1 }
+                DisplayName = $"OF{number}"
             };
+            testChordTemp.SetFingering(1, -1, -1, -1, -1, -1);
+            testChordTemp.SetFrets(8, -1, -1, -1, -1, -1);
             testArrangement.ChordTemplates.Add(testChordTemp);
 
             new ChordNameProcessor(new List<ImproverMessage>()).Apply(testArrangement, nullLog);
@@ -230,11 +230,10 @@ namespace DDCImprover.Core.Tests.XmlProcessor
             var phraseIter = new PhraseIteration(chordTime, testArrangement.Phrases.Count - 1);
             testArrangement.PhraseIterations.Add(phraseIter);
 
-            var template = new ChordTemplate
-            {
-                Fingers = new sbyte[] { 1, 3, 3, -1, -1, -1 },
-                Frets = new sbyte[] { 1, 3, 4, -1, -1, -1 }
-            };
+            var template = new ChordTemplate();
+            template.SetFingering(1, 3, 3, -1, -1, -1);
+            template.SetFrets(1, 3, 4, -1, -1, -1);
+
             testArrangement.ChordTemplates.Add(template);
             short chordId = (short)(testArrangement.ChordTemplates.Count - 1);
 

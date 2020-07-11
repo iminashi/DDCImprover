@@ -51,11 +51,15 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             testArrangement.Events.Should().NotContain(e => e.Code == "tone_a");
             testArrangement.Events.Should().NotContain(e => e.Code == "tone_b");
+            testArrangement.Events.Should().NotContain(e => e.Code == "tone_c");
+            testArrangement.Events.Should().NotContain(e => e.Code == "tone_d");
 
             new ToneEventGenerator().Apply(testArrangement, nullLog);
 
             testArrangement.Events.Should().Contain(e => e.Code == "tone_a");
             testArrangement.Events.Should().Contain(e => e.Code == "tone_b");
+            testArrangement.Events.Should().Contain(e => e.Code == "tone_c");
+            testArrangement.Events.Should().Contain(e => e.Code == "tone_d");
         }
 
         [Fact]
