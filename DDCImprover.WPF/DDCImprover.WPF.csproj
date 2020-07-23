@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="DynamicData">
-      <Version>6.15.1</Version>
+      <Version>6.16.1</Version>
     </PackageReference>
     <PackageReference Include="Fody">
       <Version>6.2.0</Version>
@@ -43,7 +43,7 @@
       <Version>11.4.17</Version>
     </PackageReference>
     <PackageReference Include="Splat">
-      <Version>9.4.5</Version>
+      <Version>9.5.6</Version>
     </PackageReference>
     <PackageReference Include="System.Collections.Immutable">
       <Version>1.7.1</Version>
