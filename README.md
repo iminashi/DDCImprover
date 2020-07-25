@@ -1,4 +1,4 @@
-# DDCImprover
+# DDC Improver
 ![Screenshot of version 3.0](https://i.imgur.com/Rz6sHLp.png)
 
 A tool for processing Rocksmith 2014 XML files.
