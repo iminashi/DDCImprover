@@ -72,7 +72,7 @@ namespace DDCImprover.Core.PostBlocks
 
                         var anchorsToAddToSecondLevel =
                                 from anchor in firstLevelAnchors
-                                join note in firstLevelNotes on anchor.Time equals note.Time
+                                where anchor.Time >= startTime && anchor.Time < endTime
                                 select anchor;
 
                         var newSecondLevelAnchors = new List<Anchor>();
