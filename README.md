@@ -1,5 +1,5 @@
-# DDCImprover
-![Screenshot of version 2.2](https://i.imgur.com/0OKdUdW.png)
+# DDC Improver
+![Screenshot of version 3.0](https://i.imgur.com/Rz6sHLp.png)
 
 A tool for processing Rocksmith 2014 XML files.
 It originated as a command line program I wrote in Ruby to automate a workaround to prevent DDC (Dynamic Difficulty Creator) from moving sections that are not placed on the first beat of a measure.
@@ -19,6 +19,7 @@ Some of the features in the program have nothing to do with DDC and it can also 
 - Move phrases/sections off beat with special phrase names
 - Removes beats that come after the audio has ended
 - Checks the XML for issues
+- Can quickly remove DD from files
 
 # Libraries Used
 
