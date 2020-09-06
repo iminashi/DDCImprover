@@ -171,7 +171,7 @@ namespace DDCImprover.Avalonia.Views
                 titlePanel.Children.Add(filename);
                 mainPanel.Children.Add(titlePanel);
 
-                foreach (MessageType messageType in Enum.GetValues(typeof(MessageType)))
+                foreach (var messageType in (MessageType[])Enum.GetValues(typeof(MessageType)))
                 {
                     var messages = from message in xmlProcessor.StatusMessages
                                    where message.Type == messageType

@@ -142,7 +142,7 @@ namespace DDCImprover.WPF
                 title.Inlines.Add(xmlFile);
                 doc.Blocks.Add(title);
 
-                foreach (MessageType messageType in Enum.GetValues(typeof(MessageType)))
+                foreach (var messageType in (MessageType[])Enum.GetValues(typeof(MessageType)))
                 {
                     var messages = from message in xmlProcessor.StatusMessages
                                    where message.Type == messageType
