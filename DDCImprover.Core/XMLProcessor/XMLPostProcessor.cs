@@ -1,7 +1,10 @@
 ﻿using DDCImprover.Core.PostBlocks;
-using Rocksmith2014Xml;
+
+using Rocksmith2014.XML;
+
 using System;
 using System.Linq;
+
 using static DDCImprover.Core.XMLProcessor;
 
 namespace DDCImprover.Core
@@ -89,7 +92,7 @@ namespace DDCImprover.Core
                 }
             }
 
-            if(Preferences.RemoveTranscriptionTrack)
+            if (Preferences.RemoveTranscriptionTrack)
                 DDCArrangement.TranscriptionTrack = new Level();
 
             ValidateDDCXML();
@@ -153,19 +156,19 @@ namespace DDCImprover.Core
                 var notes = DDCArrangement.Levels.SelectMany(lev => lev.Notes);
                 var mutedNotesWithSustain =
                     from note in notes
-                    where note.IsMute && note.Sustain > 0
+                    where note.IsFretHandMute && note.Sustain > 0
                     select note;
 
                 foreach (var note in mutedNotesWithSustain)
                 {
                     bool originallyHadMutedNote = Parent.OriginalArrangement!.Levels
                         .SelectMany(lev => lev.Notes)
-                        .Any(n => (n.Time == note.Time) && n.IsMute);
+                        .Any(n => (n.Time == note.Time) && n.IsFretHandMute);
 
                     bool originallyHadMutedChord = Parent.OriginalArrangement.Levels
                         .SelectMany(lev => lev.Chords)
                         .SelectMany(c => c.ChordNotes)
-                        .Any(cn => (cn.Time == note.Time) && cn.IsMute && cn.Sustain != 0);
+                        .Any(cn => (cn.Time == note.Time) && cn.IsFretHandMute && cn.Sustain != 0);
 
                     if (!originallyHadMutedNote && !originallyHadMutedChord)
                     {

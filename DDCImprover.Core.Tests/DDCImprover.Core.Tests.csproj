@@ -15,6 +15,7 @@
     <PackageReference Include="Moq">
       <Version>4.14.5</Version>
     </PackageReference>
+    <PackageReference Include="Rocksmith2014.XML" Version="1.0.1" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="xunit">
       <Version>2.4.1</Version>
@@ -33,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DDCImprover.Core\DDCImprover.Core.csproj" />
-    <ProjectReference Include="..\Rocksmith2014Xml\Rocksmith2014Xml.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestFiles\postTest_RS2.xml">

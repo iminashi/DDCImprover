@@ -1,4 +1,4 @@
-﻿using Rocksmith2014Xml;
+﻿using Rocksmith2014.XML;
 
 using System;
 
@@ -13,7 +13,7 @@ namespace DDCImprover.Core.PostBlocks
         {
             var lastBeat = arrangement.Ebeats[^1];
             var penultimateBeat = arrangement.Ebeats[^2];
-            int audioEnd = arrangement.SongLength;
+            int audioEnd = arrangement.MetaData.SongLength;
             int lastBeatTime = lastBeat.Time;
             bool first = true;
 

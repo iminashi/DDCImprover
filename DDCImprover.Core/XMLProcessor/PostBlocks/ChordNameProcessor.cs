@@ -1,4 +1,4 @@
-﻿using Rocksmith2014Xml;
+﻿using Rocksmith2014.XML;
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace DDCImprover.Core.PostBlocks
             for (int i = 0; i < arrangement.ChordTemplates.Count; i++)
             {
                 var currentChordTemplate = arrangement.ChordTemplates[i];
-                string chordName = currentChordTemplate.ChordName;
+                string chordName = currentChordTemplate.Name;
 
                 // One fret handshape fret moving
                 if (chordName.StartsWith("OF"))
@@ -51,10 +51,10 @@ namespace DDCImprover.Core.PostBlocks
                             }
                         }
 
-                        Log($"Adjusted fret number of one fret chord: {currentChordTemplate.ChordName}");
+                        Log($"Adjusted fret number of one fret chord: {currentChordTemplate.Name}");
 
                         // Remove chord name
-                        currentChordTemplate.ChordName = "";
+                        currentChordTemplate.Name = "";
                         currentChordTemplate.DisplayName = "";
                     }
                     else
@@ -65,7 +65,7 @@ namespace DDCImprover.Core.PostBlocks
                     }
                 }
 
-                string oldChordName = currentChordTemplate.ChordName;
+                string oldChordName = currentChordTemplate.Name;
                 string oldDisplayName = currentChordTemplate.DisplayName;
                 string newChordName = oldChordName;
                 string newDisplayName = oldDisplayName;
@@ -110,7 +110,7 @@ namespace DDCImprover.Core.PostBlocks
                     chordRenamed[oldChordName] = true;
                 }
 
-                currentChordTemplate.ChordName = newChordName;
+                currentChordTemplate.Name = newChordName;
                 currentChordTemplate.DisplayName = newDisplayName;
             }
         }

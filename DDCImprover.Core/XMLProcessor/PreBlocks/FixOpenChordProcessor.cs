@@ -1,4 +1,4 @@
-﻿using Rocksmith2014Xml;
+﻿using Rocksmith2014.XML;
 
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace DDCImprover.Core.PreBlocks
             for (int chordId = 0; chordId < ChordTemplates.Count; chordId++)
             {
                 var currentChordTemplate = ChordTemplates[chordId];
-                string chordName = currentChordTemplate.ChordName;
+                string chordName = currentChordTemplate.Name;
 
                 if (chordName.Contains("FIXOPEN"))
                 {
@@ -118,7 +118,7 @@ namespace DDCImprover.Core.PreBlocks
                     }
 
                     // Set correct name
-                    currentChordTemplate.ChordName = currentChordTemplate.ChordName.Replace("FIXOPEN", "");
+                    currentChordTemplate.Name = currentChordTemplate.Name.Replace("FIXOPEN", "");
                     currentChordTemplate.DisplayName = currentChordTemplate.DisplayName.Replace("FIXOPEN", "");
                 }
             }

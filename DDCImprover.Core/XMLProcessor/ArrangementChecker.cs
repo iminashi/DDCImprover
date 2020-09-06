@@ -1,5 +1,5 @@
-﻿using Rocksmith2014Xml;
-using Rocksmith2014Xml.Extensions;
+﻿using Rocksmith2014.XML;
+using Rocksmith2014.XML.Extensions;
 
 using System;
 using System.Collections.Generic;
@@ -197,7 +197,7 @@ namespace DDCImprover.Core
                 }
 
                 // Check for notes with both harmonic and pinch harmonic
-                if (note.IsHarmonic && note.IsHarmonicPinch)
+                if (note.IsHarmonic && note.IsPinchHarmonic)
                 {
                     AddIssue($"Note set as both harmonic and pinch harmonic at {note.Time.TimeToString()}.", note.Time);
                 }
@@ -266,7 +266,7 @@ namespace DDCImprover.Core
                     }
 
                     // Check for notes with both harmonic and pinch harmonic
-                    if (chordNotes.Any(cn => cn.IsHarmonic && cn.IsHarmonicPinch))
+                    if (chordNotes.Any(cn => cn.IsHarmonic && cn.IsPinchHarmonic))
                     {
                         AddIssue($"Chord note set as both harmonic and pinch harmonic at {chord.Time.TimeToString()}.", chord.Time);
                     }

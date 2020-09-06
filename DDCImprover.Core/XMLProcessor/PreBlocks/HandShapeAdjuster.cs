@@ -1,5 +1,5 @@
-﻿using Rocksmith2014Xml;
-using Rocksmith2014Xml.Extensions;
+﻿using Rocksmith2014.XML;
+using Rocksmith2014.XML.Extensions;
 
 using System;
 using System.Linq;

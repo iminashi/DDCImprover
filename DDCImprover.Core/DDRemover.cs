@@ -1,4 +1,4 @@
-﻿using Rocksmith2014Xml;
+﻿using Rocksmith2014.XML;
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ namespace DDCImprover.Core
 
                 foreach (var pi in arrangement.PhraseIterations)
                 {
-                    pi.HeroLevels = null;
+                    pi.HeroLevels = new HeroLevels();
                 }
             }
 

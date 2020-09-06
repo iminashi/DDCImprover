@@ -1,5 +1,5 @@
-﻿using Rocksmith2014Xml;
-using Rocksmith2014Xml.Extensions;
+﻿using Rocksmith2014.XML;
+using Rocksmith2014.XML.Extensions;
 
 using System;
 using System.Globalization;
@@ -74,7 +74,7 @@ namespace DDCImprover.Core.PreBlocks
 
         private void AddOutroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            int audioEnd = arrangement.SongLength;
+            int audioEnd = arrangement.MetaData.SongLength;
 
             int applauseStartTime = audioEnd - VenueFadeOutLength - OutroApplauseLength;
 
@@ -94,7 +94,7 @@ namespace DDCImprover.Core.PreBlocks
             // Add initial crowd tempo event only if there are no other tempo events present
             if (!events.Any(ev => Regex.IsMatch(ev.Code, "e[0-2]$")))
             {
-                float averageTempo = arrangement.AverageTempo;
+                float averageTempo = arrangement.MetaData.AverageTempo;
                 int startBeat = arrangement.StartBeat;
 
                 string crowdSpeed = (averageTempo < 90f) ? "e0" :

@@ -1,4 +1,5 @@
-﻿using Rocksmith2014Xml;
+﻿using Rocksmith2014.XML;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

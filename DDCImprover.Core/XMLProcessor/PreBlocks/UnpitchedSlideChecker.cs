@@ -1,4 +1,4 @@
-﻿using Rocksmith2014Xml;
+﻿using Rocksmith2014.XML;
 
 using System;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace DDCImprover.Core.PreBlocks
     {
         public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            if (arrangement.ArrangementProperties.UnpitchedSlides)
+            if (arrangement.MetaData.ArrangementProperties.UnpitchedSlides)
                 return;
 
             // TODO: Could optimize by looking at hardest level only
@@ -20,7 +20,7 @@ namespace DDCImprover.Core.PreBlocks
 
             if (notes.Any(n => n.IsUnpitchedSlide))
             {
-                arrangement.ArrangementProperties.UnpitchedSlides = true;
+                arrangement.MetaData.ArrangementProperties.UnpitchedSlides = true;
             }
             else
             {
@@ -31,14 +31,14 @@ namespace DDCImprover.Core.PreBlocks
 
                     if (chord.ChordNotes.Any(n => n.IsUnpitchedSlide))
                     {
-                        arrangement.ArrangementProperties.UnpitchedSlides = true;
+                        arrangement.MetaData.ArrangementProperties.UnpitchedSlides = true;
 
                         break;
                     }
                 }
             }
 
-            if (arrangement.ArrangementProperties.UnpitchedSlides)
+            if (arrangement.MetaData.ArrangementProperties.UnpitchedSlides)
                 Log("Enabled unpitched slides in arrangement properties.");
         }
     }
