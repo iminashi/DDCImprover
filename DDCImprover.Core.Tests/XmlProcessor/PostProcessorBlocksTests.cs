@@ -2,7 +2,7 @@
 
 using FluentAssertions;
 
-using Rocksmith2014Xml;
+using Rocksmith2014.XML;
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void ExtraneousBeatsRemover_RemovesExtraBeats()
         {
-            int audioEnd = testArrangement.SongLength;
+            int audioEnd = testArrangement.MetaData.SongLength;
             testArrangement.Ebeats.Should().Contain(b => b.Time > audioEnd);
 
             new ExtraneousBeatsRemover().Apply(testArrangement, nullLog);
@@ -40,12 +40,12 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             var testChordTemp1 = new ChordTemplate
             {
-                ChordName = " ",
+                Name = " ",
                 DisplayName = " "
             };
             var testChordTemp2 = new ChordTemplate
             {
-                ChordName = "   ",
+                Name = "   ",
                 DisplayName = "   "
             };
             testArrangement.ChordTemplates.Add(testChordTemp1);
@@ -53,9 +53,9 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             new ChordNameProcessor(new List<ImproverMessage>()).Apply(testArrangement, nullLog);
 
-            testChordTemp1.ChordName.Should().Be("");
+            testChordTemp1.Name.Should().Be("");
             testChordTemp1.DisplayName.Should().Be("");
-            testChordTemp2.ChordName.Should().Be("");
+            testChordTemp2.Name.Should().Be("");
             testChordTemp2.DisplayName.Should().Be("");
         }
 
@@ -64,14 +64,14 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             var testChordTemp = new ChordTemplate
             {
-                ChordName = "Amin",
+                Name = "Amin",
                 DisplayName = "Amin"
             };
             testArrangement.ChordTemplates.Add(testChordTemp);
 
             new ChordNameProcessor(new List<ImproverMessage>()).Apply(testArrangement, nullLog);
 
-            testChordTemp.ChordName.Should().Be("Am");
+            testChordTemp.Name.Should().Be("Am");
             testChordTemp.DisplayName.Should().Be("Am");
         }
 
@@ -80,13 +80,13 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             var testChordTemp1 = new ChordTemplate
             {
-                ChordName = "D9-arp",
+                Name = "D9-arp",
                 DisplayName = "D9-arp"
             };
 
             var testChordTemp2 = new ChordTemplate
             {
-                ChordName = "F5(no 3)-nop",
+                Name = "F5(no 3)-nop",
                 DisplayName = "F5(no 3)-nop"
             };
             testArrangement.ChordTemplates.Add(testChordTemp1);
@@ -94,10 +94,10 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             new ChordNameProcessor(new List<ImproverMessage>()).Apply(testArrangement, nullLog);
 
-            testChordTemp1.ChordName.Should().Be("D9");
+            testChordTemp1.Name.Should().Be("D9");
             testChordTemp1.DisplayName.Should().Be("D9-arp");
 
-            testChordTemp2.ChordName.Should().Be("F5(no 3)");
+            testChordTemp2.Name.Should().Be("F5(no 3)");
             testChordTemp2.DisplayName.Should().Be("F5(no 3)-nop");
         }
 
@@ -110,7 +110,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         {
             var testChordTemp = new ChordTemplate
             {
-                ChordName = $"OF{number}",
+                Name = $"OF{number}",
                 DisplayName = $"OF{number}"
             };
             testChordTemp.SetFingering(1, -1, -1, -1, -1, -1);
@@ -119,7 +119,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
 
             new ChordNameProcessor(new List<ImproverMessage>()).Apply(testArrangement, nullLog);
 
-            testChordTemp.ChordName.Should().Be("");
+            testChordTemp.Name.Should().Be("");
             testChordTemp.DisplayName.Should().Be("");
             testChordTemp.Frets[0].Should().Be((sbyte)number);
         }
@@ -127,7 +127,7 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void OneLevelPhraseFixer_AddsASecondDifficultyLevel()
         {
-            testArrangement.PhraseIterations.Last().Time = testArrangement.SongLength;
+            testArrangement.PhraseIterations.Last().Time = testArrangement.MetaData.SongLength;
             testArrangement.PhraseIterations.Last().PhraseId++;
 
             var testPhrase = new Phrase("test", 0, PhraseMask.None);

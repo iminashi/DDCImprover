@@ -1,6 +1,6 @@
 ﻿using DDCImprover.Core.PreBlocks;
 using FluentAssertions;
-using Rocksmith2014Xml;
+using Rocksmith2014.XML;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -21,11 +21,11 @@ namespace DDCImprover.Core.Tests.XmlProcessor
         [Fact]
         public void UnpitchedSlideChecker_EnablesUnpitchedSlides()
         {
-            testArrangement.ArrangementProperties.UnpitchedSlides.Should().Be(false);
+            testArrangement.MetaData.ArrangementProperties.UnpitchedSlides.Should().Be(false);
 
             new UnpitchedSlideChecker().Apply(testArrangement, nullLog);
 
-            testArrangement.ArrangementProperties.UnpitchedSlides.Should().Be(true);
+            testArrangement.MetaData.ArrangementProperties.UnpitchedSlides.Should().Be(true);
         }
 
         [Fact]
