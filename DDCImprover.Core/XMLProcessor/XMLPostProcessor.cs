@@ -128,7 +128,7 @@ namespace DDCImprover.Core
         {
             var phraseLevels = PhraseLevelRepository.TryGetLevels(Parent.XMLFileFullPath);
 
-            if (phraseLevels != null)
+            if (phraseLevels is not null)
             {
                 foreach (var phrase in DDCArrangement.Phrases)
                 {

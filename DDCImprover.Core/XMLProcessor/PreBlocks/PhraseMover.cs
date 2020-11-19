@@ -117,7 +117,7 @@ namespace DDCImprover.Core.PreBlocks
 
                     // Move section (if present)
                     var sectionToMove = arrangement.Sections.FindByTime(phraseTime);
-                    if (sectionToMove != null)
+                    if (sectionToMove is not null)
                     {
                         sectionToMove.Time = movetoTime;
                         Log($"--Moved phrase and section from {phraseTime.TimeToString()} to {movetoTime.TimeToString()}");

@@ -36,7 +36,7 @@ namespace DDCImprover.Avalonia
             messageBox.Show();
         }
 
-        private List<FileDialogFilter> GetFilters(FileFilter filter)
+        private static List<FileDialogFilter> GetFilters(FileFilter filter)
         {
             var filters = new List<FileDialogFilter>();
 

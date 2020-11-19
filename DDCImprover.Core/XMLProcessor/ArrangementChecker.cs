@@ -67,7 +67,7 @@ namespace DDCImprover.Core
             int? applauseEnd = events.Find(e => e.Code == "E13")?.Time;
             Regex crowdSpeedRegex = new Regex("e[0-2]$");
 
-            if (introApplauseStart != null && applauseEnd != null)
+            if (introApplauseStart is not null && applauseEnd is not null)
             {
                 var badlyPlacedEvents =
                     from ev in events
@@ -81,9 +81,9 @@ namespace DDCImprover.Core
                 }
             }
 
-            if (introApplauseStart != null)
+            if (introApplauseStart is not null)
             {
-                if (applauseEnd == null)
+                if (applauseEnd is null)
                 {
                     AddIssue($"There is an intro applause event (E3) at {introApplauseStart.Value.TimeToString()} without an end event (E13).", introApplauseStart.Value);
                 }
@@ -336,12 +336,12 @@ namespace DDCImprover.Core
 
                     if (!chordOK)
                     {
-                        if (previous is HandShape && IsSameAnchorWith1stFinger(previous, activeAnchor))
+                        if (previous is not null && IsSameAnchorWith1stFinger(previous, activeAnchor))
                         {
                             continue;
                         }
 
-                        if (next is HandShape && IsSameAnchorWith1stFinger(next, activeAnchor))
+                        if (next is not null && IsSameAnchorWith1stFinger(next, activeAnchor))
                         {
                             continue;
                         }

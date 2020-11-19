@@ -56,7 +56,7 @@ namespace DDCImprover.Core.PreBlocks
                                            && note.Time > chord.Time
                                      select note).FirstOrDefault();
 
-                                while (noteToRemove != null)
+                                while (noteToRemove is not null)
                                 {
                                     sustain += noteToRemove.Sustain;
 

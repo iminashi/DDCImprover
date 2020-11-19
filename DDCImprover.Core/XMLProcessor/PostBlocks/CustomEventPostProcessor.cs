@@ -82,7 +82,7 @@ namespace DDCImprover.Core.PostBlocks
 
                     // Shorten handshapes that EOF has set to include the slide out
                     // If chord notes is null here, there is an error in the XML file
-                    if (linkNextChordHs != null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes![0].Sustain)
+                    if (linkNextChordHs is not null && linkNextChordHs.EndTime > linkNextChord.Time + linkNextChord.ChordNotes![0].Sustain)
                     {
                         linkNextChordHs.EndTime = linkNextChord.Time + linkNextChord.ChordNotes[0].Sustain;
                     }
