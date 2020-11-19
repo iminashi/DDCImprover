@@ -24,15 +24,9 @@ namespace DDCImprover.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IViewFor<MainWindowViewModel>
+    public partial class MainWindow : Window
     {
         public MainWindowViewModel ViewModel { get; set; }
-
-        object IViewFor.ViewModel
-        {
-            get => ViewModel;
-            set => ViewModel = (MainWindowViewModel)value;
-        }
 
         private readonly ConfigurationWindowViewModel configViewModel;
         private readonly WPFServices services;
