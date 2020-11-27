@@ -1,3 +1,8 @@
+3.1
+-Updated DDC to v3.7
+-Fixed a bug in the "one level phrase fixer"
+-Added a check for chords whose chord notes have different sustains
+
 3.0
 -Added "Quick Remove DD" feature
 -Added "Open Containing Folder" context menu item
