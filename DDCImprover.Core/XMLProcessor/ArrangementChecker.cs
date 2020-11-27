@@ -253,6 +253,12 @@ namespace DDCImprover.Core
 
                 if (chordNotes != null)
                 {
+                    // Check for inconsistent chord note sustains
+                    if(!chordNotes.TrueForAll(cn => cn.Sustain == chordNotes[0].Sustain))
+                    {
+                        AddIssue($"Chord with varying chord note sustains at {chord.Time.TimeToString()}.", chord.Time);
+                    }
+
                     // Check 7th fret harmonic notes with sustain (and without ignore)
                     if (!chord.IsIgnore && chordNotes.Any(cn => cn.Sustain > 0 && cn.Fret == 7 && cn.IsHarmonic))
                     {
@@ -272,7 +278,7 @@ namespace DDCImprover.Core
                     }
 
                     // Check 23rd and 24th fret chords without ignore
-                    if (chordNotes.All(cn => cn.Fret >= 23) && !chord.IsIgnore)
+                    if (chordNotes.TrueForAll(cn => cn.Fret >= 23) && !chord.IsIgnore)
                     {
                         AddIssue($"Chord on 23rd/24th fret without ignore status at {chord.Time.TimeToString()}.", chord.Time);
                     }
