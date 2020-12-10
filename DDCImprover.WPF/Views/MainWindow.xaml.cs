@@ -179,7 +179,7 @@ namespace DDCImprover.WPF
         {
             string? logFilePath = (sender as TextBlock)?.Tag as string;
 
-            if (File.Exists(logFilePath))
+            if (logFilePath is not null && File.Exists(logFilePath))
             {
                 Window logWin = new Window
                 {

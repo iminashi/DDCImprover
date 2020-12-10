@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <AssemblyVersion>1.0.3.160</AssemblyVersion>
     <FileVersion>1.0.3.160</FileVersion>
@@ -17,8 +17,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="12.1.5" />
-    <PackageReference Include="ReactiveUI.Fody" Version="12.1.5" />
+    <PackageReference Include="ReactiveUI" Version="13.0.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>

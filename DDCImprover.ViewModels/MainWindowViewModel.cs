@@ -160,7 +160,7 @@ namespace DDCImprover.ViewModels
                 .Where(c => c > 0)
                 .Subscribe(count => ProgressMaximum = count * XMLProcessor.ProgressSteps);
 
-            ProcessFiles.IsExecuting.ToPropertyEx(this, x => x.IsProcessingFiles, false);
+            ProcessFiles.IsExecuting.ToPropertyEx(this, x => x.IsProcessingFiles, deferSubscription: false);
 
             OpenChildWindow = ShowWindow.
                 Merge(
@@ -179,7 +179,7 @@ namespace DDCImprover.ViewModels
             {
                 foreach (string path in SelectedItems.Cast<XMLProcessor>().Select(x => x.XMLFileFullPath).Distinct())
                 {
-                    Path.GetDirectoryName(path).StartAsProcess();
+                    Path.GetDirectoryName(path)?.StartAsProcess();
                 }
             }
         }
@@ -348,7 +348,7 @@ namespace DDCImprover.ViewModels
             ShowInStatusbar($"Loading time: {stopwatch.ElapsedMilliseconds} ms");
 #endif
 
-            if (skippedFiles.Count > 0)
+            if (!skippedFiles.IsEmpty)
             {
                 UpdateStatusBarForSkippedFiles(skippedFiles);
             }

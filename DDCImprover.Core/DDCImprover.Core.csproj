@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Authors>iminashi</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>3.1.0</Version>
-    <AssemblyVersion>3.1.6.332</AssemblyVersion>
-    <FileVersion>3.1.6.332</FileVersion>
+    <AssemblyVersion>3.1.10.345</AssemblyVersion>
+    <FileVersion>3.1.10.345</FileVersion>
     <Copyright>Copyright © 2020</Copyright>
   </PropertyGroup>
   
