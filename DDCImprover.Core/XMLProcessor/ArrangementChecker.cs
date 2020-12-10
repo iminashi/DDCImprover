@@ -150,7 +150,7 @@ namespace DDCImprover.Core
                         }
                     }
                 } // Check if bendValues match
-                else if (note.IsBend)
+                else if (note.IsBend && note.BendValues is not null)
                 {
                     float thisNoteLastBendValue = note.BendValues.Last().Step;
                     float nextNoteFirstBendValue = 0f;

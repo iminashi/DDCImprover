@@ -16,11 +16,10 @@ namespace DDCImprover.Core.PreBlocks
             {
                 foreach (var chord in level.Chords.Where(c => c.IsLinkNext))
                 {
-                    if (chord.ChordNotes.Any(cn => cn.IsSlide))
+                    if (chord.ChordNotes is not null && chord.ChordNotes.Any(cn => cn.IsSlide))
                     {
                         var handshape = level.HandShapes.Find(hs => hs.StartTime == chord.Time);
-                        if (!(handshape is null) && !(chord.ChordNotes is null)
-                            && (handshape.EndTime > handshape.StartTime + chord.ChordNotes[0].Sustain))
+                        if (handshape is not null && (handshape.EndTime > handshape.StartTime + chord.ChordNotes[0].Sustain))
                         {
                             handshape.EndTime = handshape.StartTime + chord.ChordNotes[0].Sustain;
                             Log($"Adjusted handshape length for chord slide at {chord.Time.TimeToString()}");

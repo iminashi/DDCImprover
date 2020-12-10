@@ -90,13 +90,24 @@ namespace DDCImprover.Core.PostBlocks
                 else // It is a normal chord with unpitched slide out
                 {
                     var chord = level.Chords[chordIndex];
+                    if (chord.ChordNotes is null)
+                    {
+                        string error = $"Chord missing chord notes for SlideOut event at {slideEvent.Time.TimeToString()}";
+                        _statusMessages.Add(new ImproverMessage(error, MessageType.Error, slideEvent.Time));
+                        Log(error);
+                        continue;
+                    }
+
                     notes.AddRange(chord.ChordNotes.Where(cn => cn.IsUnpitchedSlide));
 
                     originalChordTemplate = arrangement.ChordTemplates[chord.ChordId];
 
                     // The length of the handshape likely needs to be shortened
                     var chordHs = level.HandShapes.Find(hs => hs.StartTime == chord.Time);
-                    chordHs.EndTime = chordHs.StartTime + ((chordHs.EndTime - chordHs.StartTime) / 3);
+                    if (chordHs is not null)
+                    {
+                        chordHs.EndTime = chordHs.StartTime + ((chordHs.EndTime - chordHs.StartTime) / 3);
+                    }
                 }
 
                 if (notes.Count == 0)

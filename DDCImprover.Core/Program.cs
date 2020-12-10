@@ -14,11 +14,11 @@ namespace DDCImprover.Core
         {
             get
             {
-                if (version is string)
+                if (version is not null)
                     return version;
 
                 var thisAsm = Assembly.GetExecutingAssembly();
-                var ver = thisAsm.GetName().Version;
+                var ver = thisAsm.GetName().Version!;
                 version = $"v{ver.Major}.{ver.Minor}.{ver.Build}";
 
                 return version;

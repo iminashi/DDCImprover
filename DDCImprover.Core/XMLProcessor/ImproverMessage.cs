@@ -15,7 +15,7 @@ namespace DDCImprover.Core
             TimeCode = timeCode;
         }
 
-        public int CompareTo(ImproverMessage other)
+        public int CompareTo(ImproverMessage? other)
             => TimeCode.CompareTo(other.TimeCode);
 
         public bool Equals(ImproverMessage? other)

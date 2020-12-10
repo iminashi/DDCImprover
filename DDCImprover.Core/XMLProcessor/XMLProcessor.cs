@@ -161,14 +161,14 @@ namespace DDCImprover.Core
                     }
                     else if (reader.Name == "arrangementProperties")
                     {
-                        var arrProp = XNode.ReadFrom(reader) as XElement;
-                        ArrangementType = arrProp!.Attribute("pathLead").Value == "1" ? "Lead" :
-                                          arrProp.Attribute("pathRhythm").Value == "1" ? "Rhythm" :
-                                          arrProp.Attribute("pathBass").Value == "1" ? "Bass" : "N/A";
+                        var arrProp = (XElement)XNode.ReadFrom(reader);
+                        ArrangementType = arrProp.Attribute("pathLead")?.Value == "1" ? "Lead" :
+                                          arrProp.Attribute("pathRhythm")?.Value == "1" ? "Rhythm" :
+                                          arrProp.Attribute("pathBass")?.Value == "1" ? "Bass" : "N/A";
 
-                        if (arrProp.Attribute("bonusArr").Value == "1")
+                        if (arrProp.Attribute("bonusArr")?.Value == "1")
                             ArrangementType = "Bonus " + ArrangementType;
-                        else if (arrProp.Attribute("represent").Value == "0")
+                        else if (arrProp.Attribute("represent")?.Value == "0")
                             ArrangementType = "Alt. " + ArrangementType;
 
                         // Finished reading everything needed
@@ -196,13 +196,14 @@ namespace DDCImprover.Core
         {
             XMLFileFullPath = xmlFilePath;
 
-            FileInfo xmlFileInfo = new FileInfo(XMLFileFullPath);
+            var xmlFileInfo = new FileInfo(XMLFileFullPath);
+            var xmlFileDir = xmlFileInfo.Directory!.FullName;
 
             XMLFileName = xmlFileInfo.Name;
 
-            TempXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "ORIGINAL_" + XMLFileName);
-            DDCXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DDC_" + XMLFileName);
-            ManualDDXMLFileFullPath = Path.Combine(xmlFileInfo.Directory.FullName, "DD_" + XMLFileName);
+            TempXMLFileFullPath = Path.Combine(xmlFileDir, "ORIGINAL_" + XMLFileName);
+            DDCXMLFileFullPath = Path.Combine(xmlFileDir, "DDC_" + XMLFileName);
+            ManualDDXMLFileFullPath = Path.Combine(xmlFileDir, "DD_" + XMLFileName);
 
             LogFileFullPath = Path.Combine(Program.LogDirectory, XMLFileName + ".log");
         }
@@ -511,7 +512,7 @@ namespace DDCImprover.Core
             return arguments;
         }
 
-        public bool Equals(XMLProcessor other)
+        public bool Equals(XMLProcessor? other)
             => XMLFileFullPath.Equals(other?.XMLFileFullPath);
 
         public override int GetHashCode()

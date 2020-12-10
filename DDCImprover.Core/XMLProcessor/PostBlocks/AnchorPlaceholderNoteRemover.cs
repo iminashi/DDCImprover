@@ -50,7 +50,7 @@ namespace DDCImprover.Core.PostBlocks
                 {
                     Chord chord = chords[i];
 
-                    if (chord.IsLinkNext && chord.ChordNotes.Any(n => n.IsSlide))
+                    if (chord.IsLinkNext && chord.ChordNotes?.Any(n => n.IsSlide) == true)
                     {
                         // Find the first note after the chord
                         int noteIndex = notes.FindIndex(n => n.Time > chord.Time);

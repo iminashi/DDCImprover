@@ -167,7 +167,7 @@ namespace DDCImprover.Core
 
                     bool originallyHadMutedChord = Parent.OriginalArrangement.Levels
                         .SelectMany(lev => lev.Chords)
-                        .SelectMany(c => c.ChordNotes)
+                        .SelectMany(c => c.ChordNotes ?? Enumerable.Empty<Note>())
                         .Any(cn => (cn.Time == note.Time) && cn.IsFretHandMute && cn.Sustain != 0);
 
                     if (!originallyHadMutedNote && !originallyHadMutedChord)
