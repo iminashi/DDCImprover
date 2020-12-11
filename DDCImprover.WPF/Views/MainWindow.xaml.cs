@@ -51,7 +51,7 @@ namespace DDCImprover.WPF
 
             // Close file(s) when user clicks delete
             Observable.FromEventPattern<KeyEventArgs>(filesListView, "KeyUp")
-                .Where(e => e.EventArgs.Key == Key.Delete && (e.Sender as ListView)?.SelectedItem != null)
+                .Where(e => e.EventArgs.Key == Key.Delete && (e.Sender as ListView)?.SelectedItem is not null)
                 .Select(_ => Unit.Default)
                 .InvokeCommand(ViewModel.CloseFile);
 

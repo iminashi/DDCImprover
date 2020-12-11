@@ -138,7 +138,7 @@ namespace DDCImprover.Core
         {
             arrangement.XmlComments.RemoveAll(c => c.CommentType == CommentType.DDCImprover);
             var ddcComment = arrangement.XmlComments.Find(c => c.CommentType == CommentType.DDC);
-            if (ddcComment != null)
+            if (ddcComment is not null)
             {
                 arrangement.XmlComments.RemoveAll(c => c.CommentType == CommentType.DDC);
                 string ddcVer = ddcComment.Value.Substring(0, ddcComment.Value.IndexOf('-') - 1);

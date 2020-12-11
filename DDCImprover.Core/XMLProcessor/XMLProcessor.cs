@@ -275,7 +275,7 @@ namespace DDCImprover.Core
             catch (Exception e)
             {
                 Log("ERROR: " + e.Message);
-                Log(e.StackTrace);
+                Log(e.StackTrace ?? "(No stack trace)");
 
                 StatusMessages.Add(new ImproverMessage(e.Message, MessageType.Error));
                 Status = ImproverStatus.ProcessingError;
@@ -284,7 +284,7 @@ namespace DDCImprover.Core
             {
                 DeleteTempFiles();
 
-                if (Preferences.EnableLogging && logStreamWriter != null)
+                if (Preferences.EnableLogging && logStreamWriter is not null)
                 {
                     LogViewText = "View";
                     logStreamWriter.Close();
@@ -447,7 +447,7 @@ namespace DDCImprover.Core
 
             ddcProcess.StartInfo.UseShellExecute = false;
             ddcProcess.StartInfo.CreateNoWindow = true;
-            ddcProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(XMLFileFullPath);
+            ddcProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(XMLFileFullPath)!;
 
             if (Program.UseWine)
             {
@@ -495,12 +495,12 @@ namespace DDCImprover.Core
 
             if (!string.IsNullOrEmpty(Preferences.DDCRampupFile) && Preferences.DDCRampupFile != "ddc_default")
             {
-                string rmpPath = Path.Combine(Path.GetDirectoryName(Program.DDCExecutablePath), $"{Preferences.DDCRampupFile}.xml");
+                string rmpPath = Path.Combine(Path.GetDirectoryName(Program.DDCExecutablePath)!, $"{Preferences.DDCRampupFile}.xml");
                 arguments += $" -m \"{rmpPath}\"";
             }
             if (!string.IsNullOrEmpty(Preferences.DDCConfigFile) && Preferences.DDCConfigFile != "ddc_default")
             {
-                string cfgPath = Path.Combine(Path.GetDirectoryName(Program.DDCExecutablePath), $"{Preferences.DDCConfigFile}.cfg");
+                string cfgPath = Path.Combine(Path.GetDirectoryName(Program.DDCExecutablePath)!, $"{Preferences.DDCConfigFile}.cfg");
                 arguments += $" -c \"{cfgPath}\"";
             }
 

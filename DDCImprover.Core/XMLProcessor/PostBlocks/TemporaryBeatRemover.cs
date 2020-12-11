@@ -22,7 +22,14 @@ namespace DDCImprover.Core.PostBlocks
             foreach (var addedBeat in _addedBeats)
             {
                 var beatToRemove = arrangement.Ebeats.Find(beat => beat == addedBeat);
-                arrangement.Ebeats.Remove(beatToRemove);
+                if (beatToRemove is not null)
+                {
+                    arrangement.Ebeats.Remove(beatToRemove);
+                }
+                else
+                {
+                    throw new Exception("Could not find the added beat in the arrangement's beat list.");
+                }
             }
         }
     }

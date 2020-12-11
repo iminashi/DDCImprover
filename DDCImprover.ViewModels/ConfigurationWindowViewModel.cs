@@ -42,7 +42,7 @@ namespace DDCImprover.ViewModels
 
             if (File.Exists(Program.DDCExecutablePath))
             {
-                DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Program.DDCExecutablePath));
+                DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Program.DDCExecutablePath)!);
 
                 DDCConfigFiles = (from file in di.GetFiles("*.cfg")
                                   orderby file.Name

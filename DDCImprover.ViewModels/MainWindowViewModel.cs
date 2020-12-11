@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace DDCImprover.ViewModels
         public int ProgressMaximum { get; private set; }
 
         [Reactive]
-        public string StatusbarMessage { get; private set; }
+        public string StatusbarMessage { get; private set; } = string.Empty;
 
         [Reactive]
         public string? StatusbarMessageTooltip { get; private set; }
@@ -113,6 +114,9 @@ namespace DDCImprover.ViewModels
             Directory.CreateDirectory(Program.LogDirectory);
         }
 
+        [MemberNotNull(nameof(AddFiles), nameof(OpenFiles), nameof(CloseAll), nameof(RemoveDD),
+                       nameof(CloseFile), nameof(ProcessFiles), nameof(OpenFolder), nameof(OpenGitHubPage),
+                       nameof(Exit), nameof(ShowWindow))]
         private void CreateReactiveCommands()
         {
             AddFiles = ReactiveCommand.CreateFromTask(_ => LoadFilesImpl(addingFiles: true));
@@ -153,6 +157,7 @@ namespace DDCImprover.ViewModels
             ShowWindow = ReactiveCommand.Create<WindowType, WindowType>(type => type);
         }
 
+        [MemberNotNull(nameof(OpenChildWindow))]
         private void SetupObservables()
         {
             // Keep the maximum value of the progressbar up to date
@@ -175,7 +180,7 @@ namespace DDCImprover.ViewModels
         /// </summary>
         private void OpenFolderImpl()
         {
-            if (SelectedItems != null)
+            if (SelectedItems is not null)
             {
                 foreach (string path in SelectedItems.Cast<XMLProcessor>().Select(x => x.XMLFileFullPath).Distinct())
                 {
@@ -234,7 +239,7 @@ namespace DDCImprover.ViewModels
                         string newFileName = oldFileName.StartsWith("DDC_") ?
                             oldFileName.Substring(4) :
                             oldFileName;
-                        arrangement.Save(Path.Combine(Path.GetDirectoryName(fn), "NDD_" + newFileName));
+                        arrangement.Save(Path.Combine(Path.GetDirectoryName(fn)!, "NDD_" + newFileName));
                     }));
 
                 string files = (fileNames.Length == 1) ? "File" : "Files";

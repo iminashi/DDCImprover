@@ -33,7 +33,7 @@ namespace DDCImprover.Core
             using ZipArchive archive = ZipFile.OpenRead(repositoryFile);
 
             var entry = archive.GetEntry(entryName);
-            if (entry != null)
+            if (entry is not null)
             {
                 var dict = new Dictionary<string, int>();
 
@@ -59,8 +59,8 @@ namespace DDCImprover.Core
 
             foreach (var phrase in phrases)
             {
-                // format: "p1 10 p2 4"
-                sb.Append(phrase.Name).Append(" ").Append(phrase.MaxDifficulty).Append(" ");
+                // Format: "p1 10 p2 4"
+                sb.Append(phrase.Name).Append(' ').Append(phrase.MaxDifficulty).Append(' ');
             }
 
             return sb.ToString();
@@ -76,7 +76,7 @@ namespace DDCImprover.Core
 
         public static void UpdateRepository()
         {
-            if (queue.Count == 0)
+            if (queue.IsEmpty)
                 return;
 
             using ZipArchive archive = ZipFile.Open(repositoryFile, ZipArchiveMode.Update);

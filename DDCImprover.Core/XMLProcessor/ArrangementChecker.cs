@@ -251,7 +251,7 @@ namespace DDCImprover.Core
                 var chord = level.Chords[i];
                 var chordNotes = chord.ChordNotes;
 
-                if (chordNotes != null)
+                if (chordNotes is not null)
                 {
                     // Check for inconsistent chord note sustains
                     if(!chordNotes.TrueForAll(cn => cn.Sustain == chordNotes[0].Sustain))
