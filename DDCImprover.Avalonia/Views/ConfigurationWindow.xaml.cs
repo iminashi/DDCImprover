@@ -25,10 +25,6 @@ namespace DDCImprover.Avalonia.Views
             DataContext = viewModel;
 
             this.FindControl<Button>("CloseButton").Click += (s, e) => Close();
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

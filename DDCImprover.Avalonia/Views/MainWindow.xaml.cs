@@ -66,10 +66,6 @@ namespace DDCImprover.Avalonia.Views
 
             processorList.AddHandler(DragDrop.DragOverEvent, DragOver);
             processorList.AddHandler(DragDrop.DropEvent, Drop);
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

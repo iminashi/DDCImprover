@@ -19,10 +19,6 @@ namespace DDCImprover.Avalonia
             Title = caption;
             this.FindControl<TextBlock>("messageText").Text = message;
             this.FindControl<Button>("okButton").Click += (s, e) => Close();
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

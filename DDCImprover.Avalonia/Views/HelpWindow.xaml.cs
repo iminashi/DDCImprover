@@ -9,9 +9,6 @@ namespace DDCImprover.Avalonia.Views
         public HelpWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

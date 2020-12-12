@@ -1,6 +1,5 @@
 ﻿using System;
 using Avalonia;
-using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 
 namespace DDCImprover.Avalonia
@@ -20,6 +19,6 @@ namespace DDCImprover.Avalonia
 #endif
                 .UsePlatformDetect()
                 .UseReactiveUI()
-                .LogToDebug();
+                .LogToTrace();
     }
 }
