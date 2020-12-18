@@ -41,7 +41,7 @@ namespace DDCImprover.Core.PreBlocks
                     bool shortenBy16thNote = false;
 
                     // Check if the chord that starts the handshape is a LinkNext slide
-                    var startChord = level.Chords?.FindByTime(precedingStartTime);
+                    var startChord = level.Chords.FindByTime(precedingStartTime);
                     if (startChord?.IsLinkNext == true && startChord?.ChordNotes?.Any(cn => cn.IsSlide) == true)
                     {
                         // Check if the handshape length is an 8th note or longer

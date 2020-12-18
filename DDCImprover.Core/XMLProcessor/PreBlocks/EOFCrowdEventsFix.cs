@@ -14,17 +14,14 @@ namespace DDCImprover.Core.PreBlocks
 
         public void Apply(InstrumentalArrangement arrangement, Action<string> Log)
         {
-            if (arrangement.Events?.Count > 0)
+            foreach (var @event in arrangement.Events)
             {
-                foreach (var @event in arrangement.Events)
+                if (wrongCrowdEvents.Contains(@event.Code))
                 {
-                    if (wrongCrowdEvents.Contains(@event.Code))
-                    {
-                        string correctEvent = @event.Code.ToLower();
-                        Log($"Corrected wrong crowd event: {@event.Code} -> {correctEvent}");
+                    string correctEvent = @event.Code.ToLowerInvariant();
+                    Log($"Corrected wrong crowd event: {@event.Code} -> {correctEvent}");
 
-                        @event.Code = correctEvent;
-                    }
+                    @event.Code = correctEvent;
                 }
             }
         }
