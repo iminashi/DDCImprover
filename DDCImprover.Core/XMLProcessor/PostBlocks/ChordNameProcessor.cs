@@ -67,36 +67,20 @@ namespace DDCImprover.Core.PostBlocks
 
                 string oldChordName = currentChordTemplate.Name;
                 string oldDisplayName = currentChordTemplate.DisplayName;
-                string newChordName = oldChordName;
-                string newDisplayName = oldDisplayName;
 
-                if (string.IsNullOrWhiteSpace(oldChordName))
-                {
-                    newChordName = string.Empty;
-                }
-                else
-                {
-                    if (oldChordName.Contains("min"))
-                        newChordName = oldChordName.Replace("min", "m");
-                    if (oldChordName.Contains("CONV"))
-                        newChordName = oldChordName.Replace("CONV", "");
-                    if (oldChordName.Contains("-nop"))
-                        newChordName = oldChordName.Replace("-nop", "");
-                    if (oldChordName.Contains("-arp"))
-                        newChordName = oldChordName.Replace("-arp", "");
-                }
+                string newChordName =
+                    string.IsNullOrWhiteSpace(oldChordName) ?
+                    string.Empty :
+                    oldChordName.Replace("min", "m")
+                                .Replace("CONV", "")
+                                .Replace("-nop", "")
+                                .Replace("-arp", "");
 
-                if (string.IsNullOrWhiteSpace(oldDisplayName))
-                {
-                    newDisplayName = string.Empty;
-                }
-                else
-                {
-                    if (oldDisplayName.Contains("min"))
-                        newDisplayName = oldDisplayName.Replace("min", "m");
-                    if (oldDisplayName.Contains("CONV"))
-                        newDisplayName = oldDisplayName.Replace("CONV", "-arp");
-                }
+                string newDisplayName =
+                    string.IsNullOrWhiteSpace(oldDisplayName) ?
+                    string.Empty :
+                    oldDisplayName.Replace("min", "m")
+                                  .Replace("CONV", "-arp");
 
                 // Log message for changed chord names that are not empty
                 if (newChordName != oldChordName && newChordName.Length != 0 && !chordRenamed.ContainsKey(oldChordName))
