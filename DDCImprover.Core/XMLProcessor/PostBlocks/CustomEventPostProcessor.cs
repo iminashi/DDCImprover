@@ -26,7 +26,7 @@ namespace DDCImprover.Core.PostBlocks
             var events = arrangement.Events;
 
             var removeBeatsEvent = events.Find(ev => ev.Code.Equals("removebeats", StringComparison.OrdinalIgnoreCase));
-            if (!(removeBeatsEvent is null))
+            if (removeBeatsEvent is not null)
             {
                 arrangement.Ebeats.RemoveAll(b => b.Time >= removeBeatsEvent.Time);
 
