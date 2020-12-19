@@ -44,7 +44,6 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
                        Margin="10,5,0,5"
-                       Width="100"
                        Value="{Binding Config.DDCPhraseLength}"
                        Minimum="8" Maximum="256"
                        ToolTip.Tip="{x:Static text:ConfigurationTooltips.PhraseLength}"/>
@@ -75,7 +74,6 @@
           <NumericUpDown Classes="nup"
                          Value="{Binding Config.MaxThreads}"
                          Margin="10,3,0,3"
-                         Width="60"
                          Minimum="1"
                          Maximum="{Binding Source={x:Static sys:Environment.ProcessorCount}, Mode=OneTime}"
                          ToolTip.Tip="Sets the number files processed simultaneously."/>
