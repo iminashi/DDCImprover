@@ -34,7 +34,7 @@ namespace DDCImprover.Core.PreBlocks
             }
         }
 
-        private void AddIntroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
+        private static void AddIntroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
         {
             Level firstPhraseLevel;
 
@@ -72,7 +72,7 @@ namespace DDCImprover.Core.PreBlocks
             Log($"Added intro applause event (E3) at time: {applauseStartTime.TimeToString()}.");
         }
 
-        private void AddOutroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
+        private static void AddOutroApplauseEvent(InstrumentalArrangement arrangement, Action<string> Log)
         {
             int audioEnd = arrangement.MetaData.SongLength;
 
