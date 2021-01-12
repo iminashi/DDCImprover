@@ -284,8 +284,11 @@ namespace DDCImprover.ViewModels
         /// Creates the XML Processors and adds them to the XMLProcessors collection.
         /// </summary>
         /// <param name="filenames">A list of the names of XML files to load.</param>
-        public async Task AddFilesAsync(IEnumerable<string> filenames)
+        public async Task AddFilesAsync(IEnumerable<string>? filenames)
         {
+            if (filenames is null)
+                return;
+
 #if DEBUG
             stopwatch.Restart();
 #endif
