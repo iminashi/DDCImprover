@@ -183,7 +183,8 @@
                Name="listBox"
                SelectionMode="Multiple"
                BorderBrush="#DEDEDE"
-               DragDrop.AllowDrop="True">
+               DragDrop.AllowDrop="True"
+               Background="White">
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="Add Files..." Command="{Binding AddFiles}"/>
