@@ -37,13 +37,13 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="ReactiveUI.Fody">
-      <Version>13.0.1</Version>
+      <Version>13.1.1</Version>
     </PackageReference>
     <PackageReference Include="ReactiveUI.WPF">
-      <Version>13.0.1</Version>
+      <Version>13.1.1</Version>
     </PackageReference>
     <PackageReference Include="Splat">
-      <Version>9.8.1</Version>
+      <Version>10.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
